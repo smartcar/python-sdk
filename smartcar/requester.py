@@ -1,7 +1,11 @@
 import requests
 from . import exceptions as E
+from . import __version__
 
 def call(method, url, **kwargs):
+    if not 'headers' in kwargs:
+        kwargs['headers'] = {}
+    kwargs['headers']['User-Agent'] = "smartcar-python-sdk:{}".format(__version__)
     response = requests.request(method, url, **kwargs)
     code = response.status_code
     if response.ok:

@@ -8,6 +8,7 @@ class TestRequester(unittest.TestCase):
     URL = 'http://fake.url'
 
     def queue(self, code):
+        """ queue up a fake response with the specified status code """
         responses.add('GET', self.URL, status=code, json={
             "message": self.EXPECTED
         })
@@ -15,6 +16,13 @@ class TestRequester(unittest.TestCase):
     def check(self, exception):
         self.assertRaisesRegexp(exception, self.EXPECTED, 
             smartcar.requester.call, "GET", self.URL)
+
+    @responses.activate
+    def test_user_agent(self):
+        self.queue(200)
+        smartcar.requester.call("GET", self.URL)
+        agent = "smartcar-python-sdk:{}".format(smartcar.__version__)
+        self.assertEqual(responses.calls[0].request.headers['User-Agent'], agent)
 
     @responses.activate
     def test_400(self):
@@ -69,4 +77,5 @@ class TestRequester(unittest.TestCase):
     @responses.activate
     def test_other(self):
         self.queue(503)
-        self.assertRaises(requests.exceptions.HTTPError)
+        with self.assertRaises(requests.exceptions.HTTPError):
+            smartcar.requester.call("GET", self.URL)
