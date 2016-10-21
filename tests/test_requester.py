@@ -5,11 +5,11 @@ import smartcar
 
 class TestRequester(unittest.TestCase):
     EXPECTED = "expected"
-    URL = 'http://fake.url'
+    URL = "http://fake.url"
 
     def queue(self, code):
         """ queue up a fake response with the specified status code """
-        responses.add('GET', self.URL, status=code, json={
+        responses.add("GET", self.URL, status=code, json={
             "message": self.EXPECTED
         })
 
@@ -22,7 +22,7 @@ class TestRequester(unittest.TestCase):
         self.queue(200)
         smartcar.requester.call("GET", self.URL)
         agent = "smartcar-python-sdk:{}".format(smartcar.__version__)
-        self.assertEqual(responses.calls[0].request.headers['User-Agent'], agent)
+        self.assertEqual(responses.calls[0].request.headers["User-Agent"], agent)
 
     @responses.activate
     def test_400(self):
