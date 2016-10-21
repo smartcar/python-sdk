@@ -1,3 +1,11 @@
-env
-htmlcover
+env/
+build/
+dist/
+*.egg-info/
+htmlcover/
 .coverage
+.cache
+
+__pycache__/
+*.py[cod]
+
