@@ -6,7 +6,7 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.api = Api(access_token, vehicle_id)
     def permissions(self, limit=25, offset=0):
-       return self.api.permissions(limit=limit, offset=offset) 
+        return self.api.permissions(limit=limit, offset=offset) 
     def info(self):
         return self.api.get("")
     def accelerometer(self):
