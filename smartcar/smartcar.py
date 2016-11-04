@@ -1,9 +1,21 @@
 from . import const, requester, api, vehicle
+import time
 
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
+
+def set_creation(access):
+    access["created_at"] = time.time()
+    return access
+
+def expired(access):
+    """
+    Check if an access object's access token is expired
+    :param access: access object to check
+    """
+    return time.time() > access["created_at"] + access["expires_in"]
 
 class Smartcar(object):
     """
@@ -71,12 +83,13 @@ class Smartcar(object):
         """
         method = "POST"
         url = const.AUTH_URL
-        params = {
+        data = {
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
-        return requester.call(method, url, params=params, auth=self.auth)
+        response = requester.call(method, url, data=data, auth=self.auth)
+        return set_creation(response)
 
 
     def exchange_token(self, refresh_token):
@@ -89,11 +102,12 @@ class Smartcar(object):
         """
         method = "POST"
         url = const.AUTH_URL
-        params = {
+        data = {
             "grant_type": "refresh_token",
             "refresh_token": refresh_token
         }
-        return requester.call(method, url, params=params, auth=self.auth)
+        response = requester.call(method, url, data=data, auth=self.auth)
+        return set_creation(response)
 
     def get_vehicles(self, access_token, limit=10, offset=0):
         """
