@@ -1,6 +1,12 @@
 class SmartcarException(Exception):
     def __init__(self, response):
-        self.message = response.json()['message']
+        json = response.json()
+        if 'message' in json:
+            self.message = json['message']
+        elif 'error_description' in json:
+            self.message = json['error_description']
+        else:
+            self.message = 'Unknown error'
 
     def __str__(self):
         return self.message

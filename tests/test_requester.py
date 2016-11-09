@@ -7,11 +7,13 @@ class TestRequester(unittest.TestCase):
     EXPECTED = "expected"
     URL = "http://fake.url"
 
-    def queue(self, code):
+    def queue(self, code, **kwargs):
         """ queue up a fake response with the specified status code """
-        responses.add("GET", self.URL, status=code, json={
-            "message": self.EXPECTED
-        })
+        if not kwargs:
+            json = { "message": self.EXPECTED }
+        else: 
+            json = kwargs
+        responses.add("GET", self.URL, status=code, json=json)
 
     def check(self, exception):
         self.assertRaisesRegexp(exception, self.EXPECTED, 
@@ -23,6 +25,22 @@ class TestRequester(unittest.TestCase):
         smartcar.requester.call("GET", self.URL)
         agent = "smartcar-python-sdk:{}".format(smartcar.__version__)
         self.assertEqual(responses.calls[0].request.headers["User-Agent"], agent)
+
+    @responses.activate
+    def test_oauth_error(self):
+        self.queue(401, error_description="unauthorized")
+        try:
+            smartcar.requester.call("GET", self.URL)
+        except smartcar.AuthenticationException as err:
+            self.assertEqual(err.message, "unauthorized")
+
+    @responses.activate
+    def test_unknown_error(self):
+        self.queue(401, unknown_field="unknown error")
+        try:
+            smartcar.requester.call("GET", self.URL)
+        except smartcar.AuthenticationException as err:
+            self.assertEqual(err.message, "Unknown error")
 
     @responses.activate
     def test_400(self):
