@@ -11,8 +11,10 @@ class Api(object):
     def _format(self, endpoint):
         return "{}/{}/{}".format(const.API_URL, self.vehicle_id, endpoint)
 
-    def action(self, endpoint, action, **kwargs):
+    def action(self, endpoint, action, imperial=False, **kwargs):
         url = self._format(endpoint)
+        headers = self.auth
+        headers['unit-system'] = 'imperial' if imperial else 'metric'
         json = { "action": action }
         for k,v in kwargs.items():
             if v:
@@ -20,9 +22,11 @@ class Api(object):
 
         return requester.call('POST', url, json=json, headers=self.auth)
 
-    def get(self, endpoint):
+    def get(self, endpoint, imperial=False):
         url = self._format(endpoint)
-        return requester.call("GET", url, headers=self.auth)
+        headers = self.auth
+        headers['unit-system'] = 'imperial' if imperial else 'metric'
+        return requester.call("GET", url, headers=headers)
 
     def permissions(self, **params):
         url = self._format("permissions")

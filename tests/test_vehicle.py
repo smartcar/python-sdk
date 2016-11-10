@@ -39,6 +39,28 @@ class TestVehicle(unittest.TestCase):
             request_json = json.loads(request.body.decode('utf-8'))
             for k,v in kwargs.items():
                self.assertEqual(request_json[k], v)
+               
+    @responses.activate
+    def test_unit_system(self):
+        self.queue("GET", "accelerometer")
+        self.vehicle.accelerometer(imperial=True)
+        unit = responses.calls[0].request.headers['unit-system']
+        self.assertEqual(unit, 'imperial')
+
+        self.queue("GET", "accelerometer")
+        self.vehicle.accelerometer()
+        unit = responses.calls[1].request.headers['unit-system']
+        self.assertEqual(unit, 'metric')
+
+        self.queue("POST", "climate")
+        self.vehicle.start_climate(imperial=True)
+        unit = responses.calls[2].request.headers['unit-system']
+        self.assertEqual(unit, 'imperial')
+
+        self.queue("POST", "climate")
+        self.vehicle.start_climate()
+        unit = responses.calls[3].request.headers['unit-system']
+        self.assertEqual(unit, 'metric')
 
     @responses.activate
     def test_permission(self):
@@ -50,7 +72,7 @@ class TestVehicle(unittest.TestCase):
     def test_info(self):
         self.queue("GET", "")
         self.check(self.vehicle.info())
-    
+
     @responses.activate
     def test_accelerometer(self):
         self.queue("GET", "accelerometer")
