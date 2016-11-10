@@ -29,6 +29,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
     * If the user denies, the query field `code` will equal `"access_denied"`, so you should handle this somehow.
 
 * With your authentication code in hand, use `client.exchange_code(authentication_code)` to exchange your authentication code for an **access object**. This access object will look like this:
+
     ```python
     {
         "access_token": "...",
@@ -42,6 +43,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 * To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired, use `client.expired(access)`.
 
 * It was pretty hard getting that first access token, but from now on its easy! Calling `client.exchange_token(refresh_token)` will return a new access object using a previous access object's **refresh token**. This means you can always have a fresh access token, by doing something like this:
+
     ```python
     def get_fresh_access():
         access = load_access_from_database()
@@ -54,9 +56,11 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
     
     fresh_access_token = get_fresh_access()['access_token']
     ```
+
 * With your fresh access token in hand, use `client.get_vehicles(access_token)` to get a list of the user's vehicles. The response will look like this:
+
     ```python
-	{
+    {
 	  "vehicles": [
 		"uuid-of-first-vehicle",
 		...
@@ -68,6 +72,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 	  }
 	}  
     ```
+
 * Now with a **vehicle id** in hand, use `client.get_vehicle(access_token, vehicle_id)` to get a Vehicle object representing the user's vehicle.
 
 * Now you can ask the car to do things, or ask it for some data! For example:
@@ -76,6 +81,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
     vehicle = client.get_vehicle(access_token, vehicle_id)
     climate_on = vehicle.climate().get('isOn')
     ```
+
 * For a lot more examples on everything you can do with a car, see the [smartcar developer docs](https://developer.smartcar.com/docs)
 
 #### Handling Exceptions
