@@ -21,7 +21,7 @@ Before you can use this SDK, you need to know your application's **client id**, 
 
 Now that you have your id, secret and redirect URI, here's a simple overall idea of how to use the SDK to authenticate and make requests with the Smartcar API.
 
-* Create a new smartcar client with `smartcar.Smartcar(client_id, client_secret, redirect_uri, scope)`
+* Create a new smartcar client with `smartcar.Client(client_id, client_secret, redirect_uri, scope)`
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url(oem)`
 * The user will login, and then accept or deny the permissions in your `scope`
     * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(oem, force=True)` 

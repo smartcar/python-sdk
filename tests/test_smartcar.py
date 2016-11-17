@@ -22,7 +22,7 @@ class TestSmartcar(unittest.TestCase):
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
         self.scope = ["a", "b", "c"]
-        self.client = smartcar.Smartcar(self.client_id, self.client_secret, 
+        self.client = smartcar.Client(self.client_id, self.client_secret, 
                 self.redirect_uri, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)

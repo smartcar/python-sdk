@@ -17,7 +17,7 @@ def expired(access):
     """
     return time.time() > access["created_at"] + access["expires_in"]
 
-class Smartcar(object):
+class Client(object):
     """
     A client for accessing the Smartcar API
 
