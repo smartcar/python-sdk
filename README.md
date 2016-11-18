@@ -73,12 +73,12 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 	}  
     ```
 
-* Now with a **vehicle id** in hand, use `client.get_vehicle(access_token, vehicle_id)` to get a Vehicle object representing the user's vehicle.
+* Now with a **vehicle id** in hand, use `smartcar.Vehicle(access_token, vehicle_id)` to get a Vehicle object representing the user's vehicle.
 
 * Now you can ask the car to do things, or ask it for some data! For example:
 
     ```python
-    vehicle = client.get_vehicle(access_token, vehicle_id)
+    vehicle = smartcar.Vehicle(access_token, vehicle_id)
     climate_on = vehicle.climate().get('isOn')
     ```
 
