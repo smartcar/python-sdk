@@ -1,38 +1,44 @@
 from .api import Api
 
 class Vehicle(object):
-    def __init__(self, access_token, vehicle_id):
+    def __init__(self, access_token, vehicle_id, imperial=False):
         self.access_token = access_token
         self.vehicle_id = vehicle_id
         self.api = Api(access_token, vehicle_id)
+        self.api.set_unit('imperial' if imperial else 'metric')
+    def set_unit(self, unit):
+        if unit not in ('metric','imperial'):
+            raise ValueError("unit must be either metric or imperial")
+        else:
+            self.api.set_unit(unit)
     def permissions(self, limit=25, offset=0):
         return self.api.permissions(limit=limit, offset=offset) 
     def info(self):
         return self.api.get("")
-    def accelerometer(self, imperial=False):
-        return self.api.get("accelerometer", imperial=imperial)
+    def accelerometer(self):
+        return self.api.get("accelerometer")
     def airbags(self):
         return self.api.get("airbags")
-    def barometer(self, imperial=False):
-        return self.api.get("barometer", imperial=imperial)
-    def battery(self, imperial=False):
-        return self.api.get("battery", imperial=imperial)
+    def barometer(self):
+        return self.api.get("barometer")
+    def battery(self):
+        return self.api.get("battery")
     def charge(self):
         return self.api.get("charge")
     def charge_limit(self):
         return self.api.get("charge/limit")
     def charge_schedule(self):
         return self.api.get("charge/schedule")
-    def climate(self, imperial=False):
-        return self.api.get("climate", imperial=imperial)
+    def climate(self):
+        return self.api.get("climate")
     def collision_sensor(self):
         return self.api.get("collision_sensor")
     def compass(self):
         return self.api.get("compass")
-    def cruise_control(self, imperial=False):
-        return self.api.get("cruise_control", imperial=imperial)
-    def dimensions(self, imperial=False):
-        return self.api.get("dimension", imperial=imperial)
+    def cruise_control(self):
+        return self.api.get("cruise_control")
+    def dimensions(self):
+        return self.api.get("dimension")
     def doors(self):
         return self.api.get("doors")
     def safety_locks(self):
@@ -41,16 +47,16 @@ class Vehicle(object):
         return self.api.get("drive_mode")
     def engine(self):
         return self.api.get("engine")
-    def engine_coolant(self, imperial=False):
-        return self.api.get("engine/coolant", imperial=imperial)
+    def engine_coolant(self):
+        return self.api.get("engine/coolant")
     def engine_hood(self):
         return self.api.get("engine/hood")
-    def engine_oil(self, imperial=False):
-        return self.api.get("engine/oil", imperial=imperial)
+    def engine_oil(self):
+        return self.api.get("engine/oil")
     def engine_throttle(self):
         return self.api.get("engine/throttle")
-    def fuel(self, imperial=False):
-        return self.api.get("fuel", imperial=imperial)
+    def fuel(self):
+        return self.api.get("fuel")
     def hazard_light(self):
         return self.api.get("lights/hazard")
     def headlight(self):
@@ -59,14 +65,14 @@ class Vehicle(object):
         return self.api.get("lights/interior")
     def turn_indicator(self):
         return self.api.get("lights/turn_indicator")
-    def location(self, imperial=False):
-        return self.api.get("location", imperial=imperial)
+    def location(self):
+        return self.api.get("location")
     def mirrors(self):
         return self.api.get("mirrors")
-    def odometer(self, imperial=False):
-        return self.api.get("odometer", imperial=imperial)
-    def trip_odometers(self, imperial=False):
-        return self.api.get("odometer/trip", imperial=imperial)
+    def odometer(self):
+        return self.api.get("odometer")
+    def trip_odometers(self):
+        return self.api.get("odometer/trip")
     def accelerator_pedal(self):
         return self.api.get("pedals/accelerator")
     def brake_pedal(self):
@@ -79,22 +85,22 @@ class Vehicle(object):
         return self.api.get("security")
     def sli_battery(self):
         return self.api.get("sli_battery")
-    def speedometer(self, imperial=False):
-        return self.api.get("speedometer", imperial=imperial)
+    def speedometer(self):
+        return self.api.get("speedometer")
     def steering_wheel(self):
         return self.api.get("steering_wheel")
     def sunroof(self):
         return self.api.get("sunroof")
     def tachometer(self):
         return self.api.get("tachometer")
-    def temperature(self, imperial=False):
-        return self.api.get("temperature", imperial=imperial)
-    def tires(self, imperial=False):
-        return self.api.get("tires", imperial=imperial)
+    def temperature(self):
+        return self.api.get("temperature")
+    def tires(self):
+        return self.api.get("tires")
     def transmission(self):
         return self.api.get("transmission")
-    def transmission_fluid(self, imperial=False):
-        return self.api.get("transmission/fluid", imperial=imperial)
+    def transmission_fluid(self):
+        return self.api.get("transmission/fluid")
     def front_trunk(self):
         return self.api.get("trunks/front")
     def rear_trunk(self):
@@ -103,10 +109,10 @@ class Vehicle(object):
         return self.api.get("vin");
     def washer_fluid(self):
         return self.api.get("washer_fluid")
-    def wheels(self, imperial=False):
-        return self.api.get("wheels", imperial=imperial)
-    def wheel_speeds(self, imperial=False):
-        return self.api.get("wheels/speed", imperial=imperial)
+    def wheels(self):
+        return self.api.get("wheels")
+    def wheel_speeds(self):
+        return self.api.get("wheels/speed")
     def windows(self):
         return self.api.get("windows")
     def yaw(self):
@@ -127,9 +133,8 @@ class Vehicle(object):
         return self.api.action("charge/schedule", "ENABLE", startTime=startTime)
     def disable_charge_schedule(self):
         return self.api.action("charge/schedule", "DISABLE")
-    def start_climate(self, temperature=None, imperial=False):
-        return self.api.action("climate", "START", temperature=temperature, 
-            imperial=imperial)
+    def start_climate(self, temperature=None):
+        return self.api.action("climate", "START", temperature=temperature)
     def stop_climate(self):
         return self.api.action("climate", "STOP")
     def start_engine(self):

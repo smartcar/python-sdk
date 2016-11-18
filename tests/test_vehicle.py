@@ -43,23 +43,20 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_unit_system(self):
         self.queue("GET", "accelerometer")
-        self.vehicle.accelerometer(imperial=True)
-        unit = responses.calls[0].request.headers['unit-system']
-        self.assertEqual(unit, 'imperial')
-
-        self.queue("GET", "accelerometer")
         self.vehicle.accelerometer()
-        unit = responses.calls[1].request.headers['unit-system']
+        unit = responses.calls[0].request.headers['unit-system']
         self.assertEqual(unit, 'metric')
 
-        self.queue("POST", "climate")
-        self.vehicle.start_climate(imperial=True)
-        unit = responses.calls[2].request.headers['unit-system']
+        self.queue("GET", "accelerometer")
+        self.vehicle.set_unit('imperial')
+        self.vehicle.accelerometer()
+        unit = responses.calls[1].request.headers['unit-system']
         self.assertEqual(unit, 'imperial')
-
+        
         self.queue("POST", "climate")
+        self.vehicle.set_unit('metric')
         self.vehicle.start_climate()
-        unit = responses.calls[3].request.headers['unit-system']
+        unit = responses.calls[2].request.headers['unit-system']
         self.assertEqual(unit, 'metric')
 
     @responses.activate
