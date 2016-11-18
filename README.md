@@ -78,7 +78,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 * Now you can ask the car to do things, or ask it for some data! For example:
 
     ```python
-    vehicle = smartcar.Vehicle(access_token, vehicle_id)
+    vehicle = smartcar.Vehicle(vehicle_id, access_token)
     climate_on = vehicle.climate().get('isOn')
     ```
 
