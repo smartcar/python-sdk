@@ -1,9 +1,9 @@
 from .api import Api
 
 class Vehicle(object):
-    def __init__(self, access_token, vehicle_id):
-        self.access_token = access_token
+    def __init__(self, vehicle_id, access_token):
         self.vehicle_id = vehicle_id
+        self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
     def permissions(self, limit=25, offset=0):
         return self.api.permissions(limit=limit, offset=offset) 

@@ -73,7 +73,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 	}  
     ```
 
-* Now with a **vehicle id** in hand, use `smartcar.Vehicle(access_token, vehicle_id)` to get a Vehicle object representing the user's vehicle.
+* Now with a **vehicle id** in hand, use `smartcar.Vehicle(vehicle_id, access_token)` to get a Vehicle object representing the user's vehicle.
 
 * Now you can ask the car to do things, or ask it for some data! For example:
 
