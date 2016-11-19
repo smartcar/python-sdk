@@ -98,10 +98,3 @@ class TestSmartcar(unittest.TestCase):
         actual = self.client.get_vehicles(access_token, **query)
         self.assertEqual(actual, self.expected)
         self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
-
-    def test_get_vehicle(self):
-        access_token = "access_token"
-        vehicle_id = "vehicle_id"
-        actual = self.client.get_vehicle(access_token, vehicle_id)
-        self.assertEqual(actual.access_token, access_token)
-        self.assertEqual(actual.vehicle_id, vehicle_id)

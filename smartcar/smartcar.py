@@ -122,15 +122,3 @@ class Client(object):
 
         """
         return api.Api(access_token).vehicles(limit=limit, offset=offset)
-
-    def get_vehicle(self, access_token, vehicle_id):
-        """
-        Get a Vehicle object representing a user's vehicle
-
-        :param access_token: A valid access token from a previously retrieved
-            access object
-
-        :param vehicle_id: A vehicle's id
-
-        """
-        return vehicle.Vehicle(access_token, vehicle_id)
