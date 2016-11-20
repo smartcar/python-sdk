@@ -1,9 +1,9 @@
 from .api import Api
 
 class Vehicle(object):
-    def __init__(self, access_token, vehicle_id, imperial=False):
-        self.access_token = access_token
+    def __init__(self, vehicle_id, access_token, imperial=False):
         self.vehicle_id = vehicle_id
+        self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
         self.api.set_unit('imperial' if imperial else 'metric')
     def set_unit(self, unit):

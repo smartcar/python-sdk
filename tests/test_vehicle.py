@@ -7,7 +7,7 @@ class TestVehicle(unittest.TestCase):
     def setUp(self):
         self.access_token = "access_token"
         self.vehicle_id = "vehicle_id"
-        self.vehicle = smartcar.Vehicle(self.access_token, self.vehicle_id)
+        self.vehicle = smartcar.Vehicle(self.vehicle_id, self.access_token)
         self.auth = "Bearer " + self.access_token
         self.expected = { "key": "value" }
 
