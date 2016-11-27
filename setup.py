@@ -1,9 +1,11 @@
 from setuptools import setup
-from smartcar import __version__
-
+import re
+with open('smartcar/__init__.py','r') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        f.read(), re.MULTILINE).group(1)
 setup(
     name="smartcar",
-    version=__version__,
+    version=version,
     description="Smartcar Python SDK",
     author="Zane Bradley",
     author_email="zane@smartcar.com",
