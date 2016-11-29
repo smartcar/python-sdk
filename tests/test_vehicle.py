@@ -126,9 +126,9 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.cruise_control())
 
     @responses.activate
-    def test_dimensions(self):
+    def test_dimension(self):
         self.queue("GET", "dimension")
-        self.check(self.vehicle.dimensions())
+        self.check(self.vehicle.dimension())
 
     @responses.activate
     def test_doors(self):
