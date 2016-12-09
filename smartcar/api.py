@@ -18,7 +18,7 @@ class Api(object):
     def action(self, endpoint, action, **kwargs):
         url = self._format(endpoint)
         headers = self.auth
-        headers['unit-system'] = self.unit
+        headers['sc-unit-system'] = self.unit
         json = { "action": action }
         for k,v in kwargs.items():
             if v:
@@ -29,7 +29,7 @@ class Api(object):
     def get(self, endpoint):
         url = self._format(endpoint)
         headers = self.auth
-        headers['unit-system'] = self.unit
+        headers['sc-unit-system'] = self.unit
         return requester.call("GET", url, headers=headers)
 
     def permissions(self, **params):
