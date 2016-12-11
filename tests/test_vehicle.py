@@ -20,11 +20,11 @@ class TestVehicle(unittest.TestCase):
             )
             url += "?" + query_string
 
-        responses.add(method, url, 
+        responses.add(method, url,
                 json=self.expected, match_querystring=bool(query))
 
     def check(self, actual, **kwargs):
-        """ 
+        """
         test that the actual response equals the expected response,
         that the "Authorization" header is the correct bearer auth string,
         and that each key in the request body is correct.
@@ -39,29 +39,29 @@ class TestVehicle(unittest.TestCase):
             request_json = json.loads(request.body.decode('utf-8'))
             for k,v in kwargs.items():
                self.assertEqual(request_json[k], v)
-               
+
     @responses.activate
     def test_unit_system(self):
         self.queue("GET", "accelerometer")
         self.vehicle.accelerometer()
-        unit = responses.calls[0].request.headers['unit-system']
+        unit = responses.calls[0].request.headers['sc-unit-system']
         self.assertEqual(unit, 'metric')
 
         self.queue("GET", "accelerometer")
         self.vehicle.set_unit('imperial')
         self.vehicle.accelerometer()
-        unit = responses.calls[1].request.headers['unit-system']
+        unit = responses.calls[1].request.headers['sc-unit-system']
         self.assertEqual(unit, 'imperial')
-        
+
         self.queue("POST", "climate")
         self.vehicle.set_unit('metric')
         self.vehicle.start_climate()
-        unit = responses.calls[2].request.headers['unit-system']
+        unit = responses.calls[2].request.headers['sc-unit-system']
         self.assertEqual(unit, 'metric')
 
     @responses.activate
     def test_permission(self):
-        query = { "limit": 11, "offset": 1 } 
+        query = { "limit": 11, "offset": 1 }
         self.queue("GET", "permissions", query=query)
         self.check(self.vehicle.permissions(**query))
 
@@ -279,7 +279,7 @@ class TestVehicle(unittest.TestCase):
     def test_transmission(self):
         self.queue("GET", "transmission")
         self.check(self.vehicle.transmission())
-    
+
     @responses.activate
     def test_transmission_fluid(self):
         self.queue("GET", "transmission/fluid")
@@ -324,17 +324,17 @@ class TestVehicle(unittest.TestCase):
     def test_yaw(self):
         self.queue("GET", "yaw")
         self.check(self.vehicle.yaw())
-    
+
     @responses.activate
     def test_disconnect(self):
         self.queue("DELETE", "application")
         self.check(self.vehicle.disconnect())
-    
+
     @responses.activate
     def test_start_charging(self):
         self.queue("POST", "charge")
         self.check(self.vehicle.start_charging(), action="START")
-    
+
     @responses.activate
     def test_stop_charging(self):
         self.queue("POST", "charge")
@@ -441,7 +441,7 @@ class TestVehicle(unittest.TestCase):
                 "key": "value"
             }
         ]
-        self.check(self.vehicle.adjust_mirrors(mirrors), 
+        self.check(self.vehicle.adjust_mirrors(mirrors),
                 action="TILT", mirrors=mirrors)
 
     @responses.activate
@@ -508,7 +508,7 @@ class TestVehicle(unittest.TestCase):
     def test_close_front_trunk(self):
         self.queue("POST", "trunks/front")
         self.check(self.vehicle.close_front_trunk(), action="CLOSE")
-        
+
     @responses.activate
     def test_open_rear_trunk(self):
         self.queue("POST", "trunks/rear")
@@ -543,6 +543,6 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_unlock_windows(self):
         self.queue("POST", "windows")
-        windows = [ { "key": "value" } ]       
+        windows = [ { "key": "value" } ]
         self.check(self.vehicle.unlock_windows(windows), action="UNLOCK",
                 windows=windows)
