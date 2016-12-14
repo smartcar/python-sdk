@@ -1,25 +1,44 @@
-<html>
-  <head>
-    <title>Clean Car!</title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-  </head>
-  <body>
-    <div class='header'>
-      <h1>On Demand Car Cleaning</h1>
-    </div>
-    <div class="main">
-      <h2>Your Cars</h2>
-      {% for vehicle in vehicles %}
-        <div class="vehicle-row">
-          <p>{{ vehicle.info.make + " " + vehicle.info.model }}</p>
-          <p>{{ vehicle.location.latitude|string + ", " + vehicle.location.longitude|string }}
-          <form action="{{ url_for('schedule') }}" method="post">
-            <button type='submit' name='vehicle' value="{{ vehicle.info.id }}" >Schedule Clean!</button>
-          </form>
-        </div>
-      {% endfor %}
-    </div>
-    <div>
-    </div>
-  </body>
-</html>
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='style.css')}}">
+{% endblock %}
+{% block title %}Car Clean{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <a class="navbar-brand" href="#">Auto Cleaners</a>
+  <ul class="nav navbar-nav">
+   <li class="active"><a href="#">Our Product <span class="sr-only">(current)</span></a></li>
+   <li><a href="#">Pricing</a></li>
+ </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="jumbotron vehicles">
+    <h1>Your Cars</h1>
+  </div>
+  <div class="main-table-area">
+    <table class='table-striped'>
+      <tbody>
+        {% for vehicle in vehicles %}
+          <tr>
+            <td>{{ vehicle.info.make + " " + vehicle.info.model }}</td>
+            <td>{{ vehicle.location.latitude|string + ", " + vehicle.location.longitude|string }}</td>
+            <td>
+              <form action="{{ url_for('schedule') }}" method="post">
+                <button type='submit' name='vehicle' value="{{ vehicle.info.id }}" >Schedule Clean!</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+ </div>
+
+{% endblock %}

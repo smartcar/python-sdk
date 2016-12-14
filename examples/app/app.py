@@ -105,7 +105,7 @@ def schedule():
     in a real application. The important things to store are the vehicleId, the access token
     tied to it, and the refresh token in case our access token expires. If we have access to
     these at a later point, then we will be able to continue interacting with the car, i.e,
-    in this example we will later want to unlock the car to get into it and clean the car.
+    in this example we will later want to find and unlock the car to get into it and clean the car.
     """
     vehicleId = request.form['vehicle']
     # store the vehicle id and the codes needed to interact with it through smartcar

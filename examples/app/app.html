@@ -40,8 +40,20 @@ the&nbsp;proper&nbsp;method&nbsp;calls&nbsp;on&nbsp;the&nbsp;object.</tt></dd></
 with&nbsp;client.get_auth_url.&nbsp;It&nbsp;renders&nbsp;a&nbsp;page&nbsp;with&nbsp;a&nbsp;button&nbsp;that&nbsp;routes&nbsp;the&nbsp;user&nbsp;to&nbsp;this&nbsp;auth&nbsp;url,<br>
 where&nbsp;they&nbsp;will&nbsp;be&nbsp;prompted&nbsp;to&nbsp;authorize&nbsp;the&nbsp;application&nbsp;to&nbsp;access&nbsp;the&nbsp;permissions&nbsp;enumerated<br>
 in&nbsp;the&nbsp;scope&nbsp;array&nbsp;of&nbsp;our&nbsp;Smartcar&nbsp;initialization.</tt></dd></dl>
- <dl><dt><a name="-schedule"><strong>schedule</strong></a>()</dt></dl>
- <dl><dt><a name="-vehicles"><strong>vehicles</strong></a>()</dt></dl>
+ <dl><dt><a name="-schedule"><strong>schedule</strong></a>()</dt><dd><tt>user&nbsp;pressed&nbsp;button&nbsp;to&nbsp;schedule&nbsp;a&nbsp;clean&nbsp;for&nbsp;one&nbsp;of&nbsp;their&nbsp;cars,&nbsp;we&nbsp;would&nbsp;handle&nbsp;this<br>
+in&nbsp;a&nbsp;real&nbsp;application.&nbsp;The&nbsp;important&nbsp;things&nbsp;to&nbsp;store&nbsp;are&nbsp;the&nbsp;vehicleId,&nbsp;the&nbsp;access&nbsp;token<br>
+tied&nbsp;to&nbsp;it,&nbsp;and&nbsp;the&nbsp;refresh&nbsp;token&nbsp;in&nbsp;case&nbsp;our&nbsp;access&nbsp;token&nbsp;expires.&nbsp;If&nbsp;we&nbsp;have&nbsp;access&nbsp;to<br>
+these&nbsp;at&nbsp;a&nbsp;later&nbsp;point,&nbsp;then&nbsp;we&nbsp;will&nbsp;be&nbsp;able&nbsp;to&nbsp;continue&nbsp;interacting&nbsp;with&nbsp;the&nbsp;car,&nbsp;i.e,<br>
+in&nbsp;this&nbsp;example&nbsp;we&nbsp;will&nbsp;later&nbsp;want&nbsp;to&nbsp;find&nbsp;and&nbsp;unlock&nbsp;the&nbsp;car&nbsp;to&nbsp;get&nbsp;into&nbsp;it&nbsp;and&nbsp;clean&nbsp;the&nbsp;car.</tt></dd></dl>
+ <dl><dt><a name="-vehicles"><strong>vehicles</strong></a>()</dt><dd><tt>vehicles&nbsp;is&nbsp;called&nbsp;upon&nbsp;visiting&nbsp;/vehicles.&nbsp;It&nbsp;checks&nbsp;that&nbsp;there&nbsp;is&nbsp;an&nbsp;access<br>
+object,&nbsp;and&nbsp;if&nbsp;so&nbsp;checks&nbsp;if&nbsp;it&nbsp;is&nbsp;expired&nbsp;and&nbsp;gets&nbsp;a&nbsp;new&nbsp;one&nbsp;using&nbsp;the&nbsp;refresh_token<br>
+if&nbsp;so.<br>
+The&nbsp;function&nbsp;then&nbsp;calls&nbsp;client.get_vehicles(access_token)['vehicles']&nbsp;to<br>
+get&nbsp;all&nbsp;vehicles&nbsp;tied&nbsp;to&nbsp;this&nbsp;access&nbsp;token.&nbsp;Note&nbsp;that&nbsp;this&nbsp;will&nbsp;get&nbsp;all&nbsp;of&nbsp;the<br>
+associated&nbsp;user's&nbsp;vehicles&nbsp;of&nbsp;one&nbsp;specific&nbsp;make&nbsp;(in&nbsp;this&nbsp;case&nbsp;'Mock').&nbsp;A&nbsp;single&nbsp;user<br>
+may&nbsp;be&nbsp;associated&nbsp;with&nbsp;multiple&nbsp;access&nbsp;objects&nbsp;if&nbsp;they&nbsp;registered&nbsp;multiple<br>
+cars&nbsp;of&nbsp;different&nbsp;makes&nbsp;with&nbsp;our&nbsp;application.&nbsp;We&nbsp;then&nbsp;render&nbsp;a&nbsp;list&nbsp;of&nbsp;these<br>
+vehicles.</tt></dd></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
