@@ -2,6 +2,7 @@ html {
   height: 100%;
   width: 100%;
 }
+
 body {
   height: 100%;
   width: 100%;
@@ -11,16 +12,19 @@ body {
   margin: 0;
   padding-top: 50px;
 }
+
 .navbar {
   padding-left: 100px;
   padding-right: 100px;
   background-color: white;
 }
+
 .container {
   margin: 0px;
   padding: 0px;
   width: 100%;
 }
+
 .jumbotron.main{
     margin-bottom: 0px;
     background-image: url(./interior.jpg);
@@ -35,9 +39,13 @@ body {
   border: solid white;
   margin-bottom: 50px;
 }
+
 .jumbotron.vehicles {
   margin-bottom: 0px;
   background-color: #070657;
+}
+.vehicles h1 {
+  color: white;
 }
 
 .main-content {
@@ -51,6 +59,7 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   height: 600px;
 }
+
 .main-table-content {
   padding: 20px;
   display: flex;
@@ -60,31 +69,11 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
   height: 600px;
 }
-.vehicle-row {
-  display: flex;
-  height: 100px;
-  align-items: center;
-  justify-content: space-between;
-  width: 40%;
+
+h2 {
+  font-style: italic;
 }
 
-
-.vehicles h1 {
-  color: white;
-}
-
-button {
-  font-family: 'Archivo Narrow', sans-serif;
-  font-weight: bold;
-  font-size: 18px;
-  color: #333;
-  display: block;
-  padding: 10px 30px;
-  margin: 0 auto;
-  min-width: 200px;
-  position: relative;
-  z-index: 1;
-}
 table {
   width: 100%;
   padding: 30px;
@@ -100,6 +89,16 @@ td {
   padding: 30px;
   font-size: 16px;
 }
-h2 {
-  font-style: italic;
+
+button {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+  display: block;
+  padding: 10px 30px;
+  margin: 0 auto;
+  min-width: 200px;
+  position: relative;
+  z-index: 1;
 }

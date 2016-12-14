@@ -92,7 +92,6 @@ def vehicles():
   for vehicle_id in vehicle_ids:
     vehicles.append(smartcar.Vehicle(vehicle_id, access_token))
 
-  # vehicles = [smartcar.Vehicle(vehicle_id, access_token) for vehicle_id in vehicle_ids]
   vehicles[1].set_unit('imperial')
   data = [get_data(vehicle) for vehicle in vehicles]
   # return "<pre>" + json.dumps(data, indent=2) + "</pre>"
