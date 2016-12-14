@@ -1,0 +1,82 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding-top: 50px;
+}
+.header {
+  height: 20%;
+  width: 100%;
+  background-color: #E74C3C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+}
+.navbar {
+  padding-left: 100px;
+  padding-right: 100px;
+  background-color: white;
+}
+.header h1 {
+  color: white;
+  font-family: "Arial Black";
+}
+.main-content {
+  padding: 20px;
+  padding-left: 200px;
+  padding-right: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 600px;
+}
+
+.vehicle-row {
+  display: flex;
+  height: 100px;
+  align-items: center;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.jumbotron {
+    margin-bottom: 0px;
+    background-image: url(./interior.jpg);
+    background-position: 0% 25%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 400px;
+    color: white;
+    text-shadow: black 0.3em 0.3em 0.3em;
+}
+
+h1 {
+  border: solid white;
+  margin-bottom: 50px;
+}
+button {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+  display: block;
+  padding: 10px 30px;
+  margin: 0 auto;
+  min-width: 200px;
+  position: relative;
+  z-index: 1;
+}
