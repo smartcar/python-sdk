@@ -8,4 +8,4 @@ htmlcover/
 
 __pycache__/
 *.py[cod]
-
+**/flask

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module app</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>app</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/mnt/c/Users/robinjayaswal/Documents/GitHub/python-sdk/examples/app/app.py">/mnt/c/Users/robinjayaswal/Documents/GitHub/python-sdk/examples/app/app.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="smartcar.html">smartcar</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-callback"><strong>callback</strong></a>()</dt><dd><tt>In&nbsp;initializing&nbsp;our&nbsp;smartcar&nbsp;instance,&nbsp;we&nbsp;gave&nbsp;it&nbsp;'/callback'&nbsp;as&nbsp;the&nbsp;redirect_uri.<br>
+That&nbsp;means&nbsp;after&nbsp;our&nbsp;user&nbsp;goes&nbsp;to&nbsp;the&nbsp;authentication&nbsp;url&nbsp;and&nbsp;accepts&nbsp;(or&nbsp;rejects)<br>
+the&nbsp;app's&nbsp;permissions,&nbsp;Smartcar&nbsp;will&nbsp;redirect&nbsp;back&nbsp;to&nbsp;our&nbsp;site&nbsp;at&nbsp;'/callback'.<br>
+This&nbsp;function&nbsp;handles&nbsp;the&nbsp;authentication&nbsp;code&nbsp;recieved,&nbsp;and&nbsp;exchanges&nbsp;it&nbsp;for&nbsp;an<br>
+access&nbsp;object.&nbsp;It&nbsp;stores&nbsp;the&nbsp;access&nbsp;object,&nbsp;which&nbsp;we&nbsp;will&nbsp;now&nbsp;use&nbsp;in&nbsp;our<br>
+interactions&nbsp;with&nbsp;the&nbsp;smartcar&nbsp;SDK.&nbsp;We&nbsp;finish&nbsp;by&nbsp;redirecting&nbsp;to&nbsp;'/vehicles'</tt></dd></dl>
+ <dl><dt><a name="-get_data"><strong>get_data</strong></a>(vehicle)</dt><dd><tt>get_data&nbsp;takes&nbsp;a&nbsp;vehicle&nbsp;instance&nbsp;and&nbsp;returns&nbsp;an&nbsp;object<br>
+containing&nbsp;its&nbsp;info,&nbsp;vin,&nbsp;and&nbsp;location.&nbsp;It&nbsp;does&nbsp;so&nbsp;by&nbsp;making<br>
+the&nbsp;proper&nbsp;method&nbsp;calls&nbsp;on&nbsp;the&nbsp;object.</tt></dd></dl>
+ <dl><dt><a name="-homepage"><strong>homepage</strong></a>()</dt><dd><tt>This&nbsp;function&nbsp;uses&nbsp;the&nbsp;smartcar&nbsp;client&nbsp;to&nbsp;get&nbsp;the&nbsp;authentication&nbsp;url&nbsp;for&nbsp;the&nbsp;'Mock'&nbsp;OEM<br>
+with&nbsp;client.get_auth_url.&nbsp;It&nbsp;renders&nbsp;a&nbsp;page&nbsp;with&nbsp;a&nbsp;button&nbsp;that&nbsp;routes&nbsp;the&nbsp;user&nbsp;to&nbsp;this&nbsp;auth&nbsp;url,<br>
+where&nbsp;they&nbsp;will&nbsp;be&nbsp;prompted&nbsp;to&nbsp;authorize&nbsp;the&nbsp;application&nbsp;to&nbsp;access&nbsp;the&nbsp;permissions&nbsp;enumerated<br>
+in&nbsp;the&nbsp;scope&nbsp;array&nbsp;of&nbsp;our&nbsp;Smartcar&nbsp;initialization.</tt></dd></dl>
+ <dl><dt><a name="-schedule"><strong>schedule</strong></a>()</dt></dl>
+ <dl><dt><a name="-vehicles"><strong>vehicles</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__warningregistry__</strong> = {("Not importing directory './flask': missing __init__.py", &lt;type 'exceptions.ImportWarning'&gt;, 1): True}<br>
+<strong>app</strong> = &lt;Flask 'app'&gt;<br>
+<strong>client</strong> = &lt;smartcar.smartcar.Client object&gt;<br>
+<strong>db</strong> = {'vehicles_to_service': []}<br>
+<strong>request</strong> = &lt;LocalProxy unbound&gt;</td></tr></table>
+</body></html>
