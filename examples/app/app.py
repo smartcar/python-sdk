@@ -18,8 +18,8 @@ with Smartcar, and enumerates the permissions you will ask the user to authorize
 """
 
 client = smartcar.Client(
-  client_id='db714877-3755-43bf-9acd-6e14c040802d',
-  client_secret='d8a110a7-7525-4964-8da6-b76a8ed20934',
+  client_id='INSERT YOUR CLIENT ID HERE',
+  client_secret='INSERT YOUR CLIENT SECRET HERE',
   redirect_uri='http://localhost:4000/callback',
   scope=['read_vehicle_info', 'read_vin', 'read_security', 'control_security', 'read_location']
 )
