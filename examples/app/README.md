@@ -22,6 +22,12 @@ You will need your application's __client id__, __client secret__, and __redirec
 Begin by creating a new Flask app. For this example, we will use a very simple structure
 with just a main app.py file and a few templates and stylesheets.
 
+Begin by installing `Flask`:
+
+`pip install Flask`
+
+You can create a file called `app.py`, a folder called `static` and an app called `templates`.
+
 Now, to install the Python Smartcar SDK, run the following command:
 
 `pip install smartcar`
@@ -32,7 +38,7 @@ Now, to install the Python Smartcar SDK, run the following command:
 We begin by importing `smartcar` along with other needed things at the top of `app.py`, and
 initializing a Flask app:
 
-```
+```python
 from flask import Flask, request, redirect, render_template
 import smartcar   # smartcar sdk
 import json
@@ -44,7 +50,7 @@ Now, we will create a new Smartcar client. This is where you will need the __cli
 
 Continuing in `app.py`:
 
-```
+```python
 client = smartcar.Client(
   client_id='YOUR_APPLICATION_CLIENT_ID'
   client_secret='YOUR_APPLICATION_CLIENT_SECRET'
@@ -113,7 +119,7 @@ redirect back to. We specified 'localhost:4000/callback' as our URI when we crea
 the client at the top of `app.py`. We also whitelisted this as a URI for our app on smartcar.developer.com, which
 is necessary for it to allow redirecting here. So, we place in `app.py`:
 
-```
+```python
 @app.route('/callback')
 def callback():
   auth_code = request.args.get('code')
@@ -159,7 +165,7 @@ ______________________
 
 So, in our code we do the following:
 
-```
+```python
 @app.route('/vehicles')
 def vehicles():
   # ensure that there is an access token
@@ -174,7 +180,7 @@ def vehicles():
 Once we have confirmed the user has an access token, we can use it to get a list of their vehicles,
 and hence interact with these vehicles!
 
-```
+```python
   # get the access token from the access object. We pass this to all smartcar calls
   access_token = db['access']['access_token']
   vehicle_ids = client.get_vehicles(access_token)['vehicles'] # get list of vehicles this user has authorized
