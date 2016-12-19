@@ -37,7 +37,7 @@ class Vehicle(object):
         return self.api.get("compass")
     def cruise_control(self):
         return self.api.get("cruise_control")
-    def dimension(self):
+    def dimensions(self):
         return self.api.get("dimensions")
     def doors(self):
         return self.api.get("doors")
