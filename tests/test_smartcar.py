@@ -81,7 +81,7 @@ class TestSmartcar(unittest.TestCase):
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_code("code")
         self.assertIn("key", actual)
-        self.assertTrue(actual["created_at"] < time.time())
+        self.assertTrue(actual["expiration"] > time.time())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(request().headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(request().body, urlencode(body))
@@ -91,7 +91,6 @@ class TestSmartcar(unittest.TestCase):
         body = {
             "grant_type": "refresh_token",
             "refresh_token": "refresh_token",
-            "expires_in":7200
         }
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_token("refresh_token")
