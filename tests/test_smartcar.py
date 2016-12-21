@@ -36,6 +36,7 @@ class TestSmartcar(unittest.TestCase):
         hour = 3600
         access = smartcar.set_expiration(access)
         self.assertTrue(datetime.utcnow().isoformat() <= access["expiration"] < (datetime.utcnow() + timedelta(hours=2.5)).isoformat())
+
 	self.assertFalse(smartcar.expired(access["expiration"]))
 
         access["expiration"] = (datetime.utcnow() - timedelta(hours=2.1)).isoformat()
@@ -43,15 +44,6 @@ class TestSmartcar(unittest.TestCase):
         self.assertTrue(smartcar.expired(access["expiration"]))
 
 
-        # self.assertTrue(smartcar.expired({
-        #     "expires_in": hour,
-        #     "created_at": now - 2*hour
-        # }))
-        #
-        # self.assertFalse(smartcar.expired({
-        #     "expires_in": hour,
-        #     "created_at": now
-        # }))
 
     def test_get_auth_url(self):
         oem = "audi"
