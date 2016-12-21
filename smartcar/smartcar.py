@@ -91,7 +91,7 @@ class Client(object):
             "redirect_uri": self.redirect_uri,
         }
         response = requester.call(method, url, data=data, auth=self.auth)
-        return set_creation(response)
+        return set_expiration(response)
 
 
     def exchange_token(self, refresh_token):
@@ -109,7 +109,7 @@ class Client(object):
             "refresh_token": refresh_token
         }
         response = requester.call(method, url, data=data, auth=self.auth)
-        return set_creation(response)
+        return set_expiration(response)
 
     def get_vehicles(self, access_token, limit=10, offset=0):
         """
