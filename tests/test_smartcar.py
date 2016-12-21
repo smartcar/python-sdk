@@ -32,10 +32,11 @@ class TestSmartcar(unittest.TestCase):
     def test_expired(self):
         access = {"expires_in": 7200}
 
-        now = time.time()
-        hour = 3600
+        now = datetime.utcnow().isoformat()
+        two_hours_from_now = (datetime.utcnow() + timedelta(hours=2.5)).isoformat()
+
         access = smartcar.set_expiration(access)
-        self.assertTrue(datetime.utcnow().isoformat() <= access["expiration"] < (datetime.utcnow() + timedelta(hours=2.5)).isoformat())
+        self.assertTrue(now <= access["expiration"] < two_hours_from_now)
 
         self.assertFalse(smartcar.expired(access["expiration"]))
 
