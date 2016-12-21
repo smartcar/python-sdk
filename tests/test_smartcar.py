@@ -27,7 +27,7 @@ class TestSmartcar(unittest.TestCase):
                 self.redirect_uri, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
-        self.expected = {"key": "value"}
+        self.expected = {"key": "value", "expires_in":7200}
 
     def test_expired(self):
         access = {"expires_in": 7200}
@@ -90,12 +90,13 @@ class TestSmartcar(unittest.TestCase):
     def test_exchange_token(self):
         body = {
             "grant_type": "refresh_token",
-            "refresh_token": "refresh_token"
+            "refresh_token": "refresh_token",
+            "expires_in":7200
         }
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_token("refresh_token")
         self.assertIn("key", actual)
-        self.assertTrue(actual["created_at"] < time.time())
+        self.assertTrue(actual["expiration"] > time.time())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(request().headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(request().body, urlencode(body))
