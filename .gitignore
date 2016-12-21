@@ -9,3 +9,5 @@ htmlcover/
 __pycache__/
 *.py[cod]
 
+examples/app/request**
+examples/app/smartcar**

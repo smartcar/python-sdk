@@ -3,6 +3,7 @@ import responses
 import smartcar
 import base64
 import time
+from datetime import datetime, timedelta
 try:
     from urllib import urlencode
 except ImportError:
@@ -22,25 +23,35 @@ class TestSmartcar(unittest.TestCase):
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
         self.scope = ["a", "b", "c"]
-        self.client = smartcar.Client(self.client_id, self.client_secret, 
+        self.client = smartcar.Client(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
         self.expected = {"key": "value"}
 
     def test_expired(self):
+        access = {"expires_in": 7200}
+
         now = time.time()
         hour = 3600
+        access = smartcar.set_expiration(access)
 
-        self.assertTrue(smartcar.expired({
-            "expires_in": hour,
-            "created_at": now - 2*hour
-        }))
+        self.assertTrue(datetime.utcnow().isoformat() < access["expiration"] < (datetime.utcnow() + timedelta(hours=2.5)).isoformat())
 
-        self.assertFalse(smartcar.expired({
-            "expires_in": hour,
-            "created_at": now
-        }))
+        access["expiration"] = datetime.utcnow() - timedelta(hours=2)
+
+        self.assertTrue(smartcar.expired(access["expiration"]))
+
+
+        # self.assertTrue(smartcar.expired({
+        #     "expires_in": hour,
+        #     "created_at": now - 2*hour
+        # }))
+        #
+        # self.assertFalse(smartcar.expired({
+        #     "expires_in": hour,
+        #     "created_at": now
+        # }))
 
     def test_get_auth_url(self):
         oem = "audi"
@@ -74,7 +85,7 @@ class TestSmartcar(unittest.TestCase):
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(request().headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(request().body, urlencode(body))
-        
+
     @responses.activate
     def test_exchange_token(self):
         body = {

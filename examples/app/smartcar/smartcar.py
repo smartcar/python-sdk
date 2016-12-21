@@ -1,23 +1,21 @@
 from . import const, requester, api, vehicle
 import time
-from datetime import datetime, timedelta
+
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
 
-def set_expiration(access):
-    expire_date = datetime.utcnow() + timedelta(minutes=access["expires_in"])
-    access["expiration"] = expire_date.isoformat()
-    print access["expiration"]
+def set_creation(access):
+    access["created_at"] = time.time()
     return access
 
-def expired(expiration):
+def expired(access):
     """
     Check if an access object's access token is expired
     :param access: access object to check
     """
-    return datetime.utcnow().isoformat() > expiration
+    return time.time() > access["created_at"] + access["expires_in"]
 
 class Client(object):
     """
