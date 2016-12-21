@@ -10,4 +10,5 @@ __pycache__/
 *.py[cod]
 
 examples/app/request**
+examples/app/requests/**
 examples/app/smartcar**
