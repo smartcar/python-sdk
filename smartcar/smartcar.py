@@ -7,7 +7,8 @@ except ImportError:
     from urllib.parse import urlencode
 
 def set_expiration(access):
-    expire_date = datetime.utcnow() + timedelta(minutes=access["expires_in"])
+    print access["expires_in"]
+    expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
     access["expiration"] = expire_date.isoformat()
     print access["expiration"]
     return access
