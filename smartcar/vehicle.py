@@ -12,7 +12,7 @@ class Vehicle(object):
         else:
             self.api.set_unit(unit)
     def permissions(self, limit=25, offset=0):
-        return self.api.permissions(limit=limit, offset=offset) 
+        return self.api.permissions(limit=limit, offset=offset)
     def info(self):
         return self.api.get("")
     def accelerometer(self):
@@ -37,12 +37,12 @@ class Vehicle(object):
         return self.api.get("compass")
     def cruise_control(self):
         return self.api.get("cruise_control")
-    def dimension(self):
-        return self.api.get("dimension")
+    def dimensions(self):
+        return self.api.get("dimensions")
     def doors(self):
         return self.api.get("doors")
-    def safety_locks(self):
-        return self.api.get("doors/safety_locks")
+    def child_safety_locks(self):
+        return self.api.get("doors/child_safety_locks")
     def drive_mode(self):
         return self.api.get("drive_mode")
     def engine(self):
@@ -57,22 +57,26 @@ class Vehicle(object):
         return self.api.get("engine/throttle")
     def fuel(self):
         return self.api.get("fuel")
+    def gyroscope(self):
+        return self.api.get("gyroscope")
+    def ignition(self):
+        return self.api.get("ignition")
     def hazard_light(self):
         return self.api.get("lights/hazard")
-    def headlight(self):
-        return self.api.get("lights/headlight")
+    def headlights(self):
+        return self.api.get("lights/headlights")
     def interior_lights(self):
         return self.api.get("lights/interior")
     def turn_indicator(self):
         return self.api.get("lights/turn_indicator")
     def location(self):
         return self.api.get("location")
-    def mirrors(self):
-        return self.api.get("mirrors")
+    def side_view_mirrors(self):
+        return self.api.get("mirrors/side_view")
     def odometer(self):
         return self.api.get("odometer")
     def trip_odometers(self):
-        return self.api.get("odometer/trip")
+        return self.api.get("odometer/trips")
     def accelerator_pedal(self):
         return self.api.get("pedals/accelerator")
     def brake_pedal(self):
@@ -93,8 +97,10 @@ class Vehicle(object):
         return self.api.get("sunroof")
     def tachometer(self):
         return self.api.get("tachometer")
-    def temperature(self):
-        return self.api.get("temperature")
+    def interior_thermistor(self):
+        return self.api.get("thermistors/interior")
+    def exterior_thermistor(self):
+        return self.api.get("thermistors/exterior")
     def tires(self):
         return self.api.get("tires")
     def transmission(self):
@@ -112,12 +118,11 @@ class Vehicle(object):
     def wheels(self):
         return self.api.get("wheels")
     def wheel_speeds(self):
-        return self.api.get("wheels/speed")
+        return self.api.get("wheels/speeds")
     def windows(self):
         return self.api.get("windows")
-    def yaw(self):
-        return self.api.get("yaw")
-    
+
+
     # Actions
     def disconnect(self):
         return self.api.disconnect()
@@ -133,30 +138,32 @@ class Vehicle(object):
         return self.api.action("charge/schedule", "ENABLE", startTime=startTime)
     def disable_charge_schedule(self):
         return self.api.action("charge/schedule", "DISABLE")
+    def activate_safety_locks(self, child_safety_locks=None):
+        return self.api.action("doors/child_safety_locks", "LOCK", child_safety_locks=child_safety_locks)
+    def disable_safety_locks(self, child_safety_locks=None):
+        return self.api.action("doors/child_safety_locks", "UNLOCK", child_safety_locks=child_safety_locks)
     def start_climate(self, temperature=None):
         return self.api.action("climate", "START", temperature=temperature)
     def stop_climate(self):
         return self.api.action("climate", "STOP")
-    def start_engine(self):
-        return self.api.action("engine", "START")
-    def stop_engine(self):
-        return self.api.action("engine", "STOP")
-    def turn_engine_on(self):
-        return self.api.action("engine", "ON")
-    def turn_engine_ac1(self):
-        return self.api.action("engine", "ACCESSORY_1")
-    def turn_engine_ac2(self):
-        return self.api.action("engine", "ACCESSORY_2")
-    def open_hood(self):
+    def open_engine_hood(self):
         return self.api.action("engine/hood", "OPEN")
-    def close_hood(self):
+    def close_engine_hood(self):
         return self.api.action("engine/hood", "CLOSE")
+    def start_ignition(self):
+        return self.api.action("ignition", "START")
+    def set_ignition_on(self):
+        return self.api.action("ignition", "ON")
+    def set_ignition_accessory(self):
+        return self.api.action("ignition", "ACCESSORY")
+    def set_ignition_off(self):
+        return self.api.action("ignition", "OFF")
     def honk_horn(self):
         return self.api.action("horn", "HONK")
-    def flash_headlight(self):
-        return self.api.action("lights/headlight", "FLASH")
-    def adjust_mirrors(self, mirrors):
-        return self.api.action("mirrors", "TILT", mirrors=mirrors)
+    def flash_headlights(self, type=None):
+        return self.api.action("lights/headlights", "FLASH", type=type)
+    def tilt_sideview_mirrors(self, mirrors):
+        return self.api.action("mirrors/side_view", "TILT", mirrors=mirrors)
     def start_panic(self):
         return self.api.action("panic", "START")
     def stop_panic(self):

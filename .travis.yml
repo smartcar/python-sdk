@@ -7,8 +7,5 @@ python:
     - 'nightly'
 install:
     - pip install -r requirements.txt
-    - pip install coveralls
 script:
     make test args="--verbose"
-after_success:
-    coveralls

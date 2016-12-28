@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/smartcar/python-sdk.svg?token=NkidHDCxcdxrtMy48fzt&branch=master)](https://travis-ci.com/smartcar/python-sdk) [![Coverage Status](https://coveralls.io/repos/github/smartcar/python-sdk/badge.svg?branch=master&t=DF9pBr)](https://coveralls.io/github/smartcar/python-sdk?branch=master)
+[![Build Status](https://travis-ci.com/smartcar/python-sdk.svg?token=NkidHDCxcdxrtMy48fzt&branch=master)](https://travis-ci.com/smartcar/python-sdk) 
 # Smartcar Python SDK
 
 ### Installation
@@ -10,7 +10,7 @@
     make test
 
 ### Running verbose tests
-    
+
     make test args="--verbose"
 
 ### Getting Started
@@ -24,7 +24,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 * Create a new smartcar `client` with `smartcar.Client(client_id, client_secret, redirect_uri, scope)`
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url(oem)`
 * The user will login, and then accept or deny the permissions in your `scope`
-    * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(oem, force=True)` 
+    * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(oem, force=True)`
     * If the user accepts, they will be redirected to your `redirect_uri`. The query field `code` will contain an authentication code. This is *very* important, so save it for later.
     * If the user denies, the query field `code` will equal `"access_denied"`, so you should handle this somehow.
 
@@ -53,7 +53,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
             return new_access
         else:
             return access
-    
+
     fresh_access_token = get_fresh_access()['access_token']
     ```
 
@@ -86,9 +86,9 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 
 #### Handling Exceptions
 
-* Any time you make a request to the Smartcar API, something can go wrong. This means that you *really* should wrap each call to `client.exchange_code`, `client.exchange_token`, `client.get_vehicles`, and any vehicle method with some exception handling code. 
+* Any time you make a request to the Smartcar API, something can go wrong. This means that you *really* should wrap each call to `client.exchange_code`, `client.exchange_token`, `client.get_vehicles`, and any vehicle method with some exception handling code.
 
-* Fortunately for you, we've made this as easy as we can! Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle. 
+* Fortunately for you, we've made this as easy as we can! Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle.
 
 |status code|exception name|
 |:-----------:|--------------|
@@ -102,4 +102,3 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 |500|smartcar.ServerException|
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
-
