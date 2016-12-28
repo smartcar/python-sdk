@@ -1,0 +1,42 @@
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='style.css')}}">
+{% endblock %}
+{% block title %}Car Clean{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <a class="navbar-brand" href="#">Auto Cleaners</a>
+  <ul class="nav navbar-nav">
+   <li class="active"><a href="#">Our Product <span class="sr-only">(current)</span></a></li>
+   <li><a href="#">Pricing</a></li>
+ </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="jumbotron main">
+    <h1>Auto Cleaners</h1>
+    <a href="{{ client_auth_url }}"><button>Connect Your Car To Automated Cleaning</button></a>
+  </div>
+  <div class="main-content">
+    <h2>Wake Up to a Clean Car</h2>
+    <h3>What we do</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <h3>How We Do it</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+  </div>
+
+ </div>
+
+{% endblock %}
