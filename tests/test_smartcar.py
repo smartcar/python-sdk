@@ -3,6 +3,7 @@ import responses
 import smartcar
 import base64
 import time
+from datetime import datetime, timedelta
 try:
     from urllib import urlencode
 except ImportError:
@@ -22,25 +23,28 @@ class TestSmartcar(unittest.TestCase):
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
         self.scope = ["a", "b", "c"]
-        self.client = smartcar.Client(self.client_id, self.client_secret, 
+        self.client = smartcar.Client(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
-        self.expected = {"key": "value"}
+        self.expected = {"key": "value", "expires_in":7200}
 
     def test_expired(self):
-        now = time.time()
-        hour = 3600
+        access = {"expires_in": 7200}
 
-        self.assertTrue(smartcar.expired({
-            "expires_in": hour,
-            "created_at": now - 2*hour
-        }))
+        now = datetime.utcnow().isoformat()
+        two_hours_from_now = (datetime.utcnow() + timedelta(hours=2.5)).isoformat()
 
-        self.assertFalse(smartcar.expired({
-            "expires_in": hour,
-            "created_at": now
-        }))
+        access = smartcar.set_expiration(access)
+        self.assertTrue(now <= access["expiration"] < two_hours_from_now)
+
+        self.assertFalse(smartcar.expired(access["expiration"]))
+
+        access["expiration"] = (datetime.utcnow() - timedelta(hours=2.1)).isoformat()
+
+        self.assertTrue(smartcar.expired(access["expiration"]))
+
+
 
     def test_get_auth_url(self):
         oem = "audi"
@@ -70,11 +74,11 @@ class TestSmartcar(unittest.TestCase):
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_code("code")
         self.assertIn("key", actual)
-        self.assertTrue(actual["created_at"] < time.time())
+        self.assertTrue(actual["expiration"] > datetime.utcnow().isoformat())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(request().headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(request().body, urlencode(body))
-        
+
     @responses.activate
     def test_exchange_token(self):
         body = {
@@ -84,7 +88,7 @@ class TestSmartcar(unittest.TestCase):
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_token("refresh_token")
         self.assertIn("key", actual)
-        self.assertTrue(actual["created_at"] < time.time())
+        self.assertTrue(actual["expiration"] > datetime.utcnow().isoformat())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(request().headers["Content-Type"], "application/x-www-form-urlencoded")
         self.assertEqual(request().body, urlencode(body))
