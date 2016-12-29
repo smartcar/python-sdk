@@ -127,8 +127,8 @@ class TestVehicle(unittest.TestCase):
 
     @responses.activate
     def test_dimension(self):
-        self.queue("GET", "dimension")
-        self.check(self.vehicle.dimension())
+        self.queue("GET", "dimensions")
+        self.check(self.vehicle.dimensions())
 
     @responses.activate
     def test_doors(self):
@@ -136,9 +136,9 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.doors())
 
     @responses.activate
-    def test_safety_locks(self):
-        self.queue("GET", "doors/safety_locks")
-        self.check(self.vehicle.safety_locks())
+    def test_child_safety_locks(self):
+        self.queue("GET", "doors/child_safety_locks")
+        self.check(self.vehicle.child_safety_locks())
 
     @responses.activate
     def test_drive_mode(self):
@@ -176,14 +176,24 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.fuel())
 
     @responses.activate
+    def gyroscope(self):
+        self.queue("GET", "gyroscope")
+        self.check(self.vehicle.gyroscope())
+
+    @responses.activate
+    def ignition(self):
+        self.queue("GET", "ignition")
+        self.check(self.vehicle.ignition())
+
+    @responses.activate
     def test_hazard_light(self):
         self.queue("GET", "lights/hazard")
         self.check(self.vehicle.hazard_light())
 
     @responses.activate
-    def test_headlight(self):
-        self.queue("GET", "lights/headlight")
-        self.check(self.vehicle.headlight())
+    def test_headlights(self):
+        self.queue("GET", "lights/headlights")
+        self.check(self.vehicle.headlights())
 
     @responses.activate
     def test_interior_lights(self):
@@ -201,9 +211,9 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.location())
 
     @responses.activate
-    def test_mirrors(self):
-        self.queue("GET", "mirrors")
-        self.check(self.vehicle.mirrors())
+    def test_side_view_mirrors(self):
+        self.queue("GET", "mirrors/side_view")
+        self.check(self.vehicle.side_view_mirrors())
 
     @responses.activate
     def test_odometer(self):
@@ -212,7 +222,7 @@ class TestVehicle(unittest.TestCase):
 
     @responses.activate
     def test_trip_odometers(self):
-        self.queue("GET", "odometer/trip")
+        self.queue("GET", "odometer/trips")
         self.check(self.vehicle.trip_odometers())
 
     @responses.activate
@@ -266,10 +276,13 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.tachometer())
 
     @responses.activate
-    def test_temperature(self):
-        self.queue("GET", "temperature")
-        self.check(self.vehicle.temperature())
-
+    def test_interior_thermistor(self):
+        self.queue("GET", "thermistors/interior")
+        self.check(self.vehicle.interior_thermistor())
+    @responses.activate
+    def test_exterior_thermistor(self):
+        self.queue("GET", "thermistors/exterior")
+        self.check(self.vehicle.exterior_thermistor())
     @responses.activate
     def test_tires(self):
         self.queue("GET", "tires")
@@ -312,18 +325,13 @@ class TestVehicle(unittest.TestCase):
 
     @responses.activate
     def test_wheel_speeds(self):
-        self.queue("GET", "wheels/speed")
+        self.queue("GET", "wheels/speeds")
         self.check(self.vehicle.wheel_speeds())
 
     @responses.activate
     def test_windows(self):
         self.queue("GET", "windows")
         self.check(self.vehicle.windows())
-
-    @responses.activate
-    def test_yaw(self):
-        self.queue("GET", "yaw")
-        self.check(self.vehicle.yaw())
 
     @responses.activate
     def test_disconnect(self):
@@ -373,6 +381,16 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.disable_charge_schedule(), action="DISABLE")
 
     @responses.activate
+    def test_activate_child_safety_locks(self):
+        self.queue("POST", "doors/child_safety_locks")
+        self.check(self.vehicle.activate_safety_locks()) #TODO: What is a child_safety_locks object?
+
+    @responses.activate
+    def test_disable_child_safety_locks(self):
+        self.queue("POST", "doors/child_safety_locks")
+        self.check(self.vehicle.disable_safety_locks()) #TODO: What is a child_safety_locks object
+
+    @responses.activate
     def test_start_climate(self):
         self.queue("POST", "climate")
         self.check(self.vehicle.start_climate(), action="START")
@@ -389,39 +407,14 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.stop_climate(), action="STOP")
 
     @responses.activate
-    def test_start_engine(self):
-        self.queue("POST", "engine")
-        self.check(self.vehicle.start_engine(), action="START")
-
-    @responses.activate
-    def test_stop_engine(self):
-        self.queue("POST", "engine")
-        self.check(self.vehicle.stop_engine(), action="STOP")
-
-    @responses.activate
-    def test_turn_engine_on(self):
-        self.queue("POST", "engine")
-        self.check(self.vehicle.turn_engine_on(), action="ON")
-
-    @responses.activate
-    def test_turn_engine_ac1(self):
-        self.queue("POST", "engine")
-        self.check(self.vehicle.turn_engine_ac1(), action="ACCESSORY_1")
-
-    @responses.activate
-    def test_turn_engine_ac2(self):
-        self.queue("POST", "engine")
-        self.check(self.vehicle.turn_engine_ac2(), action="ACCESSORY_2")
-
-    @responses.activate
-    def test_open_hood(self):
+    def test_open_engine_hood(self):
         self.queue("POST", "engine/hood")
-        self.check(self.vehicle.open_hood(), action="OPEN")
+        self.check(self.vehicle.open_engine_hood(), action="OPEN")
 
     @responses.activate
-    def test_close_hood(self):
+    def test_close_engine_hood(self):
         self.queue("POST", "engine/hood")
-        self.check(self.vehicle.close_hood(), action="CLOSE")
+        self.check(self.vehicle.close_engine_hood(), action="CLOSE")
 
     @responses.activate
     def test_honk_horn(self):
@@ -429,19 +422,39 @@ class TestVehicle(unittest.TestCase):
         self.check(self.vehicle.honk_horn(), action="HONK")
 
     @responses.activate
-    def test_flash_headlight(self):
-        self.queue("POST", "lights/headlight")
-        self.check(self.vehicle.flash_headlight(), action="FLASH")
+    def test_start_ignition(self):
+        self.queue("POST", "ignition")
+        self.check(self.vehicle.start_ignition(), action="START")
 
     @responses.activate
-    def test_adjust_mirrors(self):
-        self.queue("POST", "mirrors")
+    def test_set_ignition_on(self):
+        self.queue("POST", "ignition")
+        self.check(self.vehicle.set_ignition_on(), action="ON")
+
+    @responses.activate
+    def test_set_ignition_accessory(self):
+        self.queue("POST", "ignition")
+        self.check(self.vehicle.set_ignition_accessory(), action="ACCESSORY")
+
+    @responses.activate
+    def test_set_ignition_off(self):
+        self.queue("POST", "ignition")
+        self.check(self.vehicle.set_ignition_off(), action="OFF")
+
+    @responses.activate
+    def test_flash_headlight(self):
+        self.queue("POST", "lights/headlights")
+        self.check(self.vehicle.flash_headlights(), action="FLASH")
+
+    @responses.activate
+    def test_tilt_sideview_mirrors(self):
+        self.queue("POST", "mirrors/side_view")
         mirrors = [
             {
                 "key": "value"
             }
         ]
-        self.check(self.vehicle.adjust_mirrors(mirrors),
+        self.check(self.vehicle.tilt_sideview_mirrors(mirrors),
                 action="TILT", mirrors=mirrors)
 
     @responses.activate

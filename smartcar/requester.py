@@ -10,7 +10,7 @@ def call(method, url, **kwargs):
     code = response.status_code
     if response.ok:
         return response.json()
-    elif code == 400: 
+    elif code == 400:
         raise E.ValidationException(response)
     elif code == 401:
         raise E.AuthenticationException(response)

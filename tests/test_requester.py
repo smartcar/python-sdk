@@ -11,12 +11,12 @@ class TestRequester(unittest.TestCase):
         """ queue up a fake response with the specified status code """
         if not kwargs:
             json = { "message": self.EXPECTED }
-        else: 
+        else:
             json = kwargs
         responses.add("GET", self.URL, status=code, json=json)
 
     def check(self, exception):
-        self.assertRaisesRegexp(exception, self.EXPECTED, 
+        self.assertRaisesRegexp(exception, self.EXPECTED,
             smartcar.requester.call, "GET", self.URL)
 
     @responses.activate

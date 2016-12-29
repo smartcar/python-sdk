@@ -1,21 +1,22 @@
 from . import const, requester, api, vehicle
 import time
-
+from datetime import datetime, timedelta
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
 
-def set_creation(access):
-    access["created_at"] = time.time()
+def set_expiration(access):
+    expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
+    access["expiration"] = expire_date.isoformat()
     return access
 
-def expired(access):
+def expired(expiration):
     """
-    Check if an access object's access token is expired
-    :param access: access object to check
+    Check if an expiration has is expired
+    :param expiration: ISO Date format string to check
     """
-    return time.time() > access["created_at"] + access["expires_in"]
+    return datetime.utcnow().isoformat() > expiration
 
 class Client(object):
     """
@@ -89,7 +90,7 @@ class Client(object):
             "redirect_uri": self.redirect_uri,
         }
         response = requester.call(method, url, data=data, auth=self.auth)
-        return set_creation(response)
+        return set_expiration(response)
 
 
     def exchange_token(self, refresh_token):
@@ -107,7 +108,7 @@ class Client(object):
             "refresh_token": refresh_token
         }
         response = requester.call(method, url, data=data, auth=self.auth)
-        return set_creation(response)
+        return set_expiration(response)
 
     def get_vehicles(self, access_token, limit=10, offset=0):
         """
