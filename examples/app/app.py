@@ -81,7 +81,7 @@ def vehicles():
   # ensure that there is an access token
   if not 'access' in db:
     return redirect('/')
-  if smartcar.expired(db['access']): # there is a token, but check if it is expired
+  if smartcar.expired(db['access']['expiration']): # there is a token, but check if it is expired
     db['access'] = client.exchange_token(db['access']['refresh_token']) # use our refresh token to obtain a new access object
 
   # get the access token from the access object. We pass this to all smartcar calls

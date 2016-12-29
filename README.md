@@ -43,14 +43,14 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 }
 ```
 
-* To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired, use `smartcar.expired(access)`.
+* To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired, use `smartcar.expired(access['expiration'])`.
 
 * It was pretty hard getting that first access token, but from now on it's easy! Calling `client.exchange_token(refresh_token)` will return a new access object using a previous access object's **refresh token**. This means you can always have a fresh access token, by doing something like this:
 
 ```python
 def get_fresh_access():
     access = load_access_from_database()
-    if smartcar.expired(access):
+    if smartcar.expired(access['expiration']):
         new_access = client.exchange_token(access['refresh_token'])
         put_access_into_database(new_access)
         return new_access
