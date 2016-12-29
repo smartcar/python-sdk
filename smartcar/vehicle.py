@@ -138,9 +138,9 @@ class Vehicle(object):
         return self.api.action("charge/schedule", "ENABLE", startTime=startTime)
     def disable_charge_schedule(self):
         return self.api.action("charge/schedule", "DISABLE")
-    def activate_safety_locks(self, child_safety_locks=None):
+    def activate_safety_locks(self, child_safety_locks):
         return self.api.action("doors/child_safety_locks", "LOCK", child_safety_locks=child_safety_locks)
-    def disable_safety_locks(self, child_safety_locks=None):
+    def disable_safety_locks(self, child_safety_locks):
         return self.api.action("doors/child_safety_locks", "UNLOCK", child_safety_locks=child_safety_locks)
     def start_climate(self, temperature=None):
         return self.api.action("climate", "START", temperature=temperature)
@@ -160,7 +160,7 @@ class Vehicle(object):
         return self.api.action("ignition", "OFF")
     def honk_horn(self):
         return self.api.action("horn", "HONK")
-    def flash_headlights(self, type=None):
+    def flash_headlights(self, type):
         return self.api.action("lights/headlights", "FLASH", type=type)
     def tilt_sideview_mirrors(self, mirrors):
         return self.api.action("mirrors/side_view", "TILT", mirrors=mirrors)
