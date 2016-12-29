@@ -383,12 +383,12 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_activate_child_safety_locks(self):
         self.queue("POST", "doors/child_safety_locks")
-        self.check(self.vehicle.activate_safety_locks()) #TODO: What is a child_safety_locks object?
+        self.check(self.vehicle.activate_safety_locks(["BACK_LEFT"])) #TODO: What is a child_safety_locks object?
 
     @responses.activate
     def test_disable_child_safety_locks(self):
         self.queue("POST", "doors/child_safety_locks")
-        self.check(self.vehicle.disable_safety_locks()) #TODO: What is a child_safety_locks object
+        self.check(self.vehicle.disable_safety_locks(["BACK_LEFT"])) #TODO: What is a child_safety_locks object
 
     @responses.activate
     def test_start_climate(self):
@@ -444,7 +444,7 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_flash_headlight(self):
         self.queue("POST", "lights/headlights")
-        self.check(self.vehicle.flash_headlights(), action="FLASH")
+        self.check(self.vehicle.flash_headlights("HIGH_BEAM"), action="FLASH")
 
     @responses.activate
     def test_tilt_sideview_mirrors(self):

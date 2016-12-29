@@ -107,4 +107,4 @@ climate_on = vehicle.climate().get('isOn')
 |504|smartcar.GatewayTimeoutException|
 
 [ci-url]: https://travis-ci.com/smartcar/python-sdk
-[ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=NkidHDCxcdxrtMy48fzt&branch=master
+[ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
