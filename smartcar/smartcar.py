@@ -67,13 +67,14 @@ class Client(object):
             "response_type": "code",
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
-            "approval_prompt": approval_prompt,
         }
         if state:
             query['state'] = state
 
         if self.scope:
             query['scope'] = " ".join(self.scope)
+
+        query['approval_prompt'] = approval_prompt
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
