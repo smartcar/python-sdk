@@ -68,14 +68,15 @@ class Client(object):
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
         }
-        if state:
-            query['state'] = state
 
         if self.scope:
             query['scope'] = " ".join(self.scope)
 
         query['approval_prompt'] = approval_prompt
 
+        if state:
+            query['state'] = state
+            
         return base_url + '/oauth/authorize?' + urlencode(query)
 
     def exchange_code(self, code):
