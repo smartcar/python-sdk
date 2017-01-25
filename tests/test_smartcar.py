@@ -53,8 +53,8 @@ class TestSmartcar(unittest.TestCase):
             "response_type": "code",
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
-            "scope": " ".join(self.scope),
             "approval_prompt": "force",
+            "scope": " ".join(self.scope),
             "state": "stuff"
         })
         expected = smartcar.const.OEMS.get(oem) + "/oauth/authorize?" + query
