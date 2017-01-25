@@ -37,7 +37,7 @@ class Client(object):
     .. _application dashboard: https://developer.smartcar.com
 
     """
-    def __init__(self, client_id, client_secret, redirect_uri, scope):
+    def __init__(self, client_id, client_secret, redirect_uri, scope=None):
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth=(client_id, client_secret)
@@ -67,9 +67,12 @@ class Client(object):
             "response_type": "code",
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
-            "scope": " ".join(self.scope),
-            "approval_prompt": approval_prompt,
+            "approval_prompt": approval_prompt
         }
+
+        if self.scope:
+            query['scope'] = " ".join(self.scope)
+
         if state:
             query['state'] = state
 
