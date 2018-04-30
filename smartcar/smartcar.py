@@ -1,4 +1,4 @@
-from . import const, requester, api, vehicle
+from . import api, const, requester, vehicle
 import time
 from datetime import datetime, timedelta
 try:
@@ -19,8 +19,17 @@ def expired(expiration):
     """
 
     return datetime.utcnow().isoformat() > expiration
+def get_vehicles(self, access_token, limit=10, offset=0):
+    """
+    Get a list of the user's vehicles
+    :param access_token: A valid access token from a previously retrieved
+        access object
+    :param limit: The number of vehicles to return
+    :param offset: The index to start the vehicle list at
+    """
+    return api.Api(access_token).vehicles(limit=limit, offset=offset)
 
-def getUserId(access_token):
+def get_user(access_token):
     """
     Retrieve the userId associated with the access_token
 
@@ -28,29 +37,7 @@ def getUserId(access_token):
     :return string containing the userId
     """
 
-    url = '{}/{}'.format(const.API_URL, 'user')
-    headers = {
-        'Authorization': 'Bearer {}'.format(access_token)
-    }
-    return requester.call('GET', url, headers=headers).id
-
-def getVehicleIds(access_token, limit=10, offset=0):
-    """
-    Retrieve all vehicle ids authorized to an access token
-
-    :param access_token Smartcar access token
-    :param limit count of items to return (max: 50)
-    :param offset offset from the start of the list to return
-
-    :return all vehicle ids authorized to an access token
-    """
-
-    url = '{}/{}'.format(const.API_URL, 'vehicles')
-    headers = {
-        'Authorization': 'Bearer {}'.format(access_token)
-    }
-    return requester.call('GET', url, headers=headers)
-
+    return api.Api(access_token).user().id
 
 class AuthClient(object):
     """

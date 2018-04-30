@@ -23,7 +23,7 @@ class TestSmartcar(unittest.TestCase):
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
         self.scope = ["a", "b", "c"]
-        self.client = smartcar.Client(self.client_id, self.client_secret,
+        self.client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
@@ -44,20 +44,19 @@ class TestSmartcar(unittest.TestCase):
 
         self.assertTrue(smartcar.expired(access["expiration"]))
 
-
-
     def test_get_auth_url(self):
         oem = "audi"
-        actual = self.client.get_auth_url(oem, force=True, state="stuff")
+        actual = self.client.get_auth_url(force=True, development=True, state="stuff")
         query = urlencode({
             "response_type": "code",
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
             "approval_prompt": "force",
             "scope": " ".join(self.scope),
-            "state": "stuff"
+            "state": "stuff",
+            "development": "true"
         })
-        expected = smartcar.const.OEMS.get(oem) + "/oauth/authorize?" + query
+        expected = smartcar.const.CONNECT_URL + "/oauth/authorize?" + query
         self.assertEqual(actual, expected)
 
     def test_auth_url_bad_oem(self):
@@ -86,7 +85,7 @@ class TestSmartcar(unittest.TestCase):
             "refresh_token": "refresh_token"
         }
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
-        actual = self.client.exchange_token("refresh_token")
+        actual = self.client.exchange_refresh_token("refresh_token")
         self.assertIn("key", actual)
         self.assertTrue(actual["expiration"] > datetime.utcnow().isoformat())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
