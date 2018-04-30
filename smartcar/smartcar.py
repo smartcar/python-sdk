@@ -19,7 +19,7 @@ def expired(expiration):
     """
 
     return datetime.utcnow().isoformat() > expiration
-def get_vehicles(self, access_token, limit=10, offset=0):
+def get_vehicles(access_token, limit=10, offset=0):
     """
     Get a list of the user's vehicles
     :param access_token: A valid access token from a previously retrieved
@@ -27,7 +27,8 @@ def get_vehicles(self, access_token, limit=10, offset=0):
     :param limit: The number of vehicles to return
     :param offset: The index to start the vehicle list at
     """
-    return api.Api(access_token).vehicles(limit=limit, offset=offset)
+
+    return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 def get_user(access_token):
     """
@@ -37,7 +38,7 @@ def get_user(access_token):
     :return string containing the userId
     """
 
-    return api.Api(access_token).user().id
+    return api.Api(access_token).user().json()['id']
 
 class AuthClient(object):
     """
@@ -90,7 +91,8 @@ class AuthClient(object):
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
-            'approval_prompt': approval_prompt
+            'approval_prompt': approval_prompt,
+            'development': development
         }
 
         if self.scope:

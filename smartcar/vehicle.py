@@ -6,7 +6,7 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
-        self.api.set_unit('imperial' if imperial else 'metric')
+        self.api.set_unit('imperial' if unit_system else 'metric')
         self.unit = 'metric' if unit_system == 'metric' else 'imperial'
 
     def info(self):
@@ -17,30 +17,32 @@ class Vehicle(object):
     def vin(self):
         response = self.api.get('vin')
 
-        return response.json().vin
+        print(response.json())
+
+        return response.json()['vin']
 
     def permissions(self):
         response = self.api.permissions()
-        return response.json().permissions
+        return response.json()['permissions']
 
     def disconnect(self):
         self.api.disconnect()
 
     def odometer(self):
-        reponse = self.api.get('odometer')
+        response = self.api.get('odometer')
 
         return {
-            data: response.json(),
-            unit: self.unit,
-            age: dateutil.parser.parse(response.headers['sc-data-age']),
+            'data': response.json(),
+            'unit': self.unit,
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 
     def location(self):
         response = self.api.get('location')
 
         return {
-            data: response.json(),
-            age: dateutil.parser.parse(response.headers['sc-data-age']),
+            'data': response.json(),
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 
     def unlock(self):

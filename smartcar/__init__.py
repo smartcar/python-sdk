@@ -1,6 +1,6 @@
 __version__ = '0.0.1'
 from .const import (API_VERSION, API_URL, AUTH_URL, UNIT_HEADER)
-from .smartcar import (AuthClient, expired, set_expiration, get_user_id, get_vehicle_ids)
+from .smartcar import (AuthClient, expired, set_expiration, get_user, get_vehicles)
 from .vehicle import Vehicle
 from .exceptions import (
     SmartcarException, ValidationException, AuthenticationException,
