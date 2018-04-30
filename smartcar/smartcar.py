@@ -8,17 +8,51 @@ except ImportError:
 
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
-    access["expiration"] = expire_date.isoformat()
+    access['expiration'] = expire_date.isoformat()
     return access
 
 def expired(expiration):
     """
     Check if an expiration has is expired
+
     :param expiration: ISO Date format string to check
     """
+
     return datetime.utcnow().isoformat() > expiration
 
-class Client(object):
+def getUserId(access_token):
+    """
+    Retrieve the userId associated with the access_token
+
+    :param access_token: Smartcar access token
+    :return string containing the userId
+    """
+
+    url = '{}/{}'.format(const.API_URL, 'user')
+    headers = {
+        'Authorization': 'Bearer {}'.format(access_token)
+    }
+    return requester.call('GET', url, headers=headers).id
+
+def getVehicleIds(access_token, limit=10, offset=0):
+    """
+    Retrieve all vehicle ids authorized to an access token
+
+    :param access_token Smartcar access token
+    :param limit count of items to return (max: 50)
+    :param offset offset from the start of the list to return
+
+    :return all vehicle ids authorized to an access token
+    """
+
+    url = '{}/{}'.format(const.API_URL, 'vehicles')
+    headers = {
+        'Authorization': 'Bearer {}'.format(access_token)
+    }
+    return requester.call('GET', url, headers=headers)
+
+
+class AuthClient(object):
     """
     A client for accessing the Smartcar API
 
@@ -44,34 +78,36 @@ class Client(object):
         self.redirect_uri = redirect_uri
         self.scope = scope
 
-    def get_auth_url(self, oem, force=False, state=None):
+    def get_auth_url(self, force=False, development=False, state=None):
         """
-        Generate an OAuth authentication URL for the specified OEM
-
-        :param str oem: The name of an oem
+        Generate an OAuth authentication URL
 
         :param boolean force: Set to True in order to force the approval dialog
             shown to the user
 
+        :param boolean development: Shows the mock OEM for testing, defaults to
+            false
+
         :param str state: A random string that will be passed back on redirect,
             this allows protection against cross-site forgery requests
 
+        :return authorization url
+        :rtype str
+
         """
 
-        base_url = const.OEMS.get(oem)
-        if not base_url:
-            raise ValueError("specified oem is not supported")
+        base_url = const.CONNECT_URL
 
-        approval_prompt = "force" if force else "auto"
+        approval_prompt = 'force' if force else 'auto'
         query = {
-            "response_type": "code",
-            "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri,
-            "approval_prompt": approval_prompt
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': approval_prompt
         }
 
         if self.scope:
-            query['scope'] = " ".join(self.scope)
+            query['scope'] = ' '.join(self.scope)
 
         if state:
             query['state'] = state
@@ -84,45 +120,37 @@ class Client(object):
 
         :param code: A valid authorization code
 
+        :return dict containing the access and refresh token
+        :rtype dict(str, str)
+
         """
-        method = "POST"
+        method = 'POST'
         url = const.AUTH_URL
         data = {
-            "grant_type": "authorization_code",
-            "code": code,
-            "redirect_uri": self.redirect_uri,
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': self.redirect_uri,
         }
         response = requester.call(method, url, data=data, auth=self.auth)
         return set_expiration(response)
 
 
-    def exchange_token(self, refresh_token):
+    def exchange_refresh_token(self, refresh_token):
         """
         Exchange a refresh token for a new access object
 
         :param refresh_token: A valid refresh token from a previously retrieved
             access object
 
+        :return dict containing access and refresh token
+        :rtype dict(str, str)
+
         """
-        method = "POST"
+        method = 'POST'
         url = const.AUTH_URL
         data = {
-            "grant_type": "refresh_token",
-            "refresh_token": refresh_token
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token
         }
         response = requester.call(method, url, data=data, auth=self.auth)
         return set_expiration(response)
-
-    def get_vehicles(self, access_token, limit=10, offset=0):
-        """
-        Get a list of the user's vehicles
-
-        :param access_token: A valid access token from a previously retrieved
-            access object
-
-        :param limit: The number of vehicles to return
-
-        :param offset: The index to start the vehicle list at
-
-        """
-        return api.Api(access_token).vehicles(limit=limit, offset=offset)
