@@ -6,8 +6,13 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
-        self.api.set_unit('imperial' if unit_system else 'metric')
-        self.unit = 'metric' if unit_system == 'metric' else 'imperial'
+        self.api.set_unit('metric' if unit_system == 'metric' else 'imperial')
+
+    def set_unit(self, unit):
+        if unit not in ('metric','imperial'):
+            raise ValueError("unit must be either metric or imperial")
+        else:
+            self.api.set_unit(unit)
 
     def info(self):
         response = self.api.get('')
@@ -17,12 +22,11 @@ class Vehicle(object):
     def vin(self):
         response = self.api.get('vin')
 
-        print(response.json())
-
         return response.json()['vin']
 
     def permissions(self):
         response = self.api.permissions()
+
         return response.json()['permissions']
 
     def disconnect(self):
@@ -33,7 +37,7 @@ class Vehicle(object):
 
         return {
             'data': response.json(),
-            'unit': self.unit,
+            'unit': self.api.unit,
             'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 

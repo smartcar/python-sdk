@@ -1,7 +1,10 @@
 import unittest
 import smartcar
+import requests
 import responses
 import json
+
+import dateutil.parser
 
 class TestVehicle(unittest.TestCase):
     def setUp(self):
@@ -9,6 +12,7 @@ class TestVehicle(unittest.TestCase):
         self.vehicle_id = 'vehicle_id'
         self.vehicle = smartcar.Vehicle(self.vehicle_id, self.access_token)
         self.auth = 'Bearer ' + self.access_token
+        self.date_time = '2018-04-30T22:28:52+00:00'
 
     def queue(self, method, endpoint, expected={ 'key': 'value' }, query=None):
         """ queue a mock response """
@@ -20,12 +24,13 @@ class TestVehicle(unittest.TestCase):
             url += '?' + query_string
 
         responses.add(method, url,
-                json=expected, match_querystring=bool(query))
+                json=expected,
+                match_querystring=bool(query),
+                headers={ 'sc-data-age': self.date_time})
 
-    def check(self, actual, expected={ 'key': 'value' }, **kwargs):
+    def check(self, actual, **kwargs):
         """
-        test that the actual response equals the expected response,
-        that the 'Authorization' header is the correct bearer auth string,
+        test that the 'Authorization' header is the correct bearer auth string,
         and that each key in the request body is correct.
         """
 
@@ -53,40 +58,75 @@ class TestVehicle(unittest.TestCase):
         unit = responses.calls[1].request.headers[smartcar.UNIT_HEADER]
         self.assertEqual(unit, 'imperial')
 
-        self.queue('POST', 'climate')
+        self.queue('POST', 'security')
         self.vehicle.set_unit('metric')
-        self.vehicle.start_climate()
+        self.vehicle.unlock()
         unit = responses.calls[2].request.headers[smartcar.UNIT_HEADER]
         self.assertEqual(unit, 'metric')
 
     @responses.activate
     def test_permission(self):
-        query = { 'limit': 11, 'offset': 1 }
-        self.queue('GET', 'permissions', query=query)
-        self.check(self.vehicle.permissions(**query))
+        data = {
+            "permissions": ["read_odometer"]
+        }
+
+        self.queue('GET', 'permissions', data)
+        response = self.vehicle.permissions()
+
+        self.check(response)
+        self.assertEqual(response, data['permissions'])
 
     @responses.activate
     def test_info(self):
-        self.queue('GET', '')
-        self.check(self.vehicle.info())
+        data = {
+          "id": "36ab27d0-fd9d-4455-823a-ce30af709ffc",
+          "make": "TESLA",
+          "model": "Model S",
+          "year": 2014
+        }
+
+        self.queue('GET', '', expected=data)
+        response = self.vehicle.info()
+
+        self.check(response)
+        self.assertEqual(response, data)
 
     @responses.activate
     def test_location(self):
-        self.queue('GET', 'location')
-        self.check(self.vehicle.location())
+        data = {
+            'latitude': 37.4292,
+            'longitude': 122.1381
+        }
+
+        self.queue('GET', 'location', expected=data)
+        response = self.vehicle.location()
+
+        self.check(response)
+        self.assertEqual(response['data'], data)
+        self.assertEqual(response['age'], dateutil.parser.parse(self.date_time))
 
     @responses.activate
     def test_odometer(self):
-        self.queue('GET', 'odometer')
-        self.check(self.vehicle.odometer())
+        data = {
+            'odometer': 1234
+        }
+
+        self.queue('GET', 'odometer', expected=data)
+        response = self.vehicle.odometer()
+
+        self.check(response)
+        self.assertEqual(response['data'], data)
+        self.assertEqual(response['unit'], 'metric')
+        self.assertEqual(response['age'], dateutil.parser.parse(self.date_time))
 
     @responses.activate
     def test_vin(self):
-        self.queue('GET', 'vin', expected={ 'vin': 'fakeVin'})
+        data = { 'vin': 'fakeVin'}
+        self.queue('GET', 'vin', expected=data)
 
         response = self.vehicle.vin()
-        self.check(response, expected={ 'vin': 'fakeVin'})
-        self.assertEqual(response, 'fakeVin')
+        self.check(response)
+        self.assertEqual(response, data['vin'])
 
     @responses.activate
     def test_disconnect(self):

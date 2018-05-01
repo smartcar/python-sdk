@@ -120,7 +120,7 @@ class AuthClient(object):
             'code': code,
             'redirect_uri': self.redirect_uri,
         }
-        response = requester.call(method, url, data=data, auth=self.auth)
+        response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
 
@@ -141,5 +141,5 @@ class AuthClient(object):
             'grant_type': 'refresh_token',
             'refresh_token': refresh_token
         }
-        response = requester.call(method, url, data=data, auth=self.auth)
+        response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
