@@ -26,7 +26,7 @@ class TestVehicle(unittest.TestCase):
         responses.add(method, url,
                 json=expected,
                 match_querystring=bool(query),
-                headers={ 'sc-data-age': self.date_time})
+                headers={ 'sc-data-age': self.date_time })
 
     def check(self, actual, **kwargs):
         """
@@ -116,7 +116,7 @@ class TestVehicle(unittest.TestCase):
 
         self.check(response)
         self.assertEqual(response['data'], data)
-        self.assertEqual(response['unit'], 'metric')
+        self.assertEqual(response['unit_system'], 'metric')
         self.assertEqual(response['age'], dateutil.parser.parse(self.date_time))
 
     @responses.activate

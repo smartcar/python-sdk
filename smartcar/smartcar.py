@@ -8,10 +8,12 @@ except ImportError:
 
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
+    refresh_expire_date = datetime.utcnow() + timedelta(days=60)
     access['expiration'] = expire_date.isoformat()
+    access['refresh_expiration'] = refresh_expire_date.isoformat()
     return access
 
-def expired(expiration):
+def is_expired(expiration):
     """
     Check if an expiration has is expired
 
@@ -19,7 +21,7 @@ def expired(expiration):
     """
 
     return datetime.utcnow().isoformat() > expiration
-def get_vehicles(access_token, limit=10, offset=0):
+def get_vehicle_ids(access_token, limit=10, offset=0):
     """
     Get a list of the user's vehicles
     :param access_token: A valid access token from a previously retrieved
@@ -30,7 +32,7 @@ def get_vehicles(access_token, limit=10, offset=0):
 
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
-def get_user(access_token):
+def get_user_id(access_token):
     """
     Retrieve the userId associated with the access_token
 

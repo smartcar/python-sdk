@@ -29,20 +29,20 @@ class TestSmartcar(unittest.TestCase):
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
         self.expected = {'key': 'value', 'expires_in':7200}
 
-    def test_expired(self):
+    def test_is_expired(self):
         access = {'expires_in': 7200}
 
         now = datetime.utcnow().isoformat()
         two_hours_from_now = (datetime.utcnow() + timedelta(hours=2.5)).isoformat()
 
-        access = smartcar.set_expiration(access)
+        access['expiration'] = (datetime.utcnow() + timedelta(seconds=access['expires_in'])).isoformat()
         self.assertTrue(now <= access['expiration'] < two_hours_from_now)
 
-        self.assertFalse(smartcar.expired(access['expiration']))
+        self.assertFalse(smartcar.is_expired(access['expiration']))
 
         access['expiration'] = (datetime.utcnow() - timedelta(hours=2.1)).isoformat()
 
-        self.assertTrue(smartcar.expired(access['expiration']))
+        self.assertTrue(smartcar.is_expired(access['expiration']))
 
     def test_get_auth_url(self):
         oem = 'audi'
@@ -70,6 +70,7 @@ class TestSmartcar(unittest.TestCase):
         actual = self.client.exchange_code('code')
         self.assertIn('key', actual)
         self.assertTrue(actual['expiration'] > datetime.utcnow().isoformat())
+        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow().isoformat())
         self.assertEqual(request().headers['Authorization'], self.basic_auth)
         self.assertEqual(request().headers['Content-Type'], 'application/x-www-form-urlencoded')
         self.assertEqual(request().body, urlencode(body))
@@ -84,16 +85,29 @@ class TestSmartcar(unittest.TestCase):
         actual = self.client.exchange_refresh_token('refresh_token')
         self.assertIn('key', actual)
         self.assertTrue(actual['expiration'] > datetime.utcnow().isoformat())
+        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow().isoformat())
         self.assertEqual(request().headers['Authorization'], self.basic_auth)
         self.assertEqual(request().headers['Content-Type'], 'application/x-www-form-urlencoded')
         self.assertEqual(request().body, urlencode(body))
 
     @responses.activate
-    def test_get_vehicles(self):
+    def test_get_vehicle_ids(self):
         query = { 'limit': 11, 'offset': 1 }
         access_token = 'access_token'
         url = smartcar.const.API_URL + '/vehicles?' + urlencode(query)
         responses.add('GET', url, json=self.expected, match_querystring=True)
-        actual = smartcar.get_vehicles(access_token, limit=query['limit'], offset=query['offset'])
+        actual = smartcar.get_vehicle_ids(access_token, limit=query['limit'], offset=query['offset'])
         self.assertEqual(actual, self.expected)
+        self.assertEqual(request().headers['Authorization'], 'Bearer ' + access_token)
+
+    @responses.activate
+    def test_get_user_id(self):
+        access_token = 'access_token'
+        data = {
+            'id': 'user_id',
+        }
+        url = smartcar.const.API_URL + '/user'
+        responses.add('GET', url, json=data)
+        actual = smartcar.get_user_id(access_token)
+        self.assertEqual(actual, data['id'])
         self.assertEqual(request().headers['Authorization'], 'Bearer ' + access_token)

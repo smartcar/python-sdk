@@ -37,7 +37,7 @@ class Vehicle(object):
 
         return {
             'data': response.json(),
-            'unit': self.api.unit,
+            'unit_system': self.api.unit,
             'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 
