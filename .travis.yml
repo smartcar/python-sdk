@@ -14,7 +14,6 @@ script:
 
   - make test args='--verbose'
 
-deploy:
   # create tag
   - git config --global user.email "ci@smartcar.com"
   - git config --global user.name "Travis CI User"
@@ -28,9 +27,11 @@ deploy:
     script: git push origin v$tag
     on:
       branch: master
+      python: 3.6
 
   - provider: pypi
     user: $PYPI_USERNAME
     password: $PYPI_PASSWORD
     on:
       branch: master
+      python: 3.6

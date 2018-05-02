@@ -14,18 +14,15 @@ def set_expiration(access):
     return access
 
 def is_expired(expiration):
-
     """ Check if an expiration is expired
 
     Args:
         expiration (str): ISO Date format string to check
 
     """
-
     return datetime.utcnow().isoformat() > expiration
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
-
     """ Get a list of the user's vehicle ids
 
     Args:
@@ -38,11 +35,9 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
         dict: response containing the list of vehicle ids and paging information
 
     """
-
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 def get_user_id(access_token):
-
     """ Retrieve the userId associated with the access_token
 
     Args:
@@ -52,13 +47,11 @@ def get_user_id(access_token):
         str: userId
 
     """
-
     return api.Api(access_token).user().json()['id']
 
 class AuthClient(object):
 
     def __init__(self, client_id, client_secret, redirect_uri, scope=None, development=False):
-
         """ A client for accessing the Smartcar API
 
         Args:
@@ -74,7 +67,6 @@ class AuthClient(object):
                 Defaults to False
 
         """
-
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth=(client_id, client_secret)
@@ -83,7 +75,6 @@ class AuthClient(object):
         self.development = development
 
     def get_auth_url(self, force=False, state=None):
-
         """ Generate an OAuth authentication URL
 
         Args:
@@ -97,7 +88,6 @@ class AuthClient(object):
             str: authorization url
 
         """
-
         base_url = const.CONNECT_URL
 
         approval_prompt = 'force' if force else 'auto'
@@ -118,7 +108,6 @@ class AuthClient(object):
         return base_url + '/oauth/authorize?' + urlencode(query)
 
     def exchange_code(self, code):
-
         """ Exchange an authentication code for an access dictionary
 
         Args:
@@ -140,7 +129,6 @@ class AuthClient(object):
 
 
     def exchange_refresh_token(self, refresh_token):
-
         """ Exchange a refresh token for a new access dictionary
 
         Args:

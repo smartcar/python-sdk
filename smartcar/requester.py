@@ -3,7 +3,6 @@ from . import exceptions as E
 from . import __version__
 
 def call(method, url, **kwargs):
-
     """ Attachs the kwargs into the headers, sends the request to the Smartcar API
         and handles all error cases
 
@@ -16,7 +15,6 @@ def call(method, url, **kwargs):
         dict: response from the request to the Smartcar API
 
     """
-    
     if not 'headers' in kwargs:
         kwargs['headers'] = {}
     kwargs['headers']['User-Agent'] = 'smartcar-python-sdk:{}'.format(__version__)
