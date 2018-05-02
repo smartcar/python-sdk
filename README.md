@@ -115,7 +115,7 @@ odometer = vehicle.odometer()['data']['odometer']
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
 
-## Authentication Configuration
+## AuthClient
 ### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, development=False)`
 #### Arguments:
 | Parameter       | Type | Description   |
@@ -145,7 +145,6 @@ odometer = vehicle.odometer()['data']['odometer']
 ```
 
 ### `exchange_code(code)`
-
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
@@ -156,9 +155,9 @@ odometer = vehicle.odometer()['data']['odometer']
 |:------------------------------- |:--------------------|
 | Dictionary                      | Dictionary containing the access and refresh token |
 | Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
-| Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
+| Dictionary.`expiration`         | A datetime of the expiration of the access_token |
 | Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.`refresh_expiration` | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
 ### `exchange_refresh_token(token)`
@@ -172,15 +171,69 @@ odometer = vehicle.odometer()['data']['odometer']
 |:------------------------------- |:--------------------|
 | Dictionary                      | Dictionary containing the access and refresh token |
 | Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
-| Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
+| Dictionary.`expiration`         | A datetime of the expiration of the access_token |
 | Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.`refresh_expiration` | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
-## Make Requests to a Vehicle
+## Vehicle
+
 After receiving an `access_token` from the Smartcar Auth flow, your application may make
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
+### `smartcar.Vehicle(self, vehicle_id, access_token, unit_system='metric')`
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---- |:------------- |
+| `vehicle_id`    | String | **Required** the vehicle's unique identifier |
+| `access_token`  | String | **Required** a valid access token |
+| `unit_system`   | String | **Optional** the unit system to use for vehicle data. Defaults to metric. |
+
+### `set_unit(self, unit)`
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---- |:------------- |
+| 'unit'          | String | the unit system to use (metric/imperial) |
+
+### `permissions(self)`
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| List[String]       | 	An array of permissions. |
+
+### `info(self)`
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's info |
+| Dictionary.`id`    | A vehicle ID (UUID v4). |
+| Dictionary.`make`  | The manufacturer of the vehicle. |
+| Dictionary.`model` | The model of the vehicle. |
+| Dictionary.`year`  | The model year. |
+
+### `vin(self)`
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| String             | The manufacturer unique identifier. |
+
+### `odometer(self)`
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's odometer  |
+| Dictionary.`data`.`odometer`  | vehicle's odometer  |
+| Dictionary.`unit_system` | the unit system of the odometer data |
+| Dictionary.'age'   | A datetime for the age of the data |
+
+### `disconnect(self)`
+
+### `unlock(self)`
+
+### `lock(self)`
 
 [ci-url]: https://travis-ci.com/smartcar/python-sdk
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master

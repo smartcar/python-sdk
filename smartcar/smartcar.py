@@ -9,8 +9,8 @@ except ImportError:
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
     refresh_expire_date = datetime.utcnow() + timedelta(days=60)
-    access['expiration'] = expire_date.isoformat()
-    access['refresh_expiration'] = refresh_expire_date.isoformat()
+    access['expiration'] = expire_date
+    access['refresh_expiration'] = refresh_expire_date
     return access
 
 def is_expired(expiration):
