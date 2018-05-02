@@ -17,12 +17,12 @@ def is_expired(expiration):
     """ Check if an expiration is expired
 
     Args:
-        expiration (str): ISO Date format string to check
+        expiration (datetime): expiration datetime
 
     Returns:
-    
+        bool: true if expired
     """
-    return datetime.utcnow().isoformat() > expiration
+    return datetime.utcnow() > expiration
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
     """ Get a list of the user's vehicle ids

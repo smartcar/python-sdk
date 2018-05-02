@@ -32,15 +32,15 @@ class TestSmartcar(unittest.TestCase):
     def test_is_expired(self):
         access = {'expires_in': 7200}
 
-        now = datetime.utcnow().isoformat()
-        two_hours_from_now = (datetime.utcnow() + timedelta(hours=2.5)).isoformat()
+        now = datetime.utcnow()
+        two_hours_from_now = (datetime.utcnow() + timedelta(hours=2.5))
 
-        access['expiration'] = (datetime.utcnow() + timedelta(seconds=access['expires_in'])).isoformat()
+        access['expiration'] = (datetime.utcnow() + timedelta(seconds=access['expires_in']))
         self.assertTrue(now <= access['expiration'] < two_hours_from_now)
 
         self.assertFalse(smartcar.is_expired(access['expiration']))
 
-        access['expiration'] = (datetime.utcnow() - timedelta(hours=2.1)).isoformat()
+        access['expiration'] = (datetime.utcnow() - timedelta(hours=2.1))
 
         self.assertTrue(smartcar.is_expired(access['expiration']))
 
@@ -69,8 +69,8 @@ class TestSmartcar(unittest.TestCase):
         responses.add('POST', smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_code('code')
         self.assertIn('key', actual)
-        self.assertTrue(actual['expiration'] > datetime.utcnow().isoformat())
-        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow().isoformat())
+        self.assertTrue(actual['expiration'] > datetime.utcnow())
+        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow())
         self.assertEqual(request().headers['Authorization'], self.basic_auth)
         self.assertEqual(request().headers['Content-Type'], 'application/x-www-form-urlencoded')
         self.assertEqual(request().body, urlencode(body))
@@ -84,8 +84,8 @@ class TestSmartcar(unittest.TestCase):
         responses.add('POST', smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_refresh_token('refresh_token')
         self.assertIn('key', actual)
-        self.assertTrue(actual['expiration'] > datetime.utcnow().isoformat())
-        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow().isoformat())
+        self.assertTrue(actual['expiration'] > datetime.utcnow())
+        self.assertTrue(actual['refresh_expiration'] > datetime.utcnow())
         self.assertEqual(request().headers['Authorization'], self.basic_auth)
         self.assertEqual(request().headers['Content-Type'], 'application/x-www-form-urlencoded')
         self.assertEqual(request().body, urlencode(body))

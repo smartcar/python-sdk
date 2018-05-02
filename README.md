@@ -215,7 +215,7 @@ Update the unit system to use in requests to the Smartcar API.
 
 ### `permissions(self)`
 
-GET Vehicle.permissions
+Returns a paged list of all permissions currently associated with this vehicle.
 
 #### Return
 | Type               | Description         |
@@ -224,7 +224,7 @@ GET Vehicle.permissions
 
 ### `info(self)`
 
-GET Vehicle.info
+Returns a single vehicle object, containing identifying information.
 
 #### Return
 | Type               | Description         |
@@ -237,7 +237,7 @@ GET Vehicle.info
 
 ### `vin(self)`
 
-GET Vehicle.vin
+Returns the vehicle's manufacturer identifier.
 
 #### Return
 | Type               | Description         |
@@ -246,7 +246,7 @@ GET Vehicle.vin
 
 ### `location(self)`
 
-GET Vehicle.location
+Returns the location of the vehicle in geographic coordinates.
 
 #### Return
 | Type               | Description         |
@@ -258,7 +258,7 @@ GET Vehicle.location
 
 ### `odometer(self)`
 
-GET Vehicle.odometer
+Returns the vehicle's current odometer reading.
 
 #### Return
 | Type               | Description         |
@@ -278,11 +278,11 @@ wish to make requests to it
 
 ### `unlock(self)`
 
-POST Vehicle.unlock
+Unlock the vehicle.
 
 ### `lock(self)`
 
-POST Vehicle.lock
+Lock the vehicle.
 
 ## Static Methods
 
@@ -293,7 +293,7 @@ Check if an expiration is expired
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---- |:------------- |
-| `expiration`    | String | **Required** ISO Date format string to check |
+| `expiration`    | DateTime | **Required** expiration datetime |
 
 #### Returns
 
