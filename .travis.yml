@@ -1,11 +1,37 @@
 language: python
+
 python:
-    - '2.7'
-    - '3.3'
-    - '3.4'
-    - '3.5'
-    - 'nightly'
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6'
+
 install:
-    - pip install -r requirements.txt
+
+  - pip install -e .[dev]
+
 script:
-    make test args="--verbose"
+
+  - make test args='--verbose'
+
+  # create tag
+  - git config --global user.email "ci@smartcar.com"
+  - git config --global user.name "Travis CI User"
+  - export tag=$(cat smartcar/__init__.py | grep '^__version__' | sed "s/^__version__[[:blank:]]*=[[:blank:]]'\(.*\)'/\1/g")
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then git tag -a v$spec -m "Travis Generated Tag"; fi
+
+deploy:
+
+  - provider: script
+    skip_cleanup: true
+    script: git push origin v$tag
+    on:
+      branch: master
+      python: 3.6
+
+  - provider: pypi
+    user: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
+    on:
+      branch: master
+      python: 3.6

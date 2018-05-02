@@ -3,7 +3,7 @@ examples/app/requests*
 examples/app/smartcar
 
 # Python
-env*/
+*env*/
 build/
 *.egg-info/
 .cache

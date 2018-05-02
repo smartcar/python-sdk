@@ -3,13 +3,26 @@ from . import exceptions as E
 from . import __version__
 
 def call(method, url, **kwargs):
+    """ Attachs the kwargs into the headers, sends the request to the Smartcar API
+        and handles all error cases
+
+    Args:
+        method (str): HTTP method
+        url (str): url of the request
+        **kwargs: parameters for the request
+
+    Returns:
+        dict: response from the request to the Smartcar API
+
+    """
     if not 'headers' in kwargs:
         kwargs['headers'] = {}
-    kwargs['headers']['User-Agent'] = "smartcar-python-sdk:{}".format(__version__)
+    kwargs['headers']['User-Agent'] = 'smartcar-python-sdk:{}'.format(__version__)
+
     response = requests.request(method, url, **kwargs)
     code = response.status_code
     if response.ok:
-        return response.json()
+        return response
     elif code == 400:
         raise E.ValidationException(response)
     elif code == 401:
