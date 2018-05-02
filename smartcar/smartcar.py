@@ -19,6 +19,8 @@ def is_expired(expiration):
     Args:
         expiration (str): ISO Date format string to check
 
+    Returns:
+    
     """
     return datetime.utcnow().isoformat() > expiration
 

@@ -116,7 +116,11 @@ odometer = vehicle.odometer()['data']['odometer']
 |504|smartcar.GatewayTimeoutException|
 
 ## AuthClient
+
 ### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, development=False)`
+
+A client for accessing the Smartcar API
+
 #### Arguments:
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
@@ -127,6 +131,8 @@ odometer = vehicle.odometer()['data']['odometer']
 | `development`   | Boolean |**Optional** Launch Smartcar auth in development mode to enable the mock vehicle brand. |
 
 ### `get_auth_url(self, force=False, state=None)`
+
+Generate an OAuth authentication URL
 
 #### Arguments
 | Parameter       | Type | Description   |
@@ -145,6 +151,9 @@ odometer = vehicle.odometer()['data']['odometer']
 ```
 
 ### `exchange_code(code)`
+
+Exchange an authentication code for an access dictionary
+
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
@@ -161,6 +170,9 @@ odometer = vehicle.odometer()['data']['odometer']
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
 ### `exchange_refresh_token(token)`
+
+Exchange a refresh token for a new access dictionary
+
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
@@ -182,6 +194,9 @@ After receiving an `access_token` from the Smartcar Auth flow, your application 
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 ### `smartcar.Vehicle(self, vehicle_id, access_token, unit_system='metric')`
+
+Initializes a new Vehicle to use for making requests to the Smartcar API.
+
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---- |:------------- |
@@ -190,6 +205,9 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 | `unit_system`   | String | **Optional** the unit system to use for vehicle data. Defaults to metric. |
 
 ### `set_unit(self, unit)`
+
+Update the unit system to use in requests to the Smartcar API.
+
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---- |:------------- |
@@ -197,12 +215,17 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 ### `permissions(self)`
 
+GET Vehicle.permissions
+
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
 | List[String]       | 	An array of permissions. |
 
 ### `info(self)`
+
+GET Vehicle.info
+
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
@@ -214,26 +237,102 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 ### `vin(self)`
 
+GET Vehicle.vin
+
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
 | String             | The manufacturer unique identifier. |
 
+### `location(self)`
+
+GET Vehicle.location
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's location  |
+| Dictionary.`data`.`latitude`  | The latitude (in degrees). |
+| Dictionary.`data`.`longitude` | The longitude (in degrees). |
+| Dictionary.`age`   | A datetime for the age of the data |
+
 ### `odometer(self)`
+
+GET Vehicle.odometer
 
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary         | vehicle's odometer  |
-| Dictionary.`data`.`odometer`  | vehicle's odometer  |
+| Dictionary.`data`.`odometer`  | The current odometer of the vehicle |
 | Dictionary.`unit_system` | the unit system of the odometer data |
 | Dictionary.`age`   | A datetime for the age of the data |
 
 ### `disconnect(self)`
 
+Disconnect this vehicle from the connected application.
+
+Note: Calling this method will invalidate your access token and you will
+have to have the user reauthorize the vehicle to your application if you
+wish to make requests to it
+
 ### `unlock(self)`
 
+POST Vehicle.unlock
+
 ### `lock(self)`
+
+POST Vehicle.lock
+
+## Static Methods
+
+### `smartcar.is_expired(expiration)`
+
+Check if an expiration is expired
+
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---- |:------------- |
+| `expiration`    | String | **Required** ISO Date format string to check |
+
+#### Returns
+
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Boolean            | true if expired     |
+
+### `smartcar.get_vehicle_ids(access_token, limit=10, offset=0)`
+
+Get a list of the user's vehicle ids
+
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---- |:------------- |
+| `access_token`    | String | **Required** A valid access token from a previously retrieved access object |
+| `limit`    | Integer | **Optional** The number of vehicle ids to return |
+| `offset`    | Integer | **Optional** The index to start the vehicle list at |
+
+#### Returns
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary            | response containing the list of vehicle ids and paging information  |
+| Dictionary.`vehicles` | An array of vehicle IDs. |
+| Dictionary.`paging`.`count` | The total number of elements for the entire query (not just the given page). |
+| Dictionary.`paging`.`offset` | The current start index of the returned list of elements. |
+
+### `smartcar.get_user_id(access_token)`
+
+ Retrieve the userId associated with the access_token
+
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---- |:------------- |
+| `access_token`    | String | **Required** A valid access token from a previously retrieved access object |
+
+#### Returns
+| Type               | Description         |
+|:------------------ |:--------------------|
+| String             | the user id |
 
 [ci-url]: https://travis-ci.com/smartcar/python-sdk
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
