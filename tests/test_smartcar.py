@@ -24,7 +24,7 @@ class TestSmartcar(unittest.TestCase):
         self.redirect_uri = 'https://redirect.uri'
         self.scope = ['a', 'b', 'c']
         self.client = smartcar.AuthClient(self.client_id, self.client_secret,
-                self.redirect_uri, self.scope)
+                self.redirect_uri, True, self.scope)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
         self.expected = {'key': 'value', 'expires_in':7200}
@@ -46,7 +46,7 @@ class TestSmartcar(unittest.TestCase):
 
     def test_get_auth_url(self):
         oem = 'audi'
-        actual = self.client.get_auth_url(force=True, development=True, state='stuff')
+        actual = self.client.get_auth_url(force=True, state='stuff')
         query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,

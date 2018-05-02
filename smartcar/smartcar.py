@@ -14,75 +14,80 @@ def set_expiration(access):
     return access
 
 def is_expired(expiration):
-    """
-    Check if an expiration has is expired
+    """ Check if an expiration is expired
 
-    :param expiration: ISO Date format string to check
+    Args:
+        expiration (str): ISO Date format string to check
+
     """
 
     return datetime.utcnow().isoformat() > expiration
+
 def get_vehicle_ids(access_token, limit=10, offset=0):
-    """
-    Get a list of the user's vehicles
-    :param access_token: A valid access token from a previously retrieved
-        access object
-    :param limit: The number of vehicles to return
-    :param offset: The index to start the vehicle list at
+    """ Get a list of the user's vehicle ids
+
+    Args:
+        access_token (str): A valid access token from a previously retrieved
+            access object
+        limit (integer, optional): The number of vehicle ids to return
+        offset (integer, optional): The index to start the vehicle list at
+
+    Returns:
+        dict: response containing the list of vehicle ids and paging information
+
     """
 
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 def get_user_id(access_token):
-    """
-    Retrieve the userId associated with the access_token
+    """ Retrieve the userId associated with the access_token
 
-    :param access_token: Smartcar access token
-    :return string containing the userId
+    Args:
+        access_token (str): Smartcar access token
+
+    Returns:
+        str: userId
+
     """
 
     return api.Api(access_token).user().json()['id']
 
 class AuthClient(object):
-    """
-    A client for accessing the Smartcar API
+    """ A client for accessing the Smartcar API
 
-    :param client_id: The application id, provided in the `application
-        dashboard`_
-
-    :param client_secret: The application secret, provided in the `application
-        dashboard`_
-
-    :param redirect_uri: The URL to redirect to after the user accepts
-        or declines the application's permissions. This URL must also be
-        present in the Redirect URIs field in the `application dashboard`_
-
-    :param scope: A list of permissions requested by the application
-
-    .. _application dashboard: https://developer.smartcar.com
+    Args:
+        client_id (str): The application id, provided in the application
+            dashboard
+        client_secret (str): The application secret, provided in the
+            application dashboard
+        redirect_uri (str): The URL to redirect to after the user accepts
+            or declines the application's permissions. This URL must also be
+            present in the Redirect URIs field in the application dashboard
+        scope (bool, optional): A list of permissions requested by the application
+        development (bool, optional): If True, deplays the Mock OEM for testing.
+            Defaults to False
 
     """
-    def __init__(self, client_id, client_secret, redirect_uri, scope=None):
+    def __init__(self, client_id, client_secret, redirect_uri, scope=None, development=False, ):
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth=(client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.scope = scope
+        self.development = development
 
-    def get_auth_url(self, force=False, development=False, state=None):
-        """
-        Generate an OAuth authentication URL
+    def get_auth_url(self, force=False, state=None):
+        """ Generate an OAuth authentication URL
 
-        :param boolean force: Set to True in order to force the approval dialog
-            shown to the user
+        Args:
+            force (bool, optional): Set to True in order to force the approval
+                dialog shown to the user. Defaults to False.
+            state (bool, optional): A random string that will be passed back on
+                redirect, this allows protection against cross-site forgery
+                requests. Defaults to None.
 
-        :param boolean development: Shows the mock OEM for testing, defaults to
-            false
-
-        :param str state: A random string that will be passed back on redirect,
-            this allows protection against cross-site forgery requests
-
-        :return authorization url
-        :rtype str
+        Returns:
+            str: authorization url
 
         """
 
@@ -94,7 +99,7 @@ class AuthClient(object):
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': approval_prompt,
-            'development': development
+            'development': self.development
         }
 
         if self.scope:
@@ -106,13 +111,13 @@ class AuthClient(object):
         return base_url + '/oauth/authorize?' + urlencode(query)
 
     def exchange_code(self, code):
-        """
-        Exchange an authentication code for an access object
+        """ Exchange an authentication code for an access dictionary
 
-        :param code: A valid authorization code
+        Args:
+            code (str): A valid authorization code
 
-        :return dict containing the access and refresh token
-        :rtype dict(str, str)
+        Returns:
+            dict: dict containing the access and refresh token
 
         """
         method = 'POST'
@@ -127,14 +132,14 @@ class AuthClient(object):
 
 
     def exchange_refresh_token(self, refresh_token):
-        """
-        Exchange a refresh token for a new access object
+        """ Exchange a refresh token for a new access dictionary
 
-        :param refresh_token: A valid refresh token from a previously retrieved
-            access object
+        Args:
+            refresh_token (str): A valid refresh token from a previously retrieved
+                access object
 
-        :return dict containing access and refresh token
-        :rtype dict(str, str)
+        Returns:
+            dict: dict containing access and refresh token
 
         """
         method = 'POST'
