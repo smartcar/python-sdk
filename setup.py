@@ -8,20 +8,20 @@ setup(
     version=version,
     description='Smartcar Python SDK',
     author='Smartcar',
-    author_email='hi@smartcar.com',
+    author_email='hello@smartcar.com',
     packages=['smartcar'],
     url='https://github.com/smartcar/python-sdk',
     license='MIT',
     install_requires=[
         'python-dateutil',
         'requests',
-        'responses',
     ],
-    extras_requires={
+    extras_require={
         'dev': [
             'coverage',
             'nose',
             'mock',
+            'responses',
         ]
     }
 )

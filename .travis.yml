@@ -8,7 +8,7 @@ python:
 
 install:
 
-  - python setup.py install
+  - pip install -e .[dev]
 
 script:
 
@@ -18,20 +18,19 @@ deploy:
   # create tag
   - git config --global user.email "ci@smartcar.com"
   - git config --global user.name "Travis CI User"
-  - export tag=$(cat SmartcarAuth.podspec | grep '^\s*s.version' | sed "s/[[:blank:]]*s.version[[:blank:]]*=[[:blank:]]*'\(.*\)'/\1/g")
+  - export tag=$(cat smartcar/__init__.py | grep '^__version__' | sed "s/^__version__[[:blank:]]*=[[:blank:]]'\(.*\)'/\1/g")
   - if [ "$TRAVIS_BRANCH" = "master" ]; then git tag -a v$spec -m "Travis Generated Tag"; fi
 
 deploy:
 
   - provider: script
     skip_cleanup: true
-    script: echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc && git push origin v$tag
+    script: git push origin v$tag
     on:
       branch: master
 
   - provider: pypi
-    user:
-    password:
-      secure:
+    user: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
     on:
-      tags: true
+      branch: master
