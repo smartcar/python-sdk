@@ -160,6 +160,5 @@ After receiving an `access_token` from the Smartcar Auth flow, your application 
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 
- 
--[ci-url]: https://travis-ci.com/smartcar/python-sdk
--[ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
+[ci-url]: https://travis-ci.com/smartcar/python-sdk
+[ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
