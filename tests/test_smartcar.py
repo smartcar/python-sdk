@@ -52,9 +52,9 @@ class TestSmartcar(unittest.TestCase):
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
+            'development': 'True',
             'scope': ' '.join(self.scope),
-            'state': 'stuff',
-            'development': 'True'
+            'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
         self.assertEqual(actual, expected)
