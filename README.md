@@ -45,8 +45,9 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 {
   "access_token": "...",
   "token_type": "Bearer",
-  "expires_in": 7200,
+  "expiration": "2018-05-02T18:04:25+00:00",
   "refresh_token": "...",
+  "refresh_expiration": "2018-06-02T18:03:25+00:00",
   "created_at": "..."
 }
 ```
@@ -90,10 +91,10 @@ fresh_access_token = get_fresh_access()['access_token']
 
 ```python
 vehicle = smartcar.Vehicle(vehicle_id, access_token)
-climate_on = vehicle.odometer()['data']['odometer']
+odometer = vehicle.odometer()['data']['odometer']
 ```
 
-* For a lot more examples on everything you can do with a car, see the [smartcar developer docs](https://developer.smartcar.com/docs)
+* For a lot more examples on everything you can do with a car, see the [smartcar developer docs](https://smartcar.com/docs)
 
 ## Handling Exceptions
 
@@ -114,5 +115,46 @@ climate_on = vehicle.odometer()['data']['odometer']
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
 
-[ci-url]: https://travis-ci.com/smartcar/python-sdk
-[ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
+## Authentication Configuration
+### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, development=False)`
+#### Options:
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
+| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
+| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://developer.smartcar.com/apps). Given URL must match URL in application settings. |
+| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs#get-all-vehicles). |
+| `development`   | Boolean |**Optional** Launch Smartcar auth in development mode to enable the mock vehicle brand. |
+
+### `get_auth_url(self, force=False, state=None)`
+##### Example
+```
+'https://connect.smartcar.com/oauth/authorize?response_type=token...'
+```
+
+#### Options
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `force`   | Boolean |**Optional** Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions. |
+| `state`         | String |**Optional** OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request. |
+
+### `exchange_code(code)`
+##### Example
+```
+'https://connect.smartcar.com/oauth/authorize?response_type=token...'
+```
+
+#### Options
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `code`         | String |Authorization code to exchange with Smartcar for an `access_token`. |
+
+### `exchange_refresh_token(token)`
+#### Options
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `token`         | String |Refresh token to exchange with Smartcar for an `access_token`. |
+
+## Make Requests to a Vehicle
+After receiving an `access_token` from the Smartcar Auth flow, your application may make
+requests to the vehicle using the `access_token` and the `Vehicle` class.

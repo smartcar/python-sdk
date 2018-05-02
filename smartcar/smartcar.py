@@ -14,6 +14,7 @@ def set_expiration(access):
     return access
 
 def is_expired(expiration):
+
     """ Check if an expiration is expired
 
     Args:
@@ -24,6 +25,7 @@ def is_expired(expiration):
     return datetime.utcnow().isoformat() > expiration
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
+
     """ Get a list of the user's vehicle ids
 
     Args:
@@ -40,6 +42,7 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 def get_user_id(access_token):
+
     """ Retrieve the userId associated with the access_token
 
     Args:
@@ -53,22 +56,25 @@ def get_user_id(access_token):
     return api.Api(access_token).user().json()['id']
 
 class AuthClient(object):
-    """ A client for accessing the Smartcar API
 
-    Args:
-        client_id (str): The application id, provided in the application
-            dashboard
-        client_secret (str): The application secret, provided in the
-            application dashboard
-        redirect_uri (str): The URL to redirect to after the user accepts
-            or declines the application's permissions. This URL must also be
-            present in the Redirect URIs field in the application dashboard
-        scope (bool, optional): A list of permissions requested by the application
-        development (bool, optional): If True, deplays the Mock OEM for testing.
-            Defaults to False
+    def __init__(self, client_id, client_secret, redirect_uri, scope=None, development=False):
 
-    """
-    def __init__(self, client_id, client_secret, redirect_uri, scope=None, development=False, ):
+        """ A client for accessing the Smartcar API
+
+        Args:
+            client_id (str): The application id, provided in the application
+                dashboard
+            client_secret (str): The application secret, provided in the
+                application dashboard
+            redirect_uri (str): The URL to redirect to after the user accepts
+                or declines the application's permissions. This URL must also be
+                present in the Redirect URIs field in the application dashboard
+            scope (bool, optional): A list of permissions requested by the application
+            development (bool, optional): If True, deplays the Mock OEM for testing.
+                Defaults to False
+
+        """
+
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth=(client_id, client_secret)
@@ -77,6 +83,7 @@ class AuthClient(object):
         self.development = development
 
     def get_auth_url(self, force=False, state=None):
+
         """ Generate an OAuth authentication URL
 
         Args:
@@ -111,6 +118,7 @@ class AuthClient(object):
         return base_url + '/oauth/authorize?' + urlencode(query)
 
     def exchange_code(self, code):
+
         """ Exchange an authentication code for an access dictionary
 
         Args:
@@ -132,6 +140,7 @@ class AuthClient(object):
 
 
     def exchange_refresh_token(self, refresh_token):
+
         """ Exchange a refresh token for a new access dictionary
 
         Args:

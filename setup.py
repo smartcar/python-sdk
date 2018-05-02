@@ -13,13 +13,15 @@ setup(
     url='https://github.com/smartcar/python-sdk',
     license='MIT',
     install_requires=[
-        'cookies',
-        'coverage',
-        'nose',
-        'mock',
         'python-dateutil',
         'requests',
         'responses',
-        'six'
-    ]
+    ],
+    extras_requires={
+        'dev': [
+            'coverage',
+            'nose',
+            'mock',
+        ]
+    }
 )
