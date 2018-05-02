@@ -193,7 +193,7 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---- |:------------- |
-| 'unit'          | String | the unit system to use (metric/imperial) |
+| `unit`          | String | the unit system to use (metric/imperial) |
 
 ### `permissions(self)`
 
@@ -227,7 +227,7 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 | Dictionary         | vehicle's odometer  |
 | Dictionary.`data`.`odometer`  | vehicle's odometer  |
 | Dictionary.`unit_system` | the unit system of the odometer data |
-| Dictionary.'age'   | A datetime for the age of the data |
+| Dictionary.`age`   | A datetime for the age of the data |
 
 ### `disconnect(self)`
 
