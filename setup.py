@@ -24,6 +24,7 @@ setup(
     version=_get_version(),
     description='Smartcar Python SDK',
     long_description=_get_long_description(),
+    long_description_content_type='text/markdown',
     author='Smartcar',
     author_email='hello@smartcar.com',
     packages=['smartcar'],

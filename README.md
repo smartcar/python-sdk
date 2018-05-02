@@ -1,4 +1,4 @@
-# Smartcar Python SDK [![Build Status][ci-image]][ci-url]
+# Smartcar Python SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
 
 ## Overview
 
@@ -336,3 +336,5 @@ Get a list of the user's vehicle ids
 
 [ci-url]: https://travis-ci.com/smartcar/python-sdk
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
+[pypi-url]: https://badge.fury.io/py/smartcar
+[pypi-image]: https://badge.fury.io/py/smartcar.svg
