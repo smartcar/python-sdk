@@ -24,7 +24,7 @@ class TestSmartcar(unittest.TestCase):
         self.redirect_uri = 'https://redirect.uri'
         self.scope = ['a', 'b', 'c']
         self.client = smartcar.AuthClient(self.client_id, self.client_secret,
-                self.redirect_uri, True, self.scope)
+                self.redirect_uri, self.scope, True)
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
         self.expected = {'key': 'value', 'expires_in':7200}
