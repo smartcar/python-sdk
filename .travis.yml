@@ -18,7 +18,7 @@ script:
   - git config --global user.email "ci@smartcar.com"
   - git config --global user.name "Travis CI User"
   - export tag=$(cat smartcar/__init__.py | grep '^__version__' | sed "s/^__version__[[:blank:]]*=[[:blank:]]'\(.*\)'/\1/g")
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then git tag -a v$spec -m "Travis Generated Tag"; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then git tag -a v$tag -m "Travis Generated Tag"; fi
 
 deploy:
 
