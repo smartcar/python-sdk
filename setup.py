@@ -1,12 +1,29 @@
 from setuptools import setup
 import re
-with open('smartcar/__init__.py','r') as f:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                        f.read(), re.MULTILINE).group(1)
+
+def _get_version():
+  """Extract version from package."""
+  with open('smartcar/__init__.py') as reader:
+    match = re.search(
+      r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+      reader.read(),
+      re.MULTILINE
+    )
+    if match:
+      return match.group(1)
+    else:
+      raise RuntimeError('Unable to extract version.')
+
+def _get_long_description():
+  """Get README contents."""
+  with open('README.md') as reader:
+    return reader.read()
+
 setup(
     name='smartcar',
-    version=version,
+    version=_get_version(),
     description='Smartcar Python SDK',
+    long_description=_get_long_description(),
     author='Smartcar',
     author_email='hello@smartcar.com',
     packages=['smartcar'],
