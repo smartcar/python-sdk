@@ -117,7 +117,7 @@ odometer = vehicle.odometer()['data']['odometer']
 
 ## Authentication Configuration
 ### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, development=False)`
-#### Options:
+#### Arguments:
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
@@ -127,33 +127,55 @@ odometer = vehicle.odometer()['data']['odometer']
 | `development`   | Boolean |**Optional** Launch Smartcar auth in development mode to enable the mock vehicle brand. |
 
 ### `get_auth_url(self, force=False, state=None)`
-##### Example
-```
-'https://connect.smartcar.com/oauth/authorize?response_type=token...'
-```
 
-#### Options
+#### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `force`   | Boolean |**Optional** Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions. |
 | `state`         | String |**Optional** OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request. |
 
-### `exchange_code(code)`
-##### Example
+#### Return
+| Type             | Description         |
+|:---------------- |:--------------------|
+| String           | Smartcar OAuth authentication URL |
+
+#### Example
 ```
 'https://connect.smartcar.com/oauth/authorize?response_type=token...'
 ```
 
-#### Options
+### `exchange_code(code)`
+
+#### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `code`         | String |Authorization code to exchange with Smartcar for an `access_token`. |
 
+#### Return
+| Type                            | Description         |
+|:------------------------------- |:--------------------|
+| Dictionary                      | Dictionary containing the access and refresh token |
+| Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
+| Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
+| Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| Dictionary.'refresh_expiration' | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
+
 ### `exchange_refresh_token(token)`
-#### Options
+#### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `token`         | String |Refresh token to exchange with Smartcar for an `access_token`. |
+
+#### Return
+| Type                            | Description         |
+|:------------------------------- |:--------------------|
+| Dictionary                      | Dictionary containing the access and refresh token |
+| Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
+| Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
+| Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| Dictionary.'refresh_expiration' | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
 ## Make Requests to a Vehicle
 After receiving an `access_token` from the Smartcar Auth flow, your application may make
