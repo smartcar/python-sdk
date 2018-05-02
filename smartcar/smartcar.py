@@ -1,7 +1,10 @@
 from . import api, const, requester, vehicle
 import time
 from datetime import datetime, timedelta
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
