@@ -158,7 +158,7 @@ odometer = vehicle.odometer()['data']['odometer']
 | Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
 | Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
 | Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.'refresh_expiration' | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`refresh_expiration` | ISO 8601 format String of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
 ### `exchange_refresh_token(token)`
@@ -174,7 +174,7 @@ odometer = vehicle.odometer()['data']['odometer']
 | Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API. |
 | Dictionary.`expiration`         | ISO 8601 format String of the expiration of the access_token |
 | Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.'refresh_expiration' | ISO 8601 format String of the expiration of the refresh_token |
+| Dictionary.`refresh_expiration` | ISO 8601 format String of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
 ## Make Requests to a Vehicle
