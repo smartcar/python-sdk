@@ -18,6 +18,7 @@ jobs:
   include:
     - stage: tag
       language: generic
+      # no install necessary for generic language
       install: false
       script:
         - git config --global user.email "ci@smartcar.com"
@@ -32,9 +33,13 @@ jobs:
           branch: master
 
     - stage: publish
-      language: generic
-      install: false
-      script: false
+      language: python
+      python:
+        - '3.6'
+      # use 'true' to noop the install and script stageswhich are required for
+      # the python language
+      install: true
+      script: true
       deploy:
         provider: pypi
         user: $PYPI_USERNAME
