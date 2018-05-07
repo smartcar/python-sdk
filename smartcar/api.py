@@ -14,16 +14,16 @@ class Api(object):
         self.auth = {
             'Authorization': 'Bearer {}'.format(access_token)
         }
-        self.unit = 'metric'
+        self.unit_system = 'metric'
 
-    def set_unit(self, unit):
+    def set_unit_system(self, unit_system):
         """ Update the unit system to use in requests to the Smartcar API.
 
         Args:
-            unit (str): the unit system to use (metric/imperial)
+            unit_system (str): the unit system to use (metric/imperial)
 
         """
-        self.unit = unit
+        self.unit_system = unit_system
 
     def _format(self, endpoint):
         """ Generates the formated URL
@@ -51,7 +51,7 @@ class Api(object):
         """
         url = self._format(endpoint)
         headers = self.auth
-        headers[const.UNIT_HEADER] = self.unit
+        headers[const.UNIT_SYSTEM_HEADER] = self.unit_system
         json = { 'action': action }
         for k,v in kwargs.items():
             if v:
@@ -71,7 +71,7 @@ class Api(object):
         """
         url = self._format(endpoint)
         headers = self.auth
-        headers[const.UNIT_HEADER] = self.unit
+        headers[const.UNIT_SYSTEM_HEADER] = self.unit_system
         return requester.call('GET', url, headers=headers)
 
     def permissions(self, **params):
