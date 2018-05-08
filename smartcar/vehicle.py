@@ -16,19 +16,19 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
-        self.api.set_unit('metric' if unit_system == 'metric' else 'imperial')
+        self.api.set_unit_system('metric' if unit_system == 'metric' else 'imperial')
 
-    def set_unit(self, unit):
+    def set_unit_system(self, unit_system):
         """ Update the unit system to use in requests to the Smartcar API.
 
         Args:
-            unit (str): the unit system to use (metric/imperial)
+            unit_system (str): the unit system to use (metric/imperial)
 
         """
-        if unit not in ('metric','imperial'):
+        if unit_system not in ('metric','imperial'):
             raise ValueError("unit must be either metric or imperial")
         else:
-            self.api.set_unit(unit)
+            self.api.set_unit_system(unit_system)
 
     def info(self):
         """ GET Vehicle.info
@@ -82,7 +82,7 @@ class Vehicle(object):
 
         return {
             'data': response.json(),
-            'unit_system': self.api.unit,
+            'unit_system': response.headers['sc-unit-system'],
             'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 

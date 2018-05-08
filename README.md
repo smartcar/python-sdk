@@ -204,14 +204,14 @@ Initializes a new Vehicle to use for making requests to the Smartcar API.
 | `access_token`  | String | **Required** a valid access token |
 | `unit_system`   | String | **Optional** the unit system to use for vehicle data. Defaults to metric. |
 
-### `set_unit(self, unit)`
+### `set_unit_system(self, unit_system)`
 
 Update the unit system to use in requests to the Smartcar API.
 
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---- |:------------- |
-| `unit`          | String | the unit system to use (metric/imperial) |
+| `unit_system`          | String | the unit system to use (metric/imperial) |
 
 ### `permissions(self)`
 

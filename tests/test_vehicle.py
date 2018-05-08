@@ -12,9 +12,8 @@ class TestVehicle(unittest.TestCase):
         self.vehicle_id = 'vehicle_id'
         self.vehicle = smartcar.Vehicle(self.vehicle_id, self.access_token)
         self.auth = 'Bearer ' + self.access_token
-        self.date_time = '2018-04-30T22:28:52+00:00'
 
-    def queue(self, method, endpoint, expected={ 'key': 'value' }, query=None):
+    def queue(self, method, endpoint, body=None, query=None, headers=None):
         """ queue a mock response """
         url = '/'.join((smartcar.const.API_URL, self.vehicle_id, endpoint))
         if query:
@@ -22,11 +21,15 @@ class TestVehicle(unittest.TestCase):
                 k + '=' + str(v) for k,v in query.items()
             )
             url += '?' + query_string
+        if not body:
+            body = {}
+        if not headers:
+            headers = {}
 
         responses.add(method, url,
-                json=expected,
+                json=body,
                 match_querystring=bool(query),
-                headers={ 'sc-data-age': self.date_time })
+                headers=headers)
 
     def check(self, actual, **kwargs):
         """
@@ -47,22 +50,25 @@ class TestVehicle(unittest.TestCase):
 
     @responses.activate
     def test_unit_system(self):
-        self.queue('GET', 'odometer')
+        age = '2018-04-30T22:28:52+00:00'
+        self.queue('GET', 'odometer', headers={
+            'sc-unit-system': 'metric',
+            'sc-data-age': age,
+        })
         self.vehicle.odometer()
-        unit = responses.calls[0].request.headers[smartcar.UNIT_HEADER]
-        self.assertEqual(unit, 'metric')
+        headers = responses.calls[0].request.headers
+        unit_system = headers['sc-unit-system']
+        self.assertEqual(unit_system, 'metric')
 
-        self.queue('GET', 'odometer')
-        self.vehicle.set_unit('imperial')
+        self.queue('GET', 'odometer', headers={
+            'sc-unit-system': 'imperial',
+            'sc-data-age': age,
+        })
+        self.vehicle.set_unit_system('imperial')
         self.vehicle.odometer()
-        unit = responses.calls[1].request.headers[smartcar.UNIT_HEADER]
-        self.assertEqual(unit, 'imperial')
-
-        self.queue('POST', 'security')
-        self.vehicle.set_unit('metric')
-        self.vehicle.unlock()
-        unit = responses.calls[2].request.headers[smartcar.UNIT_HEADER]
-        self.assertEqual(unit, 'metric')
+        headers = responses.calls[1].request.headers
+        unit_system = headers['sc-unit-system']
+        self.assertEqual(unit_system, 'imperial')
 
     @responses.activate
     def test_permission(self):
@@ -85,7 +91,7 @@ class TestVehicle(unittest.TestCase):
           "year": 2014
         }
 
-        self.queue('GET', '', expected=data)
+        self.queue('GET', '', body=data)
         response = self.vehicle.info()
 
         self.check(response)
@@ -98,12 +104,13 @@ class TestVehicle(unittest.TestCase):
             'longitude': 122.1381
         }
 
-        self.queue('GET', 'location', expected=data)
+        age = '2018-04-30T22:28:52+00:00'
+        self.queue('GET', 'location', body=data, headers={ 'sc-data-age': age })
         response = self.vehicle.location()
 
         self.check(response)
         self.assertEqual(response['data'], data)
-        self.assertEqual(response['age'], dateutil.parser.parse(self.date_time))
+        self.assertEqual(response['age'], dateutil.parser.parse(age))
 
     @responses.activate
     def test_odometer(self):
@@ -111,18 +118,22 @@ class TestVehicle(unittest.TestCase):
             'odometer': 1234
         }
 
-        self.queue('GET', 'odometer', expected=data)
+        age = '2018-04-30T22:28:52+00:00'
+        self.queue('GET', 'odometer', body=data, headers={
+            'sc-unit-system': 'metric',
+            'sc-data-age': age,
+        })
         response = self.vehicle.odometer()
 
         self.check(response)
         self.assertEqual(response['data'], data)
         self.assertEqual(response['unit_system'], 'metric')
-        self.assertEqual(response['age'], dateutil.parser.parse(self.date_time))
+        self.assertEqual(response['age'], dateutil.parser.parse(age))
 
     @responses.activate
     def test_vin(self):
         data = { 'vin': 'fakeVin'}
-        self.queue('GET', 'vin', expected=data)
+        self.queue('GET', 'vin', body=data)
 
         response = self.vehicle.vin()
         self.check(response)
