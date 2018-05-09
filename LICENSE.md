@@ -1,6 +1,6 @@
-The MIT License
+MIT License
 
-Copyright (c) 2016- Smartcar, Inc. (https://smartcar.com)
+Copyright (c) 2018 Smartcar, Inc. <hello@smartcar.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
