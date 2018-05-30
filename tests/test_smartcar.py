@@ -52,7 +52,7 @@ class TestSmartcar(unittest.TestCase):
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
-            'development': 'True',
+            'mock': 'true',
             'scope': ' '.join(self.scope),
             'state': 'stuff'
         })

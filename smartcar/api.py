@@ -35,7 +35,7 @@ class Api(object):
             str: formatted url
 
         """
-        return '{}/{}/{}'.format(const.API_URL, self.vehicle_id, endpoint)
+        return '{}/vehicles/{}/{}'.format(const.API_URL, self.vehicle_id, endpoint)
 
     def action(self, endpoint, action, **kwargs):
         """ Sends POST requests to Smartcar API

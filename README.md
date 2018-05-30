@@ -32,6 +32,7 @@ make test args="--verbose"
 
 Now that you have your id, secret and redirect URI, here's a simple overall idea of how to use the SDK to authenticate and make requests with the Smartcar API.
 
+* Import the sdk `import smartcar`
 * Create a new smartcar `client` with `smartcar.AuthClient(client_id, client_secret, redirect_uri, scope, development)`
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url()`
 * The user will login, and then accept or deny the permissions in your `scope`
@@ -69,7 +70,7 @@ def get_fresh_access():
 fresh_access_token = get_fresh_access()['access_token']
 ```
 
-* With your fresh access token in hand, use `client.get_vehicle_ids(access_token)` to get a list of the user's vehicles. The response will look like this:
+* With your fresh access token in hand, use `smartcar.get_vehicle_ids(access_token)` to get a list of the user's vehicles. The response will look like this:
 
 ```json
 {

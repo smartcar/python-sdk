@@ -15,7 +15,7 @@ class TestVehicle(unittest.TestCase):
 
     def queue(self, method, endpoint, body=None, query=None, headers=None):
         """ queue a mock response """
-        url = '/'.join((smartcar.const.API_URL, self.vehicle_id, endpoint))
+        url = '/'.join((smartcar.const.API_URL, 'vehicles', self.vehicle_id, endpoint))
         if query:
             query_string = '&'.join(
                 k + '=' + str(v) for k,v in query.items()

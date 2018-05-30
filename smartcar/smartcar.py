@@ -98,8 +98,10 @@ class AuthClient(object):
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': approval_prompt,
-            'development': self.development
         }
+
+        if self.development:
+            query['mock'] = 'true'
 
         if self.scope:
             query['scope'] = ' '.join(self.scope)
