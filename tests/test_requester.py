@@ -25,8 +25,10 @@ class TestRequester(unittest.TestCase):
     def test_user_agent(self):
         self.queue(200)
         smartcar.requester.call('GET', self.URL)
-        agent = 'smartcar-python-sdk:{}'.format(smartcar.__version__)
-        self.assertEqual(responses.calls[0].request.headers['User-Agent'], agent)
+        self.assertRegexpMatches(
+            responses.calls[0].request.headers['User-Agent'],
+            r'^Smartcar\/(\d+\.\d+\.\d+) \((\w+); (\w+)\) Python v(\d+\.\d+\.\d+)$'
+        )
 
     @responses.activate
     def test_oauth_error(self):
