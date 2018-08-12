@@ -10,8 +10,13 @@ install:
 
   - pip install -e .[dev]
 
+services:
+
+  - docker
+
 script:
 
+  - docker run --name selenium-container -d --net host -v /dev/shm:/dev/shm selenium/standalone-firefox
   - make test args='--verbose'
 
 jobs:
