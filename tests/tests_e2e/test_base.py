@@ -71,7 +71,8 @@ class TestBase(unittest.TestCase):
 
         cls.driver = webdriver.Remote(
             command_executor='http://127.0.0.1:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
+            desired_capabilities=DesiredCapabilities.CHROME,
+            keep_alive=True)
 
         auth_url = cls.client.get_auth_url()
 
