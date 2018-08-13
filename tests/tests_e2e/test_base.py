@@ -19,7 +19,7 @@ import smartcar
 class TestBase(unittest.TestCase):
 
     @classmethod
-    @retry(stop_max_attempt_number=10)
+    @retry
     def setUpClass(cls):
         def get_code(driver, auth_url):
             driver.get(auth_url)
