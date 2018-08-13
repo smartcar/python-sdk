@@ -92,7 +92,7 @@ fresh_access_token = get_fresh_access()['access_token']
 
 ```python
 vehicle = smartcar.Vehicle(vehicle_id, access_token)
-odometer = vehicle.odometer()['data']['odometer']
+odometer = vehicle.odometer()['data']['distance']
 ```
 
 * For a lot more examples on everything you can do with a car, see the [smartcar developer docs](https://smartcar.com/docs)

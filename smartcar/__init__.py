@@ -1,4 +1,5 @@
 __version__ = '1.0.9'
+
 from .smartcar import (AuthClient, is_expired, get_user_id, get_vehicle_ids)
 from .vehicle import Vehicle
 from .exceptions import (
