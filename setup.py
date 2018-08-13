@@ -41,6 +41,7 @@ setup(
             'mock',
             'responses',
             'selenium',
+            'retrying',
         ]
     }
 )
