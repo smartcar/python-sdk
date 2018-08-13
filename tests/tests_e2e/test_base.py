@@ -1,4 +1,3 @@
-import random
 from retrying import retry
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -6,8 +5,8 @@ import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import string
 import unittest
+import uuid
 try:
     import urlparse
 except BaseException:
@@ -31,11 +30,8 @@ class TestBase(unittest.TestCase):
                     "/html/body/div/a[starts-with(@href, 'https://mock.smartcar.com')]")))
             mock_smartcar_button.click()
 
-            username = ''.join(
-                random.choice(
-                    string.ascii_uppercase +
-                    string.ascii_lowercase) for _ in range(8))
-            username = username + '@mock.com'
+            username = uuid.uuid4()
+            username = str(username) + '@mock.com'
 
             approval_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, 'approval-button')))
