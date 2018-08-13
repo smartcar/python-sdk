@@ -2,6 +2,11 @@ import smartcar
 from test_base import TestBase
 import unittest
 
+# tests run in alphabetical order by default, however, we want
+# to run disconnect() last so we don't have to reauth again
+# the lambda function below sorts it in reverse alphabetical order
+unittest.TestLoader.sortTestMethodsUsing = lambda _, x, y: (y > x) - (y < x)
+
 
 class TestVehicleE2E(TestBase):
 
@@ -44,3 +49,7 @@ class TestVehicleE2E(TestBase):
     def test_unlock(self):
         unlock = self.vehicle.unlock()
         self.assertIsNone(unlock)
+
+    def test_disconnect(self):
+        disconnected = self.vehicle.disconnect()
+        self.assertIsNone(disconnected)

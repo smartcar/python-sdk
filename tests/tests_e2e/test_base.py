@@ -2,6 +2,7 @@ import random
 from retrying import retry
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -50,9 +51,9 @@ class TestBase(unittest.TestCase):
             parsed_url = urlparse.urlparse(url)
             return urlparse.parse_qs(parsed_url.query)['code'][0]
 
-        client_id = 'e922556a-7d4f-4168-88cd-059276044798'
-        client_secret = '79c07401-d3b2-48c0-8407-dc19c4ece7ff'
-        redirect_uri = 'http://localhost:4040/callback'
+        client_id = os.environ['INTEGRATION_CLIENT_ID']
+        client_secret = os.environ['INTEGRATION_CLIENT_SECRET']
+        redirect_uri = 'https://example.com/auth'
         scope = [
             'control_security:unlock',
             'control_security:lock',
