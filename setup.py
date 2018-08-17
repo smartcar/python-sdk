@@ -40,6 +40,8 @@ setup(
             'nose',
             'mock',
             'responses',
+            'selenium',
+            'retrying',
         ]
     }
 )
