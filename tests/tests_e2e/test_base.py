@@ -58,14 +58,14 @@ class TestBase(unittest.TestCase):
             'read_location',
             'read_odometer'
         ]
-        development = True
+        test_mode = True
 
         cls.client = smartcar.AuthClient(
             client_id,
             client_secret,
             redirect_uri,
             scope,
-            development
+            test_mode
         )
 
         cls.driver = webdriver.Remote(

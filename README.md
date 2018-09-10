@@ -33,7 +33,7 @@ make test args="--verbose"
 Now that you have your id, secret and redirect URI, here's a simple overall idea of how to use the SDK to authenticate and make requests with the Smartcar API.
 
 * Import the sdk `import smartcar`
-* Create a new smartcar `client` with `smartcar.AuthClient(client_id, client_secret, redirect_uri, scope, development)`
+* Create a new smartcar `client` with `smartcar.AuthClient(client_id, client_secret, redirect_uri, scope, test_mode)`
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url()`
 * The user will login, and then accept or deny the permissions in your `scope`
     * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(force=True)`
@@ -118,7 +118,7 @@ odometer = vehicle.odometer()['data']['distance']
 
 ## AuthClient
 
-### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, development=False)`
+### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, test_mode=False)`
 
 A client for accessing the Smartcar API
 
@@ -129,7 +129,7 @@ A client for accessing the Smartcar API
 | `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
 | `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://developer.smartcar.com/apps). Given URL must match URL in application settings. |
 | `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs#get-all-vehicles). |
-| `development`   | Boolean |**Optional** Launch Smartcar auth in development mode to enable the mock vehicle brand. |
+| `test_mode`   | Boolean |**Optional** Launch Smartcar auth in test mode to enable the mock vehicle brand. |
 
 ### `get_auth_url(self, force=False, state=None)`
 

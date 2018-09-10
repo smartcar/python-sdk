@@ -53,7 +53,7 @@ def get_user_id(access_token):
 
 class AuthClient(object):
 
-    def __init__(self, client_id, client_secret, redirect_uri, scope=None, development=False):
+    def __init__(self, client_id, client_secret, redirect_uri, scope=None, test_mode=False):
         """ A client for accessing the Smartcar API
 
         Args:
@@ -65,8 +65,8 @@ class AuthClient(object):
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
             scope (bool, optional): A list of permissions requested by the application
-            development (bool, optional): If True, deplays the Mock OEM for testing.
-                Defaults to False
+            test_mode (bool, optional): Launch smartcar auth flow in test mode. Defaults to false.
+              https://smartcar.com/docs#request-authorization
 
         """
         self.client_id = client_id
@@ -74,7 +74,7 @@ class AuthClient(object):
         self.auth=(client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.scope = scope
-        self.development = development
+        self.test_mode = test_mode
 
     def get_auth_url(self, force=False, state=None):
         """ Generate an OAuth authentication URL
@@ -100,8 +100,8 @@ class AuthClient(object):
             'approval_prompt': approval_prompt,
         }
 
-        if self.development:
-            query['mock'] = 'true'
+        if self.test_mode:
+            query['mode'] = 'test'
 
         if self.scope:
             query['scope'] = ' '.join(self.scope)
