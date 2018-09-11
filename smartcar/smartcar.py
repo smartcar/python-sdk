@@ -65,7 +65,7 @@ class AuthClient(object):
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
             scope (bool, optional): A list of permissions requested by the application
-            test_mode (bool, optional): Launch smartcar auth flow in test mode. Defaults to false.
+            test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
               https://smartcar.com/docs#request-authorization
 
         """
