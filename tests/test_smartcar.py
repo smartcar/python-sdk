@@ -44,21 +44,6 @@ class TestSmartcar(unittest.TestCase):
 
         self.assertTrue(smartcar.is_expired(access['expiration']))
 
-    def test_get_auth_url_test_mode(self):
-        oem = 'audi'
-        actual = self.client.get_auth_url(force=True, state='stuff')
-        query = urlencode({
-            'response_type': 'code',
-            'client_id': self.client_id,
-            'redirect_uri': self.redirect_uri,
-            'approval_prompt': 'force',
-            'mode': 'test',
-            'scope': ' '.join(self.scope),
-            'state': 'stuff'
-        })
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
-
     def test_get_auth_url(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, test_mode=False)
@@ -68,6 +53,21 @@ class TestSmartcar(unittest.TestCase):
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff'
+        })
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+        self.assertEqual(actual, expected)
+
+    def test_get_auth_url_test_mode(self):
+        oem = 'audi'
+        actual = self.client.get_auth_url(force=True, state='stuff')
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'mode': 'test',
             'scope': ' '.join(self.scope),
             'state': 'stuff'
         })
