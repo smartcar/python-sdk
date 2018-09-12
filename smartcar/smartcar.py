@@ -53,7 +53,7 @@ def get_user_id(access_token):
 
 class AuthClient(object):
 
-    def __init__(self, client_id, client_secret, redirect_uri, scope=None, test_mode=False):
+    def __init__(self, client_id, client_secret, redirect_uri, scope=None, test_mode=None, development=None):
         """ A client for accessing the Smartcar API
 
         Args:
@@ -66,7 +66,9 @@ class AuthClient(object):
                 present in the Redirect URIs field in the application dashboard
             scope (bool, optional): A list of permissions requested by the application
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
-              https://smartcar.com/docs#request-authorization
+                https://smartcar.com/docs#request-authorization
+            development (bool, optional): DEPRECATED Launch the Smartcar auth flow in development mode
+                to enable mock vehicle brands.
 
         """
         self.client_id = client_id
@@ -74,7 +76,15 @@ class AuthClient(object):
         self.auth=(client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.scope = scope
-        self.test_mode = test_mode
+
+        if development:
+            import warnings
+            message = """Development flag is deprecated. This is discouraged and will be
+                         removed in the next major release. Use testMode instead."""
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            self.test_mode = development
+        else:
+            self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(self, force=False, state=None):
         """ Generate an OAuth authentication URL

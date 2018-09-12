@@ -130,6 +130,7 @@ A client for accessing the Smartcar API
 | `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://developer.smartcar.com/apps). Given URL must match URL in application settings. |
 | `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs#get-all-vehicles). |
 | `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
+| `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
 
 ### `get_auth_url(self, force=False, state=None)`
 

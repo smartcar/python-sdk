@@ -44,7 +44,7 @@ class TestSmartcar(unittest.TestCase):
 
         self.assertTrue(smartcar.is_expired(access['expiration']))
 
-    def test_get_auth_url(self):
+    def test_get_auth_url_test_mode(self):
         oem = 'audi'
         actual = self.client.get_auth_url(force=True, state='stuff')
         query = urlencode({
@@ -59,9 +59,40 @@ class TestSmartcar(unittest.TestCase):
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
         self.assertEqual(actual, expected)
 
-    def test_get_auth_url_live_mode(self):
+    def test_get_auth_url(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, test_mode=False)
+        actual = client.get_auth_url(force=True, state='stuff')
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff'
+        })
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+        self.assertEqual(actual, expected)
+
+    def test_get_auth_url_with_development(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=True)
+        actual = client.get_auth_url(force=True, state='stuff')
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'mode': 'test',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff'
+        })
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+        self.assertEqual(actual, expected)
+
+    def test_get_auth_url_test_mode_with_development(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
         actual = client.get_auth_url(force=True, state='stuff')
         query = urlencode({
             'response_type': 'code',
