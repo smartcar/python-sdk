@@ -49,7 +49,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
   "expiration": "2018-05-02T18:04:25+00:00",
   "refresh_token": "...",
   "refresh_expiration": "2018-06-02T18:03:25+00:00",
-  "created_at": "..."
+  "expires_in": "..."
 }
 ```
 
