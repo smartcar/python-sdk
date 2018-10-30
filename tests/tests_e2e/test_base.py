@@ -24,11 +24,11 @@ class TestBase(unittest.TestCase):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
-            mock_smartcar_button = WebDriverWait(driver, 10).until(
+            tesla_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.XPATH,
-                    "/html/body/div/a[starts-with(@href, 'https://mock.smartcar.com')]")))
-            mock_smartcar_button.click()
+                    "/html/body/div/a[starts-with(@href, 'https://tesla.smartcar.com')]")))
+            tesla_button.click()
 
             username = uuid.uuid4()
             username = str(username) + '@mock.com'
