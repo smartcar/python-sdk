@@ -60,7 +60,7 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 ```python
 def get_fresh_access():
     access = load_access_from_database()
-    if smartcar.expired(access['expiration']):
+    if smartcar.is_expired(access['expiration']):
         new_access = client.exchange_refresh_token(access['refresh_token'])
         put_access_into_database(new_access)
         return new_access
