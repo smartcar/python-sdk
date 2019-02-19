@@ -1,31 +1,16 @@
-# Smartcar Python SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
+# Smartcar Python Backend SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
 
 ## Overview
 
 The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (location, odometer) and send commands to vehicles (lock, unlock) to connected vehicles using HTTP requests.
 
-To make requests to a vehicle from a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs#authentication). This flow follows the OAuth spec and will return a `code` which can be used to obtain an access token from Smartcar.
+To make requests to a vehicle a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs/api#authorization).
 
-The Smartcar Python SDK provides methods to:
-1. Generate the link to redirect to for Smartcar's authorization flow.
-2. Make a request to Smartcar with the `code` obtained from this authorization flow to obtain an access and refresh token
-3. Make requests to the Smartcar API to read vehicle data and send commands to vehicles using the access token obtained in step 2.
-
-Before integrating with Smartcar's SDK, you'll need to register an application in the [Smartcar Developer portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe).
+Before integrating with Python SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com). Once you have registered an application, you will have a Client ID and Client Secret, which will allow you to authorize users.
 
 ## Installation
 ```
 pip install smartcar
-```
-
-### Running tests
-```
-make test
-```
-
-### Running verbose tests
-```
-make test args="--verbose"
 ```
 
 ## Overall Usage
@@ -53,14 +38,14 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 }
 ```
 
-* To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired, use `smartcar.expired(access['expiration'])`.
+* To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired, use `smartcar.is_expired(access['expiration'])`.
 
 * It was pretty hard getting that first access token, but from now on it's easy! Calling `client.exchange_refresh_token(refresh_token)` will return a new access object using a previous access object's **refresh token**. This means you can always have a fresh access token, by doing something like this:
 
 ```python
 def get_fresh_access():
     access = load_access_from_database()
-    if smartcar.expired(access['expiration']):
+    if smartcar.is_expired(access['expiration']):
         new_access = client.exchange_refresh_token(access['refresh_token'])
         put_access_into_database(new_access)
         return new_access
@@ -125,10 +110,10 @@ A client for accessing the Smartcar API
 #### Arguments:
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
-| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
-| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
-| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://developer.smartcar.com/apps). Given URL must match URL in application settings. |
-| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs#get-all-vehicles). |
+| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
+| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
 | `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
 | `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
 
@@ -266,7 +251,7 @@ Returns the vehicle's current odometer reading.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary         | vehicle's odometer  |
-| Dictionary.`data`.`odometer`  | The current odometer of the vehicle |
+| Dictionary.`data`.`distance`  | The current odometer of the vehicle |
 | Dictionary.`unit_system` | the unit system of the odometer data |
 | Dictionary.`age`   | A datetime for the age of the data |
 
