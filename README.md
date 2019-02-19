@@ -18,16 +18,6 @@ Before integrating with Smartcar's SDK, you'll need to register an application i
 pip install smartcar
 ```
 
-### Running tests
-```
-make test
-```
-
-### Running verbose tests
-```
-make test args="--verbose"
-```
-
 ## Overall Usage
 
 Now that you have your id, secret and redirect URI, here's a simple overall idea of how to use the SDK to authenticate and make requests with the Smartcar API.
