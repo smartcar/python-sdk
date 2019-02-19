@@ -1,17 +1,12 @@
-# Smartcar Python SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
+# Smartcar Python Backend SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
 
 ## Overview
 
 The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (location, odometer) and send commands to vehicles (lock, unlock) to connected vehicles using HTTP requests.
 
-To make requests to a vehicle from a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs/api#authorization). This flow follows the OAuth spec and will return a `code` which can be used to obtain an access token from Smartcar.
+To make requests to a vehicle  web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs/api#authorization).
 
-The Smartcar Python SDK provides methods to:
-1. Generate the link to redirect to for Smartcar's authorization flow.
-2. Make a request to Smartcar with the `code` obtained from this authorization flow to obtain an access and refresh token
-3. Make requests to the Smartcar API to read vehicle data and send commands to vehicles using the access token obtained in step 2.
-
-Before integrating with Smartcar's SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com).
+Before integrating with Python SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com). Once you have registered an application, you will have a Client ID and Client Secret, which will allow you to authorize users.
 
 ## Installation
 ```
