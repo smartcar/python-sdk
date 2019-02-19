@@ -64,7 +64,7 @@ class AuthClient(object):
             redirect_uri (str): The URL to redirect to after the user accepts
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
-            scope (bool, optional): A list of permissions requested by the application
+            scope (list, optional): A list of permissions requested by the application
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
                 https://smartcar.com/docs#request-authorization
             development (bool, optional): DEPRECATED Launch the Smartcar auth flow in development mode
