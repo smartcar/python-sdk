@@ -4,14 +4,14 @@
 
 The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (location, odometer) and send commands to vehicles (lock, unlock) to connected vehicles using HTTP requests.
 
-To make requests to a vehicle from a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs#authentication). This flow follows the OAuth spec and will return a `code` which can be used to obtain an access token from Smartcar.
+To make requests to a vehicle from a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs/api#authorization). This flow follows the OAuth spec and will return a `code` which can be used to obtain an access token from Smartcar.
 
 The Smartcar Python SDK provides methods to:
 1. Generate the link to redirect to for Smartcar's authorization flow.
 2. Make a request to Smartcar with the `code` obtained from this authorization flow to obtain an access and refresh token
 3. Make requests to the Smartcar API to read vehicle data and send commands to vehicles using the access token obtained in step 2.
 
-Before integrating with Smartcar's SDK, you'll need to register an application in the [Smartcar Developer portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe).
+Before integrating with Smartcar's SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com).
 
 ## Installation
 ```
@@ -115,10 +115,10 @@ A client for accessing the Smartcar API
 #### Arguments:
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
-| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
-| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://developer.smartcar.com). If you do not have access to the dashboard, please [request access](https://smartcar.com/subscribe). |
-| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://developer.smartcar.com/apps). Given URL must match URL in application settings. |
-| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs#get-all-vehicles). |
+| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
+| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
 | `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
 | `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
 
