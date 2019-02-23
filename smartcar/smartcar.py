@@ -177,5 +177,5 @@ class AuthClient(object):
         query = {
             'vin': vin
         }
-        response = requester.call(method, url, param=query, auth=self.auth).json()
+        response = requester.call(method, url, params=query, auth=self.auth).json()
         return response
