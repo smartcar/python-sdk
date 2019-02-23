@@ -174,10 +174,10 @@ class TestSmartcar(unittest.TestCase):
             'vin': 'vin,'
         }
         responses.add('GET', smartcar.const.API_URL, json={
-            'compatibility': true
+            'compatibility': True
         })
         actual = self.client.compatibility('vin')
-        self.assertEqual(actual, true)
+        self.assertTrue(actual)
 
     @responses.activate
     def test_get_vehicle_ids(self):
