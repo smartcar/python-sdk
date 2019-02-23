@@ -169,6 +169,17 @@ class TestSmartcar(unittest.TestCase):
         self.assertEqual(request().body, urlencode(body))
 
     @responses.activate
+    def test_compatibility(self):
+        query = {
+            'vin': 'vin,'
+        }
+        responses.add('GET', smartcar.const.API_URL, json={
+            'compatibility': true
+        })
+        actual = self.client.compatibility('vin')
+        self.assertEqual(actual, true)
+
+    @responses.activate
     def test_get_vehicle_ids(self):
         query = { 'limit': 11, 'offset': 1 }
         access_token = 'access_token'

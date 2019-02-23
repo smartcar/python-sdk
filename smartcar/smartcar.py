@@ -161,3 +161,21 @@ class AuthClient(object):
         }
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
+
+    def compatibility(self, vin):
+        """ Determine if a vehicle is compatible with Smartcar
+
+        Args:
+            vin (str): the VIN of the vehicle
+
+        Returns:
+            boolean: true if the vehicle is compatible
+
+        """
+        method = 'GET'
+        url = const.API_URL
+        query = {
+            'vin': vin
+        }
+        response = requester.call(method, url, param=query, auth=self.auth).json()
+        return response

@@ -175,6 +175,20 @@ Exchange a refresh token for a new access dictionary
 | Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
+### `compatibility(vin)`
+
+Determine if a vehicle is compatible with Smartcar
+
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `vin`         | String |The VIN of the vehicle. |
+
+#### Return
+| Type                            | Description         |
+|:------------------------------- |:--------------------|
+| Boolean                         | `true` if the vehicle is compatible with Smartcar. |
+
 ## Vehicle
 
 After receiving an `access_token` from the Smartcar Auth flow, your application may make
