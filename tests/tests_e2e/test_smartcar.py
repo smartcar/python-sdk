@@ -22,6 +22,15 @@ class TestSmartcarAuthE2E(TestBase):
             access_object['refresh_token'])
         assert_access_object(new_access_object)
 
+    def test_compatibility(self):
+        teslaVin = '5YJXCDE22HF068739'
+        royceVin = 'SCA665C59HUX86700'
+
+        teslaComp = self.client.compatibility(teslaVin)
+        royceComp = self.client.compatibility(royceVin)
+
+        self.assertTrue(teslaComp)
+        self.assertFalse(royceComp)
 
 class TestSmartcarStaticE2E(TestBase):
 

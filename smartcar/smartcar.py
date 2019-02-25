@@ -173,9 +173,7 @@ class AuthClient(object):
 
         """
         method = 'GET'
-        url = const.API_URL
-        query = {
-            'vin': vin
-        }
+        url = const.API_URL + '/compatibility'
+        query = { 'vin': vin }
         response = requester.call(method, url, params=query, auth=self.auth).json()
         return response
