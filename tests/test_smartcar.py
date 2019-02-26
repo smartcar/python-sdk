@@ -169,14 +169,14 @@ class TestSmartcar(unittest.TestCase):
         self.assertEqual(request().body, urlencode(body))
 
     @responses.activate
-    def test_compatibility(self):
+    def test_is_compatible(self):
         fake_vin = 'vin'
 
         query = { 'vin': fake_vin }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
-            'compatibility': True
+            'compatible': True
         })
-        actual = self.client.compatibility(fake_vin)
+        actual = self.client.is_compatible(fake_vin)
         self.assertTrue(actual)
 
     @responses.activate
