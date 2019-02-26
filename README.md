@@ -175,7 +175,7 @@ Exchange a refresh token for a new access dictionary
 | Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
-### `compatibility(vin)`
+### `is_compatible(vin)`
 
 Determine if a vehicle is compatible with Smartcar
 
