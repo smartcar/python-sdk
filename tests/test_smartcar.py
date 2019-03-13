@@ -234,7 +234,7 @@ class TestSmartcar(unittest.TestCase):
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         })
-        actual = self.client.is_compatible(fake_vin)
+        actual = self.client.is_compatible(fake_vin, scope)
         self.assertTrue(actual)
 
     @responses.activate

@@ -34,7 +34,7 @@ class TestSmartcarAuthE2E(TestBase):
 
     def test_is_compatible_with_scope(self):
         teslaVin = '5YJXCDE22HF068739'
-        bmwVin = 'WBA3B1G53FNT03555'
+        bmwVin = 'WBAFR7C51DC821948'
 
         scopes = ['read_odometer', 'read_location']
 
