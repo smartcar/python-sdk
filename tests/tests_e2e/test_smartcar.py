@@ -22,7 +22,7 @@ class TestSmartcarAuthE2E(TestBase):
             access_object['refresh_token'])
         assert_access_object(new_access_object)
 
-    def test_is_compatible(self):
+    def test_is_compatible_without_scope(self):
         teslaVin = '5YJXCDE22HF068739'
         royceVin = 'SCA665C59HUX86700'
 
@@ -31,6 +31,18 @@ class TestSmartcarAuthE2E(TestBase):
 
         self.assertTrue(teslaComp)
         self.assertFalse(royceComp)
+
+    def test_is_compatible_with_scope(self):
+        teslaVin = '5YJXCDE22HF068739'
+        bmwVin = 'WBA3B1G53FNT03555'
+
+        scopes = ['read_odometer', 'read_location']
+
+        teslaComp = self.client.is_compatible(teslaVin, scopes)
+        bmwComp = self.client.is_compatible(bmwVin, scopes)
+
+        self.assertTrue(teslaComp)
+        self.assertFalse(bmwComp)
 
 class TestSmartcarStaticE2E(TestBase):
 

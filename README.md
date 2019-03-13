@@ -179,12 +179,18 @@ Exchange a refresh token for a new access dictionary
 
 ### `is_compatible(vin)`
 
-Determine if a vehicle is compatible with Smartcar
+Determine if a vehicle is compatible with Smartcar.
+
+A compatible vehicle is a vehicle:
+1. That has the hardware required for internet connectivity.
+2. That belongs to the makes and models Smartcar supports.
+3. (Optionally) That supports the permissions. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
 
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `vin`         | String |The VIN of the vehicle. |
+| `scope`       | String[] | **Optional** The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
 
 #### Return
 | Type                            | Description         |
