@@ -86,7 +86,7 @@ class AuthClient(object):
         else:
             self.test_mode = test_mode if test_mode else False
 
-    def get_auth_url(self, force=False, state=None):
+    def get_auth_url(self, force=False, state=None, vehicle_info=None):
         """ Generate an OAuth authentication URL
 
         Args:
@@ -118,6 +118,15 @@ class AuthClient(object):
 
         if state:
             query['state'] = state
+        
+        if vehicle_info:
+            if type(vehicle_info) is str:
+                vehicle_info = {'vin': vehicle_info}
+
+            valid_parameters = ['vin', 'year', 'make', 'model']
+            for param in valid_parameters:
+                if param in vehicle_info:
+                    query[param] = vehicle_info[param]
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
