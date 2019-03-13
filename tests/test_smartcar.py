@@ -136,6 +136,54 @@ class TestSmartcar(unittest.TestCase):
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
         self.assertEqual(actual, expected)
+    
+    def test_get_auth_url_vehicle_info_vin_string(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
+
+        actual = client.get_auth_url(force=True, state='stuff', vehicle_info='some_vin')
+
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff',
+            'vin': 'some_vin'
+        })
+
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+        self.assertEqual(actual, expected)
+
+    def test_get_auth_url_vehicle_info_dictionary(self):
+        info = {
+            'vin': 'some_vin',
+            'year': 2016,
+            'make': 'TESLA',
+            'model': 'Model S'
+        }
+
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
+
+        actual = client.get_auth_url(force=True, state='stuff', vehicle_info=info)
+
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff',
+            'vin': 'some_vin',
+            'year': 2016,
+            'make': 'TESLA',
+            'model': 'Model S'
+        })
+
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+        self.assertEqual(actual, expected)
 
     @responses.activate
     def test_exchange_code(self):
