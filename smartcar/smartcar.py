@@ -95,6 +95,10 @@ class AuthClient(object):
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
+            vehicle_info (dict or str): `vehicleInfo` can be either a VIN string
+                or a dict with properties `vin`, `year`, `make`, and `model`. (must include either VIN or make). Including this information 
+                will automatically bypass the first part of the login flow and
+                send users to the correct login screen.
 
         Returns:
             str: authorization url
