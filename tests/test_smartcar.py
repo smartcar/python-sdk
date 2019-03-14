@@ -6,8 +6,15 @@ import time
 from datetime import datetime, timedelta
 try:
     from urllib import urlencode
+    from urlparse import parse_qs
 except ImportError:
-    from urllib.parse import urlencode
+    from urllib.parse import urlencode, parse_qs
+
+def assertDeepEquals(self, dict1, dict2):
+    self.assertEqual(len(dict2), len(dict1))
+
+    for param in dict1:
+        self.assertEqual(dict2[param], dict1[param])
 
 def basic_auth(id, secret):
     auth_pair = id + ':' + secret
@@ -57,7 +64,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_test_mode_true(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
@@ -73,7 +84,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_test_mode_no_keyword_true(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
@@ -89,7 +104,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_test_mode_false(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
@@ -104,7 +123,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_development_true(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
@@ -120,7 +143,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_development_false(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
@@ -135,7 +162,11 @@ class TestSmartcar(unittest.TestCase):
             'state': 'stuff'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
     
     def test_get_auth_url_vehicle_info_dictionary(self):
         info = {
@@ -158,7 +189,11 @@ class TestSmartcar(unittest.TestCase):
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-        self.assertEqual(actual, expected)
+        
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     @responses.activate
     def test_exchange_code(self):
