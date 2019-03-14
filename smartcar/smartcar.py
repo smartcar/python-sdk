@@ -124,10 +124,7 @@ class AuthClient(object):
             query['state'] = state
         
         if vehicle_info:
-            if type(vehicle_info) is str:
-                vehicle_info = {'vin': vehicle_info}
-
-            valid_parameters = ['vin', 'year', 'make', 'model']
+            valid_parameters = ['make']
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
