@@ -117,7 +117,7 @@ A client for accessing the Smartcar API
 | `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
 | `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
 
-### `get_auth_url(self, force=False, state=None)`
+### `get_auth_url(self, force=False, state=None, vehicle_info=None)`
 
 Generate an OAuth authentication URL
 
