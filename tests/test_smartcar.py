@@ -227,26 +227,15 @@ class TestSmartcar(unittest.TestCase):
         self.assertEqual(request().body, urlencode(body))
 
     @responses.activate
-    def test_is_compatible_without_scope(self):
-        fake_vin = 'vin'
-
-        query = { 'vin': fake_vin }
-        responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
-            'compatible': True
-        })
-        actual = self.client.is_compatible(fake_vin, scope)
-        self.assertTrue(actual)
-
-    @responses.activate
-    def test_is_compatible_with_scope(self):
+    def test_is_compatible(self):
         fake_vin = 'vin'
         scope = ['read_odometer', 'read_location']
 
         query = { 'vin': fake_vin, 'scope': 'read_odometer read_location' }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
-        })
-        actual = self.client.is_compatible(fake_vin)
+        }, match_querystring=True)
+        actual = self.client.is_compatible(fake_vin, scope)
         self.assertTrue(actual)
 
     @responses.activate

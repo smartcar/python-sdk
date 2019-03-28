@@ -182,20 +182,24 @@ Exchange a refresh token for a new access dictionary
 Determine if a vehicle is compatible with Smartcar.
 
 A compatible vehicle is a vehicle:
-1. That has the hardware required for internet connectivity.
-2. That belongs to the makes and models Smartcar supports.
-3. (Optionally) That supports the permissions. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
+1. that has the hardware required for internet connectivity,
+2. that belongs to the makes and models Smartcar supports, and
+3. that supports the permissions.
+
+_To use this function, please contact us!_
 
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
 | `vin`         | String |The VIN of the vehicle. |
-| `scope`       | String[] | **Optional** The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
+| `scope`       | String[] | The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
 
 #### Return
 | Type                            | Description         |
 |:------------------------------- |:--------------------|
-| Boolean                         | `true` if the vehicle is compatible with Smartcar. |
+| Boolean                         | `False` if the vehicle is NOT compatible. `True` if the vehicle is _likely_ compatible. |
+
+**Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
 
 ## Vehicle
 
