@@ -1,3 +1,4 @@
+from retrying import retry
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os
@@ -18,6 +19,7 @@ import smartcar
 class TestBase(unittest.TestCase):
 
     @classmethod
+    @retry(wait_fixed=1000, stop_max_attempt_number=5)
     def setUpClass(cls):
         def get_code(driver, auth_url):
             driver.get(auth_url)
