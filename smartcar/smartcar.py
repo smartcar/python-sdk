@@ -86,7 +86,7 @@ class AuthClient(object):
         else:
             self.test_mode = test_mode if test_mode else False
 
-    def get_auth_url(self, force=False, state=None):
+    def get_auth_url(self, force=False, state=None, vehicle_info=None):
         """ Generate an OAuth authentication URL
 
         Args:
@@ -95,6 +95,9 @@ class AuthClient(object):
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
+            vehicle_info (dict, optional): A dict with a property, make. Including this argument 
+                will allow the user to bypass the OEM selector screen, allowing the user to go 
+                directly to the vehicle login screen. Defaults to None. 
 
         Returns:
             str: authorization url
@@ -118,6 +121,12 @@ class AuthClient(object):
 
         if state:
             query['state'] = state
+        
+        if vehicle_info:
+            valid_parameters = ['make']
+            for param in valid_parameters:
+                if param in vehicle_info:
+                    query[param] = vehicle_info[param]
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 

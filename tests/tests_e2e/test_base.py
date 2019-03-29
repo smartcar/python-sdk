@@ -19,15 +19,15 @@ import smartcar
 class TestBase(unittest.TestCase):
 
     @classmethod
-    @retry
+    @retry(wait_fixed=1000, stop_max_attempt_number=5)
     def setUpClass(cls):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
             tesla_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
-                    By.XPATH,
-                    "/html/body/div/a[starts-with(@href, 'https://tesla.smartcar.com')]")))
+                    By.CSS_SELECTOR,
+                    "a[data-make='TESLA']")))
             tesla_button.click()
 
             username = uuid.uuid4()
