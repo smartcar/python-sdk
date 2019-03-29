@@ -1,4 +1,3 @@
-from retrying import retry
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os
@@ -19,15 +18,14 @@ import smartcar
 class TestBase(unittest.TestCase):
 
     @classmethod
-    @retry
     def setUpClass(cls):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
             tesla_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
-                    By.XPATH,
-                    "/html/body/div/a[data-make='TESLA']")))
+                    By.CSS_SELECTOR,
+                    "a[data-make='TESLA']")))
             tesla_button.click()
 
             username = uuid.uuid4()
