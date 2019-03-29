@@ -179,12 +179,12 @@ Exchange a refresh token for a new access dictionary
 
 ### `is_compatible(vin)`
 
-Determine if a vehicle is compatible with Smartcar.
+Determine vehicle compatibility with Smartcar.
 
-A compatible vehicle is a vehicle:
-1. that has the hardware required for internet connectivity,
-2. that belongs to the makes and models Smartcar supports, and
-3. that supports the permissions.
+A compatible vehicle is a vehicle that:
+1. has the hardware required for internet connectivity,
+2. belongs to the makes and models Smartcar supports, and
+3. supports the permissions.
 
 _To use this function, please contact us!_
 
@@ -197,9 +197,9 @@ _To use this function, please contact us!_
 #### Return
 | Type                            | Description         |
 |:------------------------------- |:--------------------|
-| Boolean                         | `False` if the vehicle is NOT compatible. `True` if the vehicle is _likely_ compatible. |
+| Boolean                         | `False` if the vehicle is NOT compatible. `True` if the vehicle is _likely_ compatible.* |
 
-**Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
+**\*Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
 
 ## Vehicle
 
