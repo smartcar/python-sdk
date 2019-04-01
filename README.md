@@ -126,7 +126,7 @@ Generate an OAuth authentication URL
 |:--------------- |:---|:------------- |
 | `force`   | Boolean |**Optional** Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions. |
 | `state`         | String |**Optional** OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request. |
-| `vehicle_info['make']`  | String |**Optional** Including the dict `vehicle_info` with a `make` property causes the OEM selector screen to be bypassed, allowing the user to go directly to the vehicle login screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive. |
+| `vehicle_info['make']`  | String |**Optional** Including the dict `vehicle_info` with a `make` property allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive. |
 
 
 #### Return
