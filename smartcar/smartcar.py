@@ -95,9 +95,10 @@ class AuthClient(object):
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
-            vehicle_info (dict, optional): A dict with a property, make. Including this argument 
-                will allow the user to bypass the OEM selector screen, allowing the user to go 
-                directly to the vehicle login screen. Defaults to None. 
+            vehicle_info (dict, optional): A dict with a property, make. Allows
+                users to bypass the car brand selection screen, allowing the
+                user to go directly to the vehicle login screen. 
+                Defaults to None. 
 
         Returns:
             str: authorization url
