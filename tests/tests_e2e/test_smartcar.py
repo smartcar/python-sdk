@@ -24,15 +24,15 @@ class TestSmartcarAuthE2E(TestBase):
 
     def test_is_compatible(self):
         teslaVin = '5YJXCDE22HF068739'
-        audiVin = 'WAUANAF40HN017169'
+        bmwVin = 'WBAKN9C54GD961741'
 
         scopes = ['read_odometer', 'read_location']
 
         teslaComp = self.client.is_compatible(teslaVin, scopes)
-        audiComp = self.client.is_compatible(audiVin, scopes)
+        bmwComp = self.client.is_compatible(bmwVin, scopes)
 
         self.assertTrue(teslaComp)
-        self.assertFalse(audiComp)
+        self.assertFalse(bmwComp)
 
 class TestSmartcarStaticE2E(TestBase):
 
