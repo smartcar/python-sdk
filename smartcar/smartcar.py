@@ -172,11 +172,12 @@ class AuthClient(object):
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
-    def is_compatible(self, vin):
+    def is_compatible(self, vin, scope):
         """ Determine if a vehicle is compatible with Smartcar
 
         Args:
             vin (str): the VIN of the vehicle
+            scope (list): list of permissions to return compatibility info for
 
         Returns:
             boolean: true if the vehicle is compatible
@@ -184,6 +185,9 @@ class AuthClient(object):
         """
         method = 'GET'
         url = const.API_URL + '/compatibility'
-        query = { 'vin': vin }
+        query = {
+            'vin': vin,
+            'scope': " ".join(scope)
+        }
         response = requester.call(method, url, params=query, auth=self.auth).json()
         return response['compatible']
