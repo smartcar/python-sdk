@@ -293,9 +293,19 @@ wish to make requests to it
 
 Unlock the vehicle.
 
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary.`status`| Set to success on successful request. |
+
 ### `lock(self)`
 
 Lock the vehicle.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary.`status`| Set to success on successful request. |
 
 ## Static Methods
 
