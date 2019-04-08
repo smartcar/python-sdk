@@ -297,7 +297,7 @@ Unlock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
-#### Raise
+#### Raises
 <code>smartcarException</code> on unsuccessful request
 
 ### `lock(self)`
@@ -308,7 +308,7 @@ Lock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
-#### Raise
+#### Raises
 <code>smartcarException</code> on unsuccessful request
 
 
