@@ -105,11 +105,15 @@ class Vehicle(object):
 
         """
         response = self.api.action('security', 'UNLOCK')
-        return response.json()
+        return {
+            'status': response.json()['status']
+        }
 
     def lock(self):
         """ POST Vehicle.lock
 
         """
         response = self.api.action('security', 'LOCK')
-        return response.json()
+        return { 
+            'status': response.json()['status']
+        }
