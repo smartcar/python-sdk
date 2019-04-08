@@ -103,6 +103,12 @@ class Vehicle(object):
     def unlock(self):
         """ POST Vehicle.unlock
 
+        Returns: 
+            dict: status
+        
+        Raises: 
+            smartcarException
+
         """
         response = self.api.action('security', 'UNLOCK')
         return {
@@ -112,6 +118,11 @@ class Vehicle(object):
     def lock(self):
         """ POST Vehicle.lock
 
+        Returns: 
+            dict: status
+
+        Raises: 
+            smartcarException
         """
         response = self.api.action('security', 'LOCK')
         return { 

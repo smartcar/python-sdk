@@ -297,8 +297,8 @@ Unlock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
-#### Throws
-<code>SmartcarError</code> on unsuccessful request
+#### Raise
+<code>smartcarException</code> on unsuccessful request
 
 ### `lock(self)`
 
@@ -308,8 +308,8 @@ Lock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
-#### Throws
-<code>SmartcarError</code> on unsuccessful request
+#### Raise
+<code>smartcarException</code> on unsuccessful request
 
 
 ## Static Methods
