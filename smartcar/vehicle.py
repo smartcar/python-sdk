@@ -107,7 +107,7 @@ class Vehicle(object):
             dict: status
         
         Raises: 
-            smartcarException
+            SmartcarException
 
         """
         response = self.api.action('security', 'UNLOCK')
@@ -122,7 +122,7 @@ class Vehicle(object):
             dict: status
 
         Raises: 
-            smartcarException
+            SmartcarException
         """
         response = self.api.action('security', 'LOCK')
         return { 
