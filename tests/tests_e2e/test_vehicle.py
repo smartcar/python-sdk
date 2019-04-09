@@ -44,11 +44,11 @@ class TestVehicleE2E(TestBase):
 
     def test_lock(self):
         lock = self.vehicle.lock()
-        self.assertIsNone(lock)
+        self.assertEqual(lock["status"], "success")
 
     def test_unlock(self):
         unlock = self.vehicle.unlock()
-        self.assertIsNone(unlock)
+        self.assertEqual(unlock["status"], "success")
 
     def test_disconnect(self):
         disconnected = self.vehicle.disconnect()

@@ -146,10 +146,22 @@ class TestVehicle(unittest.TestCase):
 
     @responses.activate
     def test_lock(self):
-        self.queue('POST', 'security')
-        self.check(self.vehicle.lock(), action='LOCK')
+        data = {
+            'status': 'success'
+        }
+        self.queue('POST', 'security', body=data)
+        
+        response = self.vehicle.lock()
+        self.check(response, action='LOCK')
+        self.assertEqual(response['status'], data['status'])
 
     @responses.activate
     def test_unlock(self):
-        self.queue('POST', 'security')
-        self.check(self.vehicle.unlock(), action='UNLOCK')
+        data = {
+            'status': 'success'
+        }
+        self.queue('POST', 'security', body=data)
+        
+        response = self.vehicle.unlock()
+        self.check(response, action='UNLOCK')
+        self.assertEqual(response['status'], data['status'])
