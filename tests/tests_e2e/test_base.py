@@ -33,11 +33,11 @@ class TestBase(unittest.TestCase):
             username = uuid.uuid4()
             username = str(username) + '@mock.com'
 
-            approval_button = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'approval-button')))
+            sign_in_button = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, 'sign-in-button')))
             driver.find_element_by_id('username').send_keys(username)
             driver.find_element_by_id('password').send_keys('password')
-            approval_button.click()
+            sign_in_button.click()
 
             permissions_approval_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, 'approval-button')))
