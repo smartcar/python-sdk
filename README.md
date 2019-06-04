@@ -100,6 +100,8 @@ odometer = vehicle.odometer()['data']['distance']
 |500|smartcar.ServerException|
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
+ 
+Checkout our [Errors documentation][errors] to learn more.
 
 ## AuthClient
 
@@ -366,3 +368,4 @@ Get a list of the user's vehicle ids
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
 [pypi-url]: https://badge.fury.io/py/smartcar
 [pypi-image]: https://badge.fury.io/py/smartcar.svg
+[errors]: https://smartcar.com/docs/api#errors
