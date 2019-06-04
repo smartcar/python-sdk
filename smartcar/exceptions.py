@@ -20,7 +20,17 @@ class PermissionException(SmartcarException):
 class ResourceNotFoundException(SmartcarException):
     pass
 class StateException(SmartcarException):
-    pass
+    def __init__(self, response):
+        super().__init__(response)
+        json = response.json()
+        if 'errorCode' in json:
+            self.code = json['errorCode']
+        else:
+            self.code = 'VS_000'
+
+    def __str__(self):
+        return self.code + ': ' + self.message
+
 class RateLimitingException(SmartcarException):
     pass
 class MonthlyLimitExceeded(SmartcarException):

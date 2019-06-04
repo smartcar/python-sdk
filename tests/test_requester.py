@@ -68,8 +68,14 @@ class TestRequester(unittest.TestCase):
 
     @responses.activate
     def test_409(self):
-        self.queue(409)
-        self.check(smartcar.StateException)
+        message = "Vehicle State Error"
+        errorCode='VS_OO1'
+        self.queue(409, message=message, errorCode=errorCode)
+        try:
+            smartcar.requester.call('GET', self.URL)
+        except smartcar.StateException as err:
+            self.assertEqual(err.message, message)
+            self.assertEqual(err.code, errorCode)
 
     @responses.activate
     def test_429(self):
