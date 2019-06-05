@@ -23,8 +23,8 @@ class StateException(SmartcarException):
     def __init__(self, response):
         super(StateException, self).__init__(response)
         json = response.json()
-        if 'errorCode' in json:
-            self.code = json['errorCode']
+        if 'code' in json:
+            self.code = json['code']
         else:
             self.code = 'VS_000'
 
