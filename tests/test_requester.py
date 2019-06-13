@@ -7,14 +7,14 @@ class TestRequester(unittest.TestCase):
     EXPECTED = 'expected'
     URL = 'http://fake.url'
 
-    def queue(self, code, **kwargs):
+    def queue(self, status_code, **kwargs):
         """ queue up a fake response with the specified status code """
         if not kwargs:
             json = { 'message': self.EXPECTED }
         else:
             json = kwargs
 
-        responses.add('GET', self.URL, status=code, json=json)
+        responses.add('GET', self.URL, status=status_code, json=json)
 
     def check(self, exception):
 
@@ -68,8 +68,14 @@ class TestRequester(unittest.TestCase):
 
     @responses.activate
     def test_409(self):
-        self.queue(409)
-        self.check(smartcar.StateException)
+        message = "Vehicle State Error"
+        code='VS_OO1'
+        self.queue(409, message=message, code=code)
+        try:
+            smartcar.requester.call('GET', self.URL)
+        except smartcar.StateException as err:
+            self.assertEqual(err.message, message)
+            self.assertEqual(err.code, code)
 
     @responses.activate
     def test_429(self):

@@ -27,7 +27,7 @@ class TestBase(unittest.TestCase):
             tesla_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.CSS_SELECTOR,
-                    "a[data-make='TESLA']")))
+                    "button[data-make='TESLA']")))
             tesla_button.click()
 
             username = uuid.uuid4()
