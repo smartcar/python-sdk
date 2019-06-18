@@ -100,7 +100,7 @@ odometer = vehicle.odometer()['data']['distance']
 |500|smartcar.ServerException|
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
- 
+
 Checkout our [Errors documentation][errors] to learn more.
 
 ## AuthClient
@@ -116,8 +116,7 @@ A client for accessing the Smartcar API
 | `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
 | `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
 | `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
-| `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
-| `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
+| `test_mode`   | Boolean |**Optional** Launch the Smartcar Connect in test mode. |
 
 ### `get_auth_url(self, force=False, state=None, vehicle_info=None)`
 
@@ -205,7 +204,7 @@ _To use this function, please contact us!_
 
 ## Vehicle
 
-After receiving an `access_token` from the Smartcar Auth flow, your application may make
+After receiving an `access_token` from the Smartcar Connect, your application may make
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 ### `smartcar.Vehicle(self, vehicle_id, access_token, unit_system='metric')`
