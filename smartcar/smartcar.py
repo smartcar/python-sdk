@@ -66,7 +66,6 @@ class AuthClient(object):
                 present in the Redirect URIs field in the application dashboard
             scope (list, optional): A list of permissions requested by the application
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
-                https://smartcar.com/docs#request-authorization
             development (bool, optional): DEPRECATED Launch the Smartcar auth flow in development mode
                 to enable mock vehicle brands.
 
@@ -87,7 +86,7 @@ class AuthClient(object):
             self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(self, force=False, state=None, vehicle_info=None):
-        """ Generate an OAuth authentication URL
+        """ Generate the Connect URL
 
         Args:
             force (bool, optional): Set to True in order to force the approval

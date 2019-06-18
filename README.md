@@ -22,10 +22,10 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url()`
 * The user will login, and then accept or deny the permissions in your `scope`
     * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(force=True)`
-    * If the user accepts, they will be redirected to your `redirect_uri`. The query field `code` will contain an authentication code. This is *very* important, so save it for later.
+    * If the user accepts, they will be redirected to your `redirect_uri`. The query field `code` will contain an authorization code. This is *very* important, so save it for later.
     * If the user denies, the query field `code` will equal `"access_denied"`, so you should handle this somehow.
 
-* With your authentication code in hand, use `client.exchange_code(authentication_code)` to exchange your authentication code for an **access object**. This access object will look like this:
+* With your authorization code in hand, use `client.exchange_code(authorization_code)` to exchange your authorization code for an **access object**. This access object will look like this:
 
 ```json
 {
@@ -121,7 +121,7 @@ A client for accessing the Smartcar API
 
 ### `get_auth_url(self, force=False, state=None, vehicle_info=None)`
 
-Generate an OAuth authentication URL
+Generate the Connect URL
 
 #### Arguments
 | Parameter       | Type | Description   |
@@ -134,7 +134,7 @@ Generate an OAuth authentication URL
 #### Return
 | Type             | Description         |
 |:---------------- |:--------------------|
-| String           | Smartcar OAuth authentication URL |
+| String           | Smartcar Connect URL |
 
 #### Example
 ```
@@ -143,7 +143,7 @@ Generate an OAuth authentication URL
 
 ### `exchange_code(code)`
 
-Exchange an authentication code for an access dictionary
+Exchange an authorization code for an access dictionary
 
 #### Arguments
 | Parameter       | Type | Description   |
