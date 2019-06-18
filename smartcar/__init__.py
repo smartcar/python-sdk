@@ -1,4 +1,4 @@
-__version__ = '3.0.2'
+__version__ = '3.0.3'
 
 from .smartcar import (AuthClient, is_expired, get_user_id, get_vehicle_ids)
 from .vehicle import Vehicle
