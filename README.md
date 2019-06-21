@@ -4,7 +4,7 @@
 
 The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (location, odometer) and send commands to vehicles (lock, unlock) to connected vehicles using HTTP requests.
 
-To make requests to a vehicle a web or mobile application, the end user must connect their vehicle using [Smartcar's authorization flow](https://smartcar.com/docs/api#authorization).
+To make requests to a vehicle a web or mobile application, the end user must connect their vehicle using [Smartcar Connect](https://smartcar.com/docs/api#authorization).
 
 Before integrating with Python SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com). Once you have registered an application, you will have a Client ID and Client Secret, which will allow you to authorize users.
 
@@ -22,10 +22,10 @@ Now that you have your id, secret and redirect URI, here's a simple overall idea
 * Redirect the user to an OEM login page using the URL from `client.get_auth_url()`
 * The user will login, and then accept or deny the permissions in your `scope`
     * If the user is already connected to your application, they will not be shown the accept or deny dialog. However the application can force this dialog to be shown with `client.get_auth_url(force=True)`
-    * If the user accepts, they will be redirected to your `redirect_uri`. The query field `code` will contain an authentication code. This is *very* important, so save it for later.
+    * If the user accepts, they will be redirected to your `redirect_uri`. The query field `code` will contain an authorization code. This is *very* important, so save it for later.
     * If the user denies, the query field `code` will equal `"access_denied"`, so you should handle this somehow.
 
-* With your authentication code in hand, use `client.exchange_code(authentication_code)` to exchange your authentication code for an **access object**. This access object will look like this:
+* With your authorization code in hand, use `client.exchange_code(authorization_code)` to exchange your authorization code for an **access object**. This access object will look like this:
 
 ```json
 {
@@ -100,7 +100,7 @@ odometer = vehicle.odometer()['data']['distance']
 |500|smartcar.ServerException|
 |501|smartcar.NotCapableException|
 |504|smartcar.GatewayTimeoutException|
- 
+
 Checkout our [Errors documentation][errors] to learn more.
 
 ## AuthClient
@@ -116,12 +116,11 @@ A client for accessing the Smartcar API
 | `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
 | `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
 | `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
-| `test_mode`   | Boolean |**Optional** Launch the Smartcar auth flow in test mode. |
-| `development`   | Boolean |**Optional** DEPRECATED Launch the Smartcar auth flow in development mode to enable mock vehicle brands. |
+| `test_mode`   | Boolean |**Optional** Launch the Smartcar Connect in test mode. |
 
 ### `get_auth_url(self, force=False, state=None, vehicle_info=None)`
 
-Generate an OAuth authentication URL
+Generate the Connect URL
 
 #### Arguments
 | Parameter       | Type | Description   |
@@ -134,7 +133,7 @@ Generate an OAuth authentication URL
 #### Return
 | Type             | Description         |
 |:---------------- |:--------------------|
-| String           | Smartcar OAuth authentication URL |
+| String           | Smartcar Connect URL |
 
 #### Example
 ```
@@ -143,7 +142,7 @@ Generate an OAuth authentication URL
 
 ### `exchange_code(code)`
 
-Exchange an authentication code for an access dictionary
+Exchange an authorization code for an access dictionary
 
 #### Arguments
 | Parameter       | Type | Description   |
@@ -205,7 +204,7 @@ _To use this function, please contact us!_
 
 ## Vehicle
 
-After receiving an `access_token` from the Smartcar Auth flow, your application may make
+After receiving an `access_token` from the Smartcar Connect, your application may make
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
 ### `smartcar.Vehicle(self, vehicle_id, access_token, unit_system='metric')`
