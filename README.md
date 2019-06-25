@@ -282,6 +282,45 @@ Returns the vehicle's current odometer reading.
 | Dictionary.`unit_system` | the unit system of the odometer data |
 | Dictionary.`age`   | A datetime for the age of the data |
 
+### `fuel(self)`
+
+Returns the vehicle's fuel status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's fuel status  |
+| Dictionary.`data.range`  | The estimated remaining distance the car can travel (in kms or miles) |
+| Dictionary.`data.percentRemaining`  | The remaining level of fuel in the tank (in percent) |
+| Dictionary.`data.amountRemaining`  | The amount of fuel in the tank (in liters of gallons (US)) |
+| Dictionary.`unit_system` | the unit system of the fuel data |
+| Dictionary.`age`   | A datetime for the age of the data |
+
+### `battery(self)`
+
+Returns the vehicle's battery status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's battery status  |
+| Dictionary.`data.range`  | The estimated remaining distance the car can travel (in kms or miles) |
+| Dictionary.`data.percentRemaining`  | The remaining level of charge in the battery (in percent) |
+| Dictionary.`unit_system` | the unit system of the battery data |
+| Dictionary.`age`   | A datetime for the age of the data |
+
+### `charge(self)`
+
+Returns the vehicle's charge status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's charge status  |
+| Dictionary.`data.isPluggedIn`  | Indicates whether charging cable is plugged in |
+| Dictionary.`data.state`  | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
+| Dictionary.`age`   | A datetime for the age of the data |
+
 ### `disconnect(self)`
 
 Disconnect this vehicle from the connected application.
