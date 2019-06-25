@@ -56,7 +56,10 @@ class TestBase(unittest.TestCase):
             'read_vehicle_info',
             'read_vin',
             'read_location',
-            'read_odometer'
+            'read_odometer',
+            'read_fuel',
+            'read_battery',
+            'read_charge'
         ]
         test_mode = True
 

@@ -26,6 +26,18 @@ class TestVehicleE2E(TestBase):
         odometer = self.vehicle.odometer()
         self.assertIsNotNone(odometer)
 
+    def test_fuel(self):
+        fuel = self.vehicle.fuel()
+        self.assertIsNotNone(fuel)
+
+    def test_battery(self):
+        battery = self.vehicle.battery()
+        self.assertIsNotNone(battery)
+
+    def test_charge(self):
+        charge = self.vehicle.charge()
+        self.assertIsNotNone(charge)
+
     def test_location(self):
         location = self.vehicle.location()
         self.assertIsNotNone(location)
