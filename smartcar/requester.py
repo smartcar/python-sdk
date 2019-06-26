@@ -3,6 +3,7 @@ import requests
 from . import exceptions as E
 from . import __version__
 
+
 def call(method, url, **kwargs):
     """ Attachs the kwargs into the headers, sends the request to the Smartcar API
         and handles all error cases
@@ -27,6 +28,8 @@ def call(method, url, **kwargs):
 
     response = requests.request(method, url, **kwargs)
     code = response.status_code
+    body = response.json()
+
     if response.ok:
         return response
     elif code == 400:
@@ -46,7 +49,9 @@ def call(method, url, **kwargs):
     elif code == 500:
         raise E.ServerException(response)
     elif code == 501:
-        raise E.NotCapableException(response)
+        if body['error'] == 'smartcar_not_capable_error':
+            raise E.SmartcarNotCapableException(response)
+        raise E.VehicleNotCapableException(response)
     elif code == 504:
         raise E.GatewayTimeoutException(response)
     else:
