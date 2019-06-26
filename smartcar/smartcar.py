@@ -36,6 +36,9 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
     Returns:
         dict: response containing the list of vehicle ids and paging information
 
+    Raises:
+        SmartcarException
+
     """
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
@@ -47,6 +50,9 @@ def get_user_id(access_token):
 
     Returns:
         str: userId
+
+    Raises:
+        SmartcarException
 
     """
     return api.Api(access_token).user().json()['id']
@@ -102,6 +108,9 @@ class AuthClient(object):
         Returns:
             str: authorization url
 
+        Raises:
+            SmartcarException
+
         """
         base_url = const.CONNECT_URL
 
@@ -139,6 +148,9 @@ class AuthClient(object):
         Returns:
             dict: dict containing the access and refresh token
 
+        Raises:
+            SmartcarException
+
         """
         method = 'POST'
         url = const.AUTH_URL
@@ -161,6 +173,9 @@ class AuthClient(object):
         Returns:
             dict: dict containing access and refresh token
 
+        Raises:
+            SmartcarException
+
         """
         method = 'POST'
         url = const.AUTH_URL
@@ -180,6 +195,9 @@ class AuthClient(object):
 
         Returns:
             boolean: true if the vehicle is compatible
+
+        Raises:
+            SmartcarException
 
         """
         method = 'GET'

@@ -38,6 +38,9 @@ class Vehicle(object):
         Returns:
             dict: vehicle's info
 
+        Raises:
+            SmartcarException
+
         """
         response = self.api.get('')
 
@@ -48,6 +51,10 @@ class Vehicle(object):
 
         Returns:
             str: vehicle's vin
+
+        Raises:
+            SmartcarException
+
         """
         response = self.api.get('vin')
 
@@ -58,6 +65,10 @@ class Vehicle(object):
 
         Returns:
             list: vehicle's permissions
+
+        Raises:
+            SmartcarException
+
         """
         response = self.api.permissions()
 
@@ -70,6 +81,9 @@ class Vehicle(object):
         have to have the user reauthorize the vehicle to your application if you
         wish to make requests to it
 
+        Raises:
+            SmartcarException
+
         """
         self.api.disconnect()
 
@@ -79,6 +93,8 @@ class Vehicle(object):
         Returns:
             dict: vehicle's odometer
 
+        Raises:
+            SmartcarException
         """
         response = self.api.get('odometer')
 
@@ -93,6 +109,9 @@ class Vehicle(object):
 
         Returns:
             dict: vehicle's fuel status
+
+        Raises:
+            SmartcarException
 
         """
         response = self.api.get('fuel')
@@ -109,6 +128,9 @@ class Vehicle(object):
         Returns:
             dict: vehicle's battery status
 
+        Raises:
+            SmartcarException
+
         """
         response = self.api.get('battery')
 
@@ -124,6 +146,9 @@ class Vehicle(object):
         Returns:
             dict: vehicle's charge status
 
+        Raises:
+            SmartcarException
+
         """
         response = self.api.get('charge')
 
@@ -137,6 +162,9 @@ class Vehicle(object):
 
         Returns:
             dict: vehicle's location
+
+        Raises:
+            SmartcarException
 
         """
         response = self.api.get('location')
@@ -169,6 +197,7 @@ class Vehicle(object):
 
         Raises:
             SmartcarException
+
         """
         response = self.api.action('security', 'LOCK')
         return {
