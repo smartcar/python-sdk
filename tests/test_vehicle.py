@@ -178,5 +178,3 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.unlock()
         self.check(response, action='UNLOCK')
         self.assertEqual(response['status'], data['status'])
-if __name__ == "__main__":
-    unittest.main()
