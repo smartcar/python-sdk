@@ -165,3 +165,15 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.unlock()
         self.check(response, action='UNLOCK')
         self.assertEqual(response['status'], data['status'])
+    
+    @responses.activate
+    def test_has_permission(self):
+        data = {
+            "permissions": ["read_odometer"]
+        }
+
+        self.queue('GET', 'permissions', data)
+        response = self.vehicle.has_permission("read_odometer")
+        print(response)
+        self.check(response)
+        self.assertTrue(response)
