@@ -83,15 +83,17 @@ class TestVehicle(unittest.TestCase):
         self.assertEqual(response, data['permissions'])
         
     @responses.activate
-    def test_has_permission(self):
+    def test_has_permissions(self):
         data = {
-            "permissions": ["read_odometer"]
+            "permissions": ["read_odometer" , "read_vehicle_info", "read_location"]
         }
 
         self.queue('GET', 'permissions', data)
-        response = self.vehicle.has_permission("read_odometer")
-        self.check(response)
-        self.assertTrue(response)
+        singleResponse = self.vehicle.has_permission("read_odometer")
+        multiResponse = self.vehicle.has_permission(["read_odometer", "read_vehicle_info"])
+
+        self.assertTrue(singleResponse)
+        self.assertTrue(multiResponse)
 
     @responses.activate
     def test_info(self):
@@ -176,3 +178,5 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.unlock()
         self.check(response, action='UNLOCK')
         self.assertEqual(response['status'], data['status'])
+if __name__ == "__main__":
+    unittest.main()

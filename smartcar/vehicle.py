@@ -61,7 +61,7 @@ class Vehicle(object):
 
         return response.json()['permissions']
       
-    def has_permission(self, permission):
+    def has_permissions(self, permissions):
       """ Checks if vehicle has specified permission.
 
         Args:
@@ -70,7 +70,17 @@ class Vehicle(object):
         Returns:
             boolean: if vehicle has permission
       """
-      return permission in self.permissions()
+      vehicle_permissions = self.permissions()
+
+      if isinstance(permissions, list):
+        contained = [permission in vehicle_permissions for permission in permissions]
+
+        if False not in contained:
+          return True
+        else:
+          return False
+      else:
+        return permissions in vehicle_permissions
 
     def disconnect(self):
         """ Disconnect this vehicle from the connected application.
