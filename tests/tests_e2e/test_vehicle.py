@@ -41,7 +41,7 @@ class TestVehicleE2E(TestBase):
     def test_has_permissions(self):
         single_response = self.vehicle.has_permissions("read_odometer")
         multi_response = self.vehicle.has_permissions(["read_odometer", "read_vehicle_info"])
-        false_response = self.vehicle.has_permissions("read_ignition");
+        false_response = self.vehicle.has_permissions("read_ignition)
         false_multi_response = self.vehicle.has_permissions(["read_odometer", "read_ignition"])
 
         self.assertTrue(single_response)
