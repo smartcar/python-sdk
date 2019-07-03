@@ -38,6 +38,17 @@ class TestVehicleE2E(TestBase):
         permissions = self.vehicle.permissions()
         self.assertIsNotNone(permissions)
 
+    def test_has_permissions(self):
+        single_response = self.vehicle.has_permissions("read_odometer")
+        multi_response = self.vehicle.has_permissions(["read_odometer", "read_vehicle_info"])
+        false_response = self.vehicle.has_permissions("read_ignition");
+        false_multi_response = self.vehicle.has_permissions(["read_odometer", "read_ignition"])
+
+        self.assertTrue(single_response)
+        self.assertTrue(multi_response)
+        self.assertFalse(false_response)
+        self.assertFalse(false_multi_response)
+
     def test_vin(self):
         vin = self.vehicle.vin()
         self.assertIsNotNone(vin)
