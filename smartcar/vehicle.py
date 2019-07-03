@@ -62,23 +62,23 @@ class Vehicle(object):
         return response.json()['permissions']
       
     def has_permissions(self, permissions):
-      """ Checks if vehicle has specified permission.
+      """ Checks if vehicle has specified permissions.
 
         Args:
-            permission (str): the permission to check on the vehicle
+            permissions (str or list): the permissions to check on the vehicle
           
         Returns:
-            boolean: if vehicle has permission
+            boolean: if vehicle has permissions
       """
       vehicle_permissions = self.permissions()
 
       if isinstance(permissions, list):
         contained = [permission in vehicle_permissions for permission in permissions]
 
-        if False not in contained:
-          return True
-        else:
+        if not any(contained):
           return False
+        else:
+          return True
       else:
         return permissions in vehicle_permissions
 
