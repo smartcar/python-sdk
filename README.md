@@ -320,7 +320,7 @@ Returns the vehicle's fuel status.
 | Dictionary         | vehicle's fuel status  |
 | Dictionary.`data.range`  | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
 | Dictionary.`data.percentRemaining`  | The remaining level of fuel in the tank (in percent) |
-| Dictionary.`data.amountRemaining`  | The amount of fuel in the tank (in liters of gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.amountRemaining`  | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
 | Dictionary.`unit_system` | the unit system of the fuel data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).|
 | Dictionary.`age`   | A datetime for the age of the data |
 
