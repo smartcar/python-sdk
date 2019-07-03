@@ -74,8 +74,7 @@ class Vehicle(object):
 
       if isinstance(permissions, list):
         contained = [permission in vehicle_permissions for permission in permissions]
-
-        if not any(contained):
+        if False in contained:
           return False
         else:
           return True
