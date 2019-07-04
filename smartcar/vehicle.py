@@ -72,6 +72,7 @@ class Vehicle(object):
       """
       vehicle_permissions = self.permissions()
       prefix = "required:"
+      
       if isinstance(permissions, list):
         contained = [permission[permission.startswith(prefix) and len(prefix):] 
           in vehicle_permissions for permission in permissions]
