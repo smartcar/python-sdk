@@ -71,15 +71,16 @@ class Vehicle(object):
             boolean: if vehicle has permissions
       """
       vehicle_permissions = self.permissions()
-
+      prefix = "required:"
       if isinstance(permissions, list):
-        contained = [permission in vehicle_permissions for permission in permissions]
+        contained = [permission[permission.startswith(prefix) and len(prefix):] 
+          in vehicle_permissions for permission in permissions]
         if False in contained:
           return False
         else:
           return True
       else:
-        return permissions in vehicle_permissions
+        return permissions[permissions.startswith(prefix) and len(prefix):] in vehicle_permissions
 
     def disconnect(self):
         """ Disconnect this vehicle from the connected application.
