@@ -234,21 +234,21 @@ Returns a paged list of all permissions currently associated with this vehicle.
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
-| List[String]       | 	An array of permissions. |
+| String[]       | 	An array of permissions. |
 
 ### `has_permissions(self, permissions)`
 
-Returns if vehicle contains specified permission.
+Returns if vehicle contains specified permission(s).
 
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
-| `permissions`         | List[String] or String |The permissions to check on the vehicle. |
+| `permissions`         | String[] or String |The permissions to check on the vehicle. |
 
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
-| Boolean      | 	If vehicle contains permissions. |
+| Boolean      | Whether the vehicle has the specified permission(s). |
 
 ### `info(self)`
 
