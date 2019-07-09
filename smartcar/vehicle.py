@@ -65,10 +65,10 @@ class Vehicle(object):
       """ Checks if vehicle has specified permission(s).
 
         Args:
-            permissions (str or list): the permission(s) to check on the vehicle
+            permissions (str or list of str): Check if the vehicle has these permission(s) granted
           
         Returns:
-            boolean: if vehicle has permissions
+            boolean: Whether the vehicle has the specified permission(s)
       """
       vehicle_permissions = self.permissions()
       prefix = "required:"
