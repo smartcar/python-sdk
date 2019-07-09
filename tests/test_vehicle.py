@@ -96,7 +96,7 @@ class TestVehicle(unittest.TestCase):
         false_multi_response = self.vehicle.has_permissions(["read_odometer", "read_location"])
 
         self.assertTrue(single_response)
-        self.assertTrue(no_required_response)
+        self.assertTrue(required_response)
         self.assertTrue(multi_response)
         self.assertFalse(false_response)
         self.assertFalse(false_multi_response)
