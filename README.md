@@ -238,7 +238,7 @@ Returns a paged list of all permissions currently associated with this vehicle.
 
 ### `has_permissions(self, permissions)`
 
-Returns if vehicle contains specified permission(s).
+Returns whether the vehicle contains specified permission(s).
 
 #### Arguments
 | Parameter       | Type | Description   |
