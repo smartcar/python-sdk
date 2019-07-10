@@ -243,7 +243,7 @@ Returns if vehicle contains specified permission(s).
 #### Arguments
 | Parameter       | Type | Description   |
 |:--------------- |:---|:------------- |
-| `permissions`         | String[] or String |The permissions to check on the vehicle. |
+| `permissions`         | String[] or String | The permissions to check. |
 
 #### Return
 | Type               | Description         |

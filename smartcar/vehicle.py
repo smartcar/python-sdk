@@ -65,7 +65,7 @@ class Vehicle(object):
       """ Checks if vehicle has specified permission(s).
 
         Args:
-            permissions (str or list of str): Check if the vehicle has these permission(s) granted
+            permissions (str or list of str): Permission(s) to check
           
         Returns:
             boolean: Whether the vehicle has the specified permission(s)
