@@ -110,25 +110,25 @@ Checkout our [Errors documentation][errors] to learn more.
 A client for accessing the Smartcar API
 
 #### Arguments:
-| Parameter       | Type | Description   |
-|:--------------- |:---|:------------- |
-| `client_id`     | String |**Required** Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
-| `client_secret` | String |**Required** Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
-| `redirect_uri`  | String |**Required** RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
-| `scope`         | String[] |**Optional** List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
-| `test_mode`   | Boolean |**Optional** Launch the Smartcar Connect in test mode. |
+| Parameter       | Type | Required | Description   |
+|:--------------- |:---|:---|:------------- |
+| `client_id`     | String |**Required** | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `client_secret` | String |**Required** | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com). |
+| `redirect_uri`  | String |**Required** | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
+| `scope`         | String[] |**Optional** | List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
+| `test_mode`   | Boolean |**Optional** | Launch the Smartcar Connect in test mode. |
 
 ### `get_auth_url(self, force=False, state=None, vehicle_info=None)`
 
 Generate the Connect URL
 
 #### Arguments
-| Parameter       | Type | Description   |
-|:--------------- |:---|:------------- |
-| `force`   | Boolean |**Optional** Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions. |
-| `state`         | String |**Optional** OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request. |
-| `vehicle_info['make']`  | String |**Optional** Including the dict `vehicle_info` with a `make` property allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive. |
-
+| Parameter       | Type | Required | Description   |
+|:--------------- |:---|:---|:------------- |
+| `force`   | Boolean |**Optional** | Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions. |
+| `state`         | String |**Optional** | OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request. |
+| `vehicle_info['make']`  | String |**Optional** | Including the dict `vehicle_info` with a `make` property allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive. |
+| `single_select` | Boolean | **Optional** | An optional value that sets the behavior of the grant dialog displayed to the user. If set to `true`, `single_select` limits the user to selecting only one vehicle. Defaults to `false`. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.
 
 #### Return
 | Type             | Description         |
@@ -190,10 +190,10 @@ A compatible vehicle is a vehicle that:
 _To use this function, please contact us!_
 
 #### Arguments
-| Parameter       | Type | Description   |
-|:--------------- |:---|:------------- |
-| `vin`         | String |The VIN of the vehicle. |
-| `scope`       | String[] | The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
+| Parameter       | Type | Required | Description   |
+|:--------------- |:---|:---|:------------- |
+| `vin`         | String | **Required** | The VIN of the vehicle. |
+| `scope`       | String[] | **Required** | The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles).
 
 #### Return
 | Type                            | Description         |
@@ -212,11 +212,11 @@ requests to the vehicle using the `access_token` and the `Vehicle` class.
 Initializes a new Vehicle to use for making requests to the Smartcar API.
 
 #### Arguments
-| Parameter       | Type | Description   |
-|:--------------- |:---- |:------------- |
-| `vehicle_id`    | String | **Required** the vehicle's unique identifier |
-| `access_token`  | String | **Required** a valid access token |
-| `unit_system`   | String | **Optional** the unit system to use for vehicle data. Defaults to metric. |
+| Parameter       | Type | Required | Description   |
+|:--------------- |:---|:---|:------------- |
+| `vehicle_id`    | String | **Required** | the vehicle's unique identifier |
+| `access_token`  | String | **Required** | a valid access token |
+| `unit_system`   | String | **Optional** | the unit system to use for vehicle data. Defaults to metric. |
 
 ### `set_unit_system(self, unit_system)`
 
@@ -241,7 +241,7 @@ Returns a paged list of all permissions currently associated with this vehicle.
 Returns whether the vehicle contains specified permission(s).
 
 #### Arguments
-| Parameter       | Type | Description   |
+| Parameter       | Type |  Description   |
 |:--------------- |:---|:------------- |
 | `permissions`         | String[] or String | The permission(s) to check. |
 
@@ -335,8 +335,8 @@ Check if an expiration is expired
 
 #### Arguments
 | Parameter       | Type | Description   |
-|:--------------- |:---- |:------------- |
-| `expiration`    | DateTime | **Required** expiration datetime |
+|:--------------- |:---|:------------- |
+| `expiration`    | DateTime | expiration datetime |
 
 #### Returns
 
@@ -349,11 +349,11 @@ Check if an expiration is expired
 Get a list of the user's vehicle ids
 
 #### Arguments
-| Parameter       | Type | Description   |
-|:--------------- |:---- |:------------- |
-| `access_token`    | String | **Required** A valid access token from a previously retrieved access object |
-| `limit`    | Integer | **Optional** The number of vehicle ids to return |
-| `offset`    | Integer | **Optional** The index to start the vehicle list at |
+| Parameter       | Type | Required | Description   |
+|:--------------- |:---|:---|:------------- |
+| `access_token`    | String | **Required** | A valid access token from a previously retrieved access object |
+| `limit`    | Integer | **Optional** | The number of vehicle ids to return |
+| `offset`    | Integer | **Optional** | The index to start the vehicle list at |
 
 #### Returns
 | Type               | Description         |
@@ -369,8 +369,8 @@ Get a list of the user's vehicle ids
 
 #### Arguments
 | Parameter       | Type | Description   |
-|:--------------- |:---- |:------------- |
-| `access_token`    | String | **Required** A valid access token from a previously retrieved access object |
+|:--------------- |:---|:------------- |
+| `access_token`    | String | A valid access token from a previously retrieved access object |
 
 #### Returns
 | Type               | Description         |
