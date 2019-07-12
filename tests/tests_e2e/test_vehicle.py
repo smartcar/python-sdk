@@ -9,18 +9,15 @@ unittest.TestLoader.sortTestMethodsUsing = lambda _, x, y: (y > x) - (y < x)
 
 
 class TestVehicleE2E(TestBase):
-
     @classmethod
     def setUpClass(cls):
         super(TestVehicleE2E, cls).setUpClass()
 
         access_object = cls.client.exchange_code(cls.code)
 
-        access_token = access_object['access_token']
+        access_token = access_object["access_token"]
         vehicle_ids = smartcar.get_vehicle_ids(access_token)
-        cls.vehicle = smartcar.Vehicle(
-            vehicle_ids['vehicles'][0],
-            access_token)
+        cls.vehicle = smartcar.Vehicle(vehicle_ids["vehicles"][0], access_token)
 
     def test_odometer(self):
         odometer = self.vehicle.odometer()
@@ -40,9 +37,13 @@ class TestVehicleE2E(TestBase):
 
     def test_has_permissions(self):
         single_response = self.vehicle.has_permissions("required:read_odometer")
-        multi_response = self.vehicle.has_permissions(["read_odometer", "required:read_vehicle_info"])
+        multi_response = self.vehicle.has_permissions(
+            ["read_odometer", "required:read_vehicle_info"]
+        )
         false_response = self.vehicle.has_permissions("read_ignition")
-        false_multi_response = self.vehicle.has_permissions(["read_odometer", "read_ignition"])
+        false_multi_response = self.vehicle.has_permissions(
+            ["read_odometer", "read_ignition"]
+        )
 
         self.assertTrue(single_response)
         self.assertTrue(multi_response)
