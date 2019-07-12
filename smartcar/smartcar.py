@@ -1,17 +1,20 @@
 from . import api, const, requester, vehicle
 import time
 from datetime import datetime, timedelta
+
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
 
+
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
     refresh_expire_date = datetime.utcnow() + timedelta(days=60)
-    access['expiration'] = expire_date
-    access['refresh_expiration'] = refresh_expire_date
+    access["expiration"] = expire_date
+    access["refresh_expiration"] = refresh_expire_date
     return access
+
 
 def is_expired(expiration):
     """ Check if an expiration is expired
@@ -23,6 +26,7 @@ def is_expired(expiration):
         bool: true if expired
     """
     return datetime.utcnow() > expiration
+
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
     """ Get a list of the user's vehicle ids
@@ -39,6 +43,7 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
     """
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
+
 def get_user_id(access_token):
     """ Retrieve the userId associated with the access_token
 
@@ -49,11 +54,19 @@ def get_user_id(access_token):
         str: userId
 
     """
-    return api.Api(access_token).user().json()['id']
+    return api.Api(access_token).user().json()["id"]
+
 
 class AuthClient(object):
-
-    def __init__(self, client_id, client_secret, redirect_uri, scope=None, test_mode=None, development=None):
+    def __init__(
+        self,
+        client_id,
+        client_secret,
+        redirect_uri,
+        scope=None,
+        test_mode=None,
+        development=None,
+    ):
         """ A client for accessing the Smartcar API
 
         Args:
@@ -72,12 +85,13 @@ class AuthClient(object):
         """
         self.client_id = client_id
         self.client_secret = client_secret
-        self.auth=(client_id, client_secret)
+        self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.scope = scope
 
         if development:
             import warnings
+
             message = """Development flag is deprecated. This is discouraged and will be
                          removed in the next major release. Use testMode instead."""
             warnings.warn(message, DeprecationWarning, stacklevel=2)
@@ -105,30 +119,30 @@ class AuthClient(object):
         """
         base_url = const.CONNECT_URL
 
-        approval_prompt = 'force' if force else 'auto'
+        approval_prompt = "force" if force else "auto"
         query = {
-            'response_type': 'code',
-            'client_id': self.client_id,
-            'redirect_uri': self.redirect_uri,
-            'approval_prompt': approval_prompt,
+            "response_type": "code",
+            "client_id": self.client_id,
+            "redirect_uri": self.redirect_uri,
+            "approval_prompt": approval_prompt,
         }
 
         if self.test_mode:
-            query['mode'] = 'test'
+            query["mode"] = "test"
 
         if self.scope:
-            query['scope'] = ' '.join(self.scope)
+            query["scope"] = " ".join(self.scope)
 
         if state:
-            query['state'] = state
-        
+            query["state"] = state
+
         if vehicle_info:
-            valid_parameters = ['make']
+            valid_parameters = ["make"]
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
 
-        return base_url + '/oauth/authorize?' + urlencode(query)
+        return base_url + "/oauth/authorize?" + urlencode(query)
 
     def exchange_code(self, code):
         """ Exchange an authentication code for an access dictionary
@@ -140,16 +154,15 @@ class AuthClient(object):
             dict: dict containing the access and refresh token
 
         """
-        method = 'POST'
+        method = "POST"
         url = const.AUTH_URL
         data = {
-            'grant_type': 'authorization_code',
-            'code': code,
-            'redirect_uri': self.redirect_uri,
+            "grant_type": "authorization_code",
+            "code": code,
+            "redirect_uri": self.redirect_uri,
         }
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
-
 
     def exchange_refresh_token(self, refresh_token):
         """ Exchange a refresh token for a new access dictionary
@@ -162,12 +175,9 @@ class AuthClient(object):
             dict: dict containing access and refresh token
 
         """
-        method = 'POST'
+        method = "POST"
         url = const.AUTH_URL
-        data = {
-            'grant_type': 'refresh_token',
-            'refresh_token': refresh_token
-        }
+        data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
@@ -182,11 +192,8 @@ class AuthClient(object):
             boolean: true if the vehicle is compatible
 
         """
-        method = 'GET'
-        url = const.API_URL + '/compatibility'
-        query = {
-            'vin': vin,
-            'scope': " ".join(scope)
-        }
+        method = "GET"
+        url = const.API_URL + "/compatibility"
+        query = {"vin": vin, "scope": " ".join(scope)}
         response = requester.call(method, url, params=query, auth=self.auth).json()
-        return response['compatible']
+        return response["compatible"]

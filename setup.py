@@ -42,6 +42,7 @@ setup(
             'responses',
             'selenium',
             'retrying',
+            'black'
         ]
     }
 )

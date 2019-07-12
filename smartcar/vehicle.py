@@ -1,9 +1,9 @@
 import dateutil.parser
 from .api import Api
 
-class Vehicle(object):
 
-    def __init__(self, vehicle_id, access_token, unit_system='metric'):
+class Vehicle(object):
+    def __init__(self, vehicle_id, access_token, unit_system="metric"):
         """ Initializes a new Vehicle to use for making requests to the Smartcar API.
 
         Args:
@@ -16,7 +16,7 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
-        self.api.set_unit_system('metric' if unit_system == 'metric' else 'imperial')
+        self.api.set_unit_system("metric" if unit_system == "metric" else "imperial")
 
     def set_unit_system(self, unit_system):
         """ Update the unit system to use in requests to the Smartcar API.
@@ -25,7 +25,7 @@ class Vehicle(object):
             unit_system (str): the unit system to use (metric/imperial)
 
         """
-        if unit_system not in ('metric','imperial'):
+        if unit_system not in ("metric", "imperial"):
             raise ValueError("unit must be either metric or imperial")
         else:
             self.api.set_unit_system(unit_system)
@@ -37,7 +37,7 @@ class Vehicle(object):
             dict: vehicle's info
 
         """
-        response = self.api.get('')
+        response = self.api.get("")
 
         return response.json()
 
@@ -47,9 +47,9 @@ class Vehicle(object):
         Returns:
             str: vehicle's vin
         """
-        response = self.api.get('vin')
+        response = self.api.get("vin")
 
-        return response.json()['vin']
+        return response.json()["vin"]
 
     def permissions(self):
         """ GET Vehicle.permissions
@@ -59,10 +59,10 @@ class Vehicle(object):
         """
         response = self.api.permissions()
 
-        return response.json()['permissions']
-      
+        return response.json()["permissions"]
+
     def has_permissions(self, permissions):
-      """ Checks if vehicle has specified permission(s).
+        """ Checks if vehicle has specified permission(s).
 
         Args:
             permissions (str or list of str): Permission(s) to check
@@ -70,18 +70,21 @@ class Vehicle(object):
         Returns:
             boolean: Whether the vehicle has the specified permission(s)
       """
-      vehicle_permissions = self.permissions()
-      prefix = "required:"
-      
-      if isinstance(permissions, list):
-        contained = [permission.replace(prefix, '', 1) in vehicle_permissions for permission in permissions]
-        
-        if False in contained:
-          return False
+        vehicle_permissions = self.permissions()
+        prefix = "required:"
+
+        if isinstance(permissions, list):
+            contained = [
+                permission.replace(prefix, "", 1) in vehicle_permissions
+                for permission in permissions
+            ]
+
+            if False in contained:
+                return False
+            else:
+                return True
         else:
-          return True
-      else:
-        return permissions.replace(prefix, '', 1) in vehicle_permissions
+            return permissions.replace(prefix, "", 1) in vehicle_permissions
 
     def disconnect(self):
         """ Disconnect this vehicle from the connected application.
@@ -100,12 +103,12 @@ class Vehicle(object):
             dict: vehicle's odometer
 
         """
-        response = self.api.get('odometer')
+        response = self.api.get("odometer")
 
         return {
-            'data': response.json(),
-            'unit_system': response.headers['sc-unit-system'],
-            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+            "data": response.json(),
+            "unit_system": response.headers["sc-unit-system"],
+            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
         }
 
     def location(self):
@@ -115,11 +118,11 @@ class Vehicle(object):
             dict: vehicle's location
 
         """
-        response = self.api.get('location')
+        response = self.api.get("location")
 
         return {
-            'data': response.json(),
-            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+            "data": response.json(),
+            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
         }
 
     def unlock(self):
@@ -132,10 +135,8 @@ class Vehicle(object):
             SmartcarException
 
         """
-        response = self.api.action('security', 'UNLOCK')
-        return {
-            'status': response.json()['status']
-        }
+        response = self.api.action("security", "UNLOCK")
+        return {"status": response.json()["status"]}
 
     def lock(self):
         """ POST Vehicle.lock
@@ -146,7 +147,5 @@ class Vehicle(object):
         Raises: 
             SmartcarException
         """
-        response = self.api.action('security', 'LOCK')
-        return { 
-            'status': response.json()['status']
-        }
+        response = self.api.action("security", "LOCK")
+        return {"status": response.json()["status"]}
