@@ -19,5 +19,8 @@ export INTEGRATION_CLIENT_SECRET=''
 ```
 3. Run tests: `make test args="--verbose"`
 
+## Formatting
+All code in this repository is formatted using [black](https://github.com/python/black). Please format all contributions using the tool.
+
 ## Creating a pull request
 Please make sure to bump the version number in `smartcar/__init__.py` in accordance with [semver](https://semver.org/) when making a pull request to the `master` branch.
