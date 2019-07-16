@@ -142,20 +142,17 @@ class AuthClient(object):
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
-<<<<<<< HEAD
-
-        if single_select != None:
-            query['single_select'] = single_select == True
-=======
         
-        if single_select == True:
-            query['single_select'] = True
-        elif single_select:
-            valid_parameters = ['vin']
-            for param in valid_parameters:
-                if param in single_select:
-                    query['single_select' + param] = single_select[param]
->>>>>>> chore: add single select v1.2 params
+        single_select_added = False
+        
+        if single_select != None:
+            if isinstance(single_select, dict):
+                valid_parameters = ['vin']
+                for param in valid_parameters:
+                    if param in single_select:
+                        query['single_select' + param] = single_select[param]
+            else
+                query['single_select'] = single_select == True
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
