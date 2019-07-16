@@ -104,10 +104,11 @@ class AuthClient(object):
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen. 
                 Defaults to None.
-            single_select (bool or dictionary, optional): If set to True, `single_select`
-                limits the user to selecting only one vehicle. If
-                `single_select` is a dictionary with the property `vin`, single select
-                behavior will be turned on and Smartcar will only authorize the vehicle
+            single_select (bool or dictionary, optional): An optional value that
+                sets the behavior of the grant dialog displayed to the user. It
+                can be either a bool or dict. If set to True, `single_select` 
+                limits the user to selecting only one vehicle. If `single_select`
+                is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
                 with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
                 for more information. Defaults to False.
 
