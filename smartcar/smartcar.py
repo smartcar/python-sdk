@@ -91,7 +91,7 @@ class AuthClient(object):
         else:
             self.test_mode = test_mode if test_mode else False
 
-    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=None):
+    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=False):
         """ Generate the Connect URL
 
         Args:
@@ -104,12 +104,12 @@ class AuthClient(object):
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen. 
                 Defaults to None.
-            single_select (bool or dictionary, optional): If set to `true`, `single_select`
+            single_select (bool or dictionary, optional): If set to True, `single_select`
                 limits the user to selecting only one vehicle. If
                 `single_select` is a dictionary with the property `vin`, single select
                 behavior will be turned on and Smartcar will only authorize the vehicle
                 with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
-                for more information. Defaults to None.
+                for more information. Defaults to False.
 
         Returns:
             str: authorization url
