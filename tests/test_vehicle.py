@@ -83,6 +83,25 @@ class TestVehicle(unittest.TestCase):
 
         self.check(response)
         self.assertEqual(response, data['permissions'])
+        
+    @responses.activate
+    def test_has_permissions(self):
+        data = {
+            "permissions": ["read_odometer" , "read_vehicle_info"]
+        }
+
+        self.queue('GET', 'permissions', data)
+        single_response = self.vehicle.has_permissions("read_odometer")
+        required_response = self.vehicle.has_permissions("required:read_odometer")
+        multi_response = self.vehicle.has_permissions(["read_odometer", "required:read_vehicle_info"])
+        false_response = self.vehicle.has_permissions("read_location")
+        false_multi_response = self.vehicle.has_permissions(["read_odometer", "read_location"])
+
+        self.assertTrue(single_response)
+        self.assertTrue(required_response)
+        self.assertTrue(multi_response)
+        self.assertFalse(false_response)
+        self.assertFalse(false_multi_response)
 
     @responses.activate
     def test_info(self):
