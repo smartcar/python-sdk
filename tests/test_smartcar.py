@@ -218,6 +218,29 @@ class TestSmartcar(unittest.TestCase):
 
         assertDeepEquals(self, expected_params, actual_params)
 
+    def test_get_auth_url_single_select_junk_values(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
+
+        actual = client.get_auth_url(force=True, state='stuff', single_select='potato')
+
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'state': 'stuff',
+            'scope': ' '.join(self.scope),
+            'single_select': False
+        })
+
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
+
     @responses.activate
     def test_exchange_code(self):
         body = {

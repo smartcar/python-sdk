@@ -85,7 +85,7 @@ class AuthClient(object):
         else:
             self.test_mode = test_mode if test_mode else False
 
-    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=None):
+    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=False):
         """ Generate the Connect URL
 
         Args:
@@ -122,15 +122,15 @@ class AuthClient(object):
 
         if state:
             query['state'] = state
-        
+
         if vehicle_info:
             valid_parameters = ['make']
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
-        
-        if single_select == True:
-            query['single_select'] = True
+
+        if single_select:
+            query['single_select'] = single_select == True
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
