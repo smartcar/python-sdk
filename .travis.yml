@@ -17,7 +17,8 @@ services:
 script:
 
   - docker run --name selenium-container -d --net host -v /dev/shm:/dev/shm selenium/standalone-chrome
-  - make lint
+  # Black formatter only works on Python 3.6+
+  - if [[ $TRAVIS_PYTHON_VERSION > '3.59' ]]; then make lint; fi
   - make test args='--verbose'
 
 jobs:
