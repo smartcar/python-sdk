@@ -3,7 +3,7 @@ from . import const, requester
 class Api(object):
 
     def __init__(self, access_token, vehicle_id=None):
-        """ Initialize a new Api object to make directly make requests to Smartcar.
+        """ Initialize a new Api object to directly make requests to Smartcar.
 
         Args:
             access_token (str): Smartcar access token
