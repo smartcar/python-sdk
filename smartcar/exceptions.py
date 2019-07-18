@@ -11,14 +11,23 @@ class SmartcarException(Exception):
     def __str__(self):
         return self.message
 
+
 class ValidationException(SmartcarException):
     pass
+
+
 class AuthenticationException(SmartcarException):
     pass
+
+
 class PermissionException(SmartcarException):
     pass
+
+
 class ResourceNotFoundException(SmartcarException):
     pass
+
+
 class StateException(SmartcarException):
     def __init__(self, response):
         super(StateException, self).__init__(response)
@@ -28,14 +37,27 @@ class StateException(SmartcarException):
     def __str__(self):
         return self.code + ': ' + self.message
 
+
 class RateLimitingException(SmartcarException):
     pass
+
+
 class MonthlyLimitExceeded(SmartcarException):
     pass
+
+
 class ServerException(SmartcarException):
     pass
-class NotCapableException(SmartcarException):
+
+
+class VehicleNotCapableException(SmartcarException):
     pass
+
+
+class SmartcarNotCapableException(SmartcarException):
+    pass
+
+
 class GatewayTimeoutException(SmartcarException):
     def __init__(self, response):
         self.message = response.text

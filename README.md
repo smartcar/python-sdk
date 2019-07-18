@@ -98,7 +98,8 @@ odometer = vehicle.odometer()['data']['distance']
 |429|smartcar.RateLimitingException|
 |430|smartcar.MonthlyLimitExceeded|
 |500|smartcar.ServerException|
-|501|smartcar.NotCapableException|
+|501|smartcar.VehicleNotCapableException|
+|501|smartcar.SmartcarNotCapableException|
 |504|smartcar.GatewayTimeoutException|
 
 Checkout our [Errors documentation][errors] to learn more.
@@ -135,6 +136,9 @@ Generate the Connect URL
 |:---------------- |:--------------------|
 | String           | Smartcar Connect URL |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 #### Example
 ```
 'https://connect.smartcar.com/oauth/authorize?response_type=token...'
@@ -159,6 +163,9 @@ Exchange an authorization code for an access dictionary
 | Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `exchange_refresh_token(token)`
 
 Exchange a refresh token for a new access dictionary
@@ -177,6 +184,9 @@ Exchange a refresh token for a new access dictionary
 | Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
 | Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token |
 | Dictionary.`token_type`         | Always set to  Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step. |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 ### `is_compatible(vin, scope)`
 
@@ -199,6 +209,9 @@ _To use this function, please contact us!_
 | Type                            | Description         |
 |:------------------------------- |:--------------------|
 | Boolean                         | `False` if the vehicle is NOT compatible. `True` if the vehicle is _likely_ compatible.* |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 **\*Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
 
@@ -250,6 +263,9 @@ Returns whether the vehicle contains specified permission(s).
 |:------------------ |:--------------------|
 | Boolean      | Whether the vehicle has the specified permission(s). |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `info(self)`
 
 Returns a single vehicle object, containing identifying information.
@@ -263,6 +279,9 @@ Returns a single vehicle object, containing identifying information.
 | Dictionary.`model` | The model of the vehicle. |
 | Dictionary.`year`  | The model year. |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `vin(self)`
 
 Returns the vehicle's manufacturer identifier.
@@ -271,6 +290,9 @@ Returns the vehicle's manufacturer identifier.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | String             | The manufacturer unique identifier. |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 ### `location(self)`
 
@@ -284,6 +306,9 @@ Returns the location of the vehicle in geographic coordinates.
 | Dictionary.`data`.`longitude` | The longitude (in degrees). |
 | Dictionary.`age`   | A datetime for the age of the data |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `odometer(self)`
 
 Returns the vehicle's current odometer reading.
@@ -291,14 +316,68 @@ Returns the vehicle's current odometer reading.
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
-| Dictionary         | vehicle's odometer  |
+| Dictionary         | vehicle's odometer (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
 | Dictionary.`data`.`distance`  | The current odometer of the vehicle |
-| Dictionary.`unit_system` | the unit system of the odometer data |
+| Dictionary.`unit_system` | the unit system of the odometer data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
 | Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `fuel(self)`
+
+Returns the vehicle's fuel status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's fuel status  |
+| Dictionary.`data.range`  | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.percentRemaining`  | The remaining level of fuel in the tank (in percent) |
+| Dictionary.`data.amountRemaining`  | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`unit_system` | the unit system of the fuel data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).|
+| Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `battery(self)`
+
+Returns the vehicle's battery status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's battery status  |
+| Dictionary.`data.range`  | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.percentRemaining`  | The remaining level of charge in the battery (in percent) |
+| Dictionary.`unit_system` | the unit system of the battery data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `charge(self)`
+
+Returns the vehicle's charge status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's charge status  |
+| Dictionary.`data.isPluggedIn`  | Indicates whether charging cable is plugged in |
+| Dictionary.`data.state`  | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
+| Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 ### `disconnect(self)`
 
 Disconnect this vehicle from the connected application.
+
+#### Raises
+<code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 Note: Calling this method will invalidate your access token and you will
 have to have the user reauthorize the vehicle to your application if you
@@ -312,6 +391,7 @@ Unlock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
+
 #### Raises
 <code>SmartcarException</code> on unsuccessful request
 
@@ -323,8 +403,9 @@ Lock the vehicle.
 | Type               | Description         |
 |:------------------ |:--------------------|
 | Dictionary.`status`| Set to success on successful request. |
+
 #### Raises
-<code>SmartcarException</code> on unsuccessful request
+<code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 
 ## Static Methods
@@ -363,6 +444,9 @@ Get a list of the user's vehicle ids
 | Dictionary.`paging`.`count` | The total number of elements for the entire query (not just the given page). |
 | Dictionary.`paging`.`offset` | The current start index of the returned list of elements. |
 
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `smartcar.get_user_id(access_token)`
 
  Retrieve the userId associated with the access_token
@@ -376,6 +460,9 @@ Get a list of the user's vehicle ids
 | Type               | Description         |
 |:------------------ |:--------------------|
 | String             | the user id |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 [ci-url]: https://travis-ci.com/smartcar/python-sdk
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master

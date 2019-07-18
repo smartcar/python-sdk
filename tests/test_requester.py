@@ -3,6 +3,7 @@ import responses
 import requests
 import smartcar
 
+
 class TestRequester(unittest.TestCase):
     EXPECTED = 'expected'
     URL = 'http://fake.url'
@@ -10,7 +11,7 @@ class TestRequester(unittest.TestCase):
     def queue(self, status_code, **kwargs):
         """ queue up a fake response with the specified status code """
         if not kwargs:
-            json = { 'message': self.EXPECTED }
+            json = {'message': self.EXPECTED}
         else:
             json = kwargs
 
@@ -19,7 +20,7 @@ class TestRequester(unittest.TestCase):
     def check(self, exception):
 
         self.assertRaisesRegexp(exception, self.EXPECTED,
-            smartcar.requester.call, 'GET', self.URL)
+                                smartcar.requester.call, 'GET', self.URL)
 
     @responses.activate
     def test_user_agent(self):
@@ -27,8 +28,7 @@ class TestRequester(unittest.TestCase):
         smartcar.requester.call('GET', self.URL)
         self.assertRegexpMatches(
             responses.calls[0].request.headers['User-Agent'],
-            r'^Smartcar\/(\d+\.\d+\.\d+) \((\w+); (\w+)\) Python v(\d+\.\d+\.\d+)$'
-        )
+            r'^Smartcar\/(\d+\.\d+\.\d+) \((\w+); (\w+)\) Python v(\d+\.\d+\.\d+)$')
 
     @responses.activate
     def test_oauth_error(self):
@@ -69,7 +69,7 @@ class TestRequester(unittest.TestCase):
     @responses.activate
     def test_409(self):
         message = "Vehicle State Error"
-        code='VS_OO1'
+        code = 'VS_OO1'
         self.queue(409, message=message, code=code)
         try:
             smartcar.requester.call('GET', self.URL)
@@ -93,13 +93,30 @@ class TestRequester(unittest.TestCase):
         self.check(smartcar.ServerException)
 
     @responses.activate
-    def test_501(self):
-        self.queue(501)
-        self.check(smartcar.NotCapableException)
+    def test_smartcar_not_capable_error(self):
+        self.queue(
+            501,
+            error='smartcar_not_capable_error',
+            message=self.EXPECTED)
+        self.check(smartcar.SmartcarNotCapableException)
+
+    @responses.activate
+    def test_vehicle_not_capable_error(self):
+        self.queue(
+            501,
+            error='vehicle_not_capable_error',
+            message=self.EXPECTED)
+        self.check(smartcar.VehicleNotCapableException)
 
     @responses.activate
     def test_504(self):
-        responses.add('GET', self.URL, status=504, body=self.EXPECTED)
+        responses.add(
+            'GET',
+            self.URL,
+            status=504,
+            json={
+                'error': 'random_error',
+                'message': self.EXPECTED})
         self.check(smartcar.GatewayTimeoutException)
 
     @responses.activate

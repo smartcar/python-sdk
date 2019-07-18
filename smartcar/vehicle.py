@@ -1,6 +1,7 @@
 import dateutil.parser
 from .api import Api
 
+
 class Vehicle(object):
 
     def __init__(self, vehicle_id, access_token, unit_system='metric'):
@@ -16,7 +17,8 @@ class Vehicle(object):
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Api(access_token, vehicle_id)
-        self.api.set_unit_system('metric' if unit_system == 'metric' else 'imperial')
+        self.api.set_unit_system(
+            'metric' if unit_system == 'metric' else 'imperial')
 
     def set_unit_system(self, unit_system):
         """ Update the unit system to use in requests to the Smartcar API.
@@ -25,7 +27,7 @@ class Vehicle(object):
             unit_system (str): the unit system to use (metric/imperial)
 
         """
-        if unit_system not in ('metric','imperial'):
+        if unit_system not in ('metric', 'imperial'):
             raise ValueError("unit must be either metric or imperial")
         else:
             self.api.set_unit_system(unit_system)
@@ -35,6 +37,9 @@ class Vehicle(object):
 
         Returns:
             dict: vehicle's info
+
+        Raises:
+            SmartcarException
 
         """
         response = self.api.get('')
@@ -46,6 +51,10 @@ class Vehicle(object):
 
         Returns:
             str: vehicle's vin
+
+        Raises:
+            SmartcarException
+
         """
         response = self.api.get('vin')
 
@@ -56,6 +65,10 @@ class Vehicle(object):
 
         Returns:
             list: vehicle's permissions
+
+        Raises:
+            SmartcarException
+
         """
         response = self.api.permissions()
 
@@ -90,6 +103,9 @@ class Vehicle(object):
         have to have the user reauthorize the vehicle to your application if you
         wish to make requests to it
 
+        Raises:
+            SmartcarException
+
         """
         self.api.disconnect()
 
@@ -99,6 +115,8 @@ class Vehicle(object):
         Returns:
             dict: vehicle's odometer
 
+        Raises:
+            SmartcarException
         """
         response = self.api.get('odometer')
 
@@ -108,11 +126,67 @@ class Vehicle(object):
             'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 
+    def fuel(self):
+        """ GET Vehicle.fuel
+
+        Returns:
+            dict: vehicle's fuel status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.get('fuel')
+
+        return {
+            'data': response.json(),
+            'unit_system': response.headers['sc-unit-system'],
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+        }
+
+    def battery(self):
+        """ GET Vehicle.battery
+
+        Returns:
+            dict: vehicle's battery status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.get('battery')
+
+        return {
+            'data': response.json(),
+            'unit_system': response.headers['sc-unit-system'],
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+        }
+
+    def charge(self):
+        """ GET Vehicle.charge
+
+        Returns:
+            dict: vehicle's charge status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.get('charge')
+
+        return {
+            'data': response.json(),
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+        }
+
     def location(self):
         """ GET Vehicle.location
 
         Returns:
             dict: vehicle's location
+
+        Raises:
+            SmartcarException
 
         """
         response = self.api.get('location')
@@ -125,10 +199,10 @@ class Vehicle(object):
     def unlock(self):
         """ POST Vehicle.unlock
 
-        Returns: 
+        Returns:
             dict: status
-        
-        Raises: 
+
+        Raises:
             SmartcarException
 
         """
@@ -140,13 +214,14 @@ class Vehicle(object):
     def lock(self):
         """ POST Vehicle.lock
 
-        Returns: 
+        Returns:
             dict: status
 
-        Raises: 
+        Raises:
             SmartcarException
+
         """
         response = self.api.action('security', 'LOCK')
-        return { 
+        return {
             'status': response.json()['status']
         }
