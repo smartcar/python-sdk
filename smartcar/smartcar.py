@@ -98,7 +98,7 @@ class AuthClient(object):
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen. 
                 Defaults to None.
-            single_select (bool, optional): If set to `true`, `single_select` limits the user to selecting only one vehicle. Defaults to `false`. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.
+            single_select (bool, optional): If set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.
 
         Returns:
             str: authorization url
