@@ -6,9 +6,9 @@ import time
 from datetime import datetime, timedelta
 try:
     from urllib import urlencode
-    from urlparse import parse_qs
+    from urlparse import parse_qs, urlparse
 except ImportError:
-    from urllib.parse import urlencode, parse_qs
+    from urllib.parse import urlencode, parse_qs, urlparse
 
 def assertDeepEquals(self, dict1, dict2):
     self.assertEqual(len(dict2), len(dict1))
@@ -234,14 +234,13 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
+            'state': 'stuff',
             'single_select_vin': '12345678901234',
             'single_select': True
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(query)
+        actual_params = parse_qs(urlparse(actual).query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
