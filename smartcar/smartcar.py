@@ -146,7 +146,7 @@ class AuthClient(object):
         
         single_select_added = False
         
-        if single_select != None:
+        if single_select is not None:
             if isinstance(single_select, dict):
                 valid_parameters = ['vin']
                 for param in valid_parameters:
