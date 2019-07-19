@@ -155,6 +155,8 @@ class AuthClient(object):
                         single_select_added = True
                 if single_select_added:
                     query['single_select'] = True
+                else:
+                    query['single_select'] = False
             else:
                 query['single_select'] = single_select == True
 
