@@ -234,7 +234,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select_vin': '12345678901234'
+            'single_select_vin': '12345678901234',
+            'single_select': True
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
