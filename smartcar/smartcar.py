@@ -144,19 +144,14 @@ class AuthClient(object):
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
         
-        single_select_added = False
-        
         if single_select is not None:
+            query['single_select'] = False
             if isinstance(single_select, dict):
                 valid_parameters = ['vin']
                 for param in valid_parameters:
                     if param in single_select:
                         query['single_select_' + param] = single_select[param]
-                        single_select_added = True
-                if single_select_added:
-                    query['single_select'] = True
-                else:
-                    query['single_select'] = False
+                        query['single_select'] = True
             else:
                 query['single_select'] = single_select == True
 
