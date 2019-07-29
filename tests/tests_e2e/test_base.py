@@ -24,11 +24,11 @@ class TestBase(unittest.TestCase):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
-            tesla_button = WebDriverWait(driver, 10).until(
+            chevy_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.CSS_SELECTOR,
-                    "button[data-make='TESLA']")))
-            tesla_button.click()
+                    "button[data-make='CHEVROLET']")))
+            chevy_button.click()
 
             username = uuid.uuid4()
             username = str(username) + '@mock.com'
