@@ -23,7 +23,7 @@ class TestVehicleE2E(TestBase):
 
     def test_fuel(self):
         try:
-            self.vehicle.fuel
+            self.vehicle.fuel()
         except smartcar.PermissionException as err:
             self.assertEqual(err.message, 'Insufficient permissions to access requested resource.')
             self.assertEqual(err.code, 403)
