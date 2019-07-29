@@ -22,8 +22,11 @@ class TestVehicleE2E(TestBase):
         self.assertIsNotNone(odometer)
 
     def test_fuel(self):
-        fuel = self.vehicle.fuel()
-        self.assertIsNotNone(fuel)
+        try:
+            self.vehicle.fuel
+        except smartcar.PermissionException as err:
+            self.assertEqual(err.message, 'Insufficient permissions to access requested resource.')
+            self.assertEqual(err.code, 403)
 
     def test_battery(self):
         battery = self.vehicle.battery()
