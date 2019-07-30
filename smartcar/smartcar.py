@@ -104,7 +104,13 @@ class AuthClient(object):
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen. 
                 Defaults to None.
-            single_select (bool, optional): If set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.
+            single_select (bool or dictionary, optional): An optional value that
+                sets the behavior of the grant dialog displayed to the user. It
+                can be either a bool or dict. If set to True, `single_select` 
+                limits the user to selecting only one vehicle. If `single_select`
+                is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
+                with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
+                for more information. Defaults to None.
 
         Returns:
             str: authorization url
@@ -137,9 +143,17 @@ class AuthClient(object):
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
-
-        if single_select != None:
-            query['single_select'] = single_select == True
+        
+        if single_select is not None:
+            query['single_select'] = False
+            if isinstance(single_select, dict):
+                valid_parameters = ['vin']
+                for param in valid_parameters:
+                    if param in single_select:
+                        query['single_select_' + param] = single_select[param]
+                        query['single_select'] = True
+            else:
+                query['single_select'] = single_select == True
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 

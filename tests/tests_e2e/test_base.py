@@ -24,11 +24,11 @@ class TestBase(unittest.TestCase):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
-            tesla_button = WebDriverWait(driver, 10).until(
+            chevy_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.CSS_SELECTOR,
-                    "button[data-make='TESLA']")))
-            tesla_button.click()
+                    "button[data-make='CHEVROLET']")))
+            chevy_button.click()
 
             username = uuid.uuid4()
             username = str(username) + '@mock.com'
@@ -51,15 +51,15 @@ class TestBase(unittest.TestCase):
         client_secret = os.environ['INTEGRATION_CLIENT_SECRET']
         redirect_uri = 'https://example.com/auth'
         scope = [
-            'control_security:unlock',
-            'control_security:lock',
-            'read_vehicle_info',
-            'read_vin',
-            'read_location',
-            'read_odometer',
-            'read_fuel',
-            'read_battery',
-            'read_charge'
+            'required:control_security:unlock',
+            'required:control_security:lock',
+            'required:read_vehicle_info',
+            'required:read_vin',
+            'required:read_location',
+            'required:read_odometer',
+            'required:read_fuel',
+            'required:read_battery',
+            'required:read_charge'
         ]
         test_mode = True
 

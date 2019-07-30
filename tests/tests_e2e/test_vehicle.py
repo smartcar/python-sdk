@@ -23,7 +23,6 @@ class TestVehicleE2E(TestBase):
 
     def test_fuel(self):
         fuel = self.vehicle.fuel()
-        self.assertIsNotNone(fuel)
 
     def test_battery(self):
         battery = self.vehicle.battery()

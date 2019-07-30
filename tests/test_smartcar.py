@@ -6,9 +6,9 @@ import time
 from datetime import datetime, timedelta
 try:
     from urllib import urlencode
-    from urlparse import parse_qs
+    from urlparse import parse_qs, urlparse
 except ImportError:
-    from urllib.parse import urlencode, parse_qs
+    from urllib.parse import urlencode, parse_qs, urlparse
 
 def assertDeepEquals(self, dict1, dict2):
     self.assertEqual(len(dict2), len(dict1))
@@ -195,7 +195,7 @@ class TestSmartcar(unittest.TestCase):
 
         assertDeepEquals(self, expected_params, actual_params)
 
-    def test_get_auth_url_single_select(self):
+    def test_get_auth_url_single_select_bool(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, development=False)
 
@@ -217,8 +217,61 @@ class TestSmartcar(unittest.TestCase):
         actual_params = parse_qs(actual)
 
         assertDeepEquals(self, expected_params, actual_params)
+    def test_get_auth_url_single_select_dictionary_vin(self):
+        single_select = {
+            'vin': '12345678901234'
+        }
+
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
+
+        actual = client.get_auth_url(force=True, state='stuff', single_select=single_select)
+
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'state': 'stuff',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff',
+            'single_select_vin': '12345678901234',
+            'single_select': True
+        })
+
+        expected_params = parse_qs(query)
+        actual_params = parse_qs(urlparse(actual).query)
+
+        assertDeepEquals(self, expected_params, actual_params)
 
     def test_get_auth_url_single_select_junk_values(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope, development=False)
+
+        actual = client.get_auth_url(force=True, state='stuff', single_select='potato')
+
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'state': 'stuff',
+            'scope': ' '.join(self.scope),
+            'single_select': False
+        })
+
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
+
+    def test_get_auth_url_single_select_junk_keys(self):
+        info = {
+            'pizza': 'TESLA'
+        }
+        
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, development=False)
 
