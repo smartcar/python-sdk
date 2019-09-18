@@ -24,6 +24,10 @@ class TestBase(unittest.TestCase):
         def get_code(driver, auth_url):
             driver.get(auth_url)
 
+            preamble_button =  WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, 'continue-button')))
+            preamble_button.click()
+
             chevy_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((
                     By.CSS_SELECTOR,
@@ -58,8 +62,10 @@ class TestBase(unittest.TestCase):
             'required:read_location',
             'required:read_odometer',
             'required:read_fuel',
+            'required:read_engine_oil',
+            'required:read_tires',
             'required:read_battery',
-            'required:read_charge'
+            'required:read_charge',
         ]
         test_mode = True
 

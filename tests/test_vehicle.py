@@ -172,6 +172,43 @@ class TestVehicle(unittest.TestCase):
         self.assertEqual(response['age'], dateutil.parser.parse(age))
 
     @responses.activate
+    def test_tire_pressure(self):
+        data = {
+            'frontLeft': 227.34,
+            'frontRight': 227.34,
+            'backLeft': 227.34,
+            'backRight': 227.34,
+        }
+
+        age = '2018-04-30T22:28:52+00:00'
+        self.queue('GET', 'tires/pressure', body=data, headers={
+            'sc-unit-system': 'metric',
+            'sc-data-age': age,
+        })
+        response = self.vehicle.tire_pressure()
+
+        self.check(response)
+        self.assertEqual(response['data'], data)
+        self.assertEqual(response['unit_system'], 'metric')
+        self.assertEqual(response['age'], dateutil.parser.parse(age))
+
+    @responses.activate
+    def test_oil(self):
+        data = {
+            'lifeRemaining': 0.86
+        }
+
+        age = '2018-04-30T22:28:52+00:00'
+        self.queue('GET', 'engine/oil', body=data, headers={
+            'sc-data-age': age,
+        })
+        response = self.vehicle.oil()
+
+        self.check(response)
+        self.assertEqual(response['data'], data)
+        self.assertEqual(response['age'], dateutil.parser.parse(age))
+
+    @responses.activate
     def test_battery(self):
         data = {
             'range': 1234,
