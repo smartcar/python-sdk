@@ -144,6 +144,41 @@ class Vehicle(object):
             'age': dateutil.parser.parse(response.headers['sc-data-age']),
         }
 
+    def oil(self):
+        """ GET Vehicle.oil
+
+        Returns:
+            dict: vehicle's oil status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.get('engine/oil')
+
+        return {
+            'data': response.json(),
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+        }
+
+    def tire_pressure(self):
+        """ GET Vehicle.tire_pressure
+
+        Returns:
+            dict: vehicle's tire pressure status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.get('tires/pressure')
+
+        return {
+            'data': response.json(),
+            'unit_system': response.headers['sc-unit-system'],
+            'age': dateutil.parser.parse(response.headers['sc-data-age']),
+        }
+
     def battery(self):
         """ GET Vehicle.battery
 

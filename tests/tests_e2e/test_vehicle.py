@@ -24,6 +24,14 @@ class TestVehicleE2E(TestBase):
     def test_fuel(self):
         fuel = self.vehicle.fuel()
 
+    def test_oil(self):
+        oil = self.vehicle.oil()
+        self.assertIsNotNone(oil)
+
+    def test_tire_pressure(self):
+        tire_pressure = self.vehicle.tire_pressure()
+        self.assertIsNotNone(tire_pressure)
+        
     def test_battery(self):
         battery = self.vehicle.battery()
         self.assertIsNotNone(battery)
