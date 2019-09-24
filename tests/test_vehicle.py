@@ -174,12 +174,10 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_tire_pressure(self):
         data = {
-            tires : {
             'frontLeft': 227.34,
             'frontRight': 227.34,
             'backLeft': 227.34,
             'backRight': 227.34,
-            }
         }
 
         age = '2018-04-30T22:28:52+00:00'
@@ -190,7 +188,7 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.tire_pressure()
 
         self.check(response)
-        self.assertEqual(response['data'], data)
+        self.assertEqual(response['data']['tires'], data)
         self.assertEqual(response['unit_system'], 'metric')
         self.assertEqual(response['age'], dateutil.parser.parse(age))
 
