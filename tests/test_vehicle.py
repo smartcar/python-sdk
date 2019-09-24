@@ -188,7 +188,7 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.tire_pressure()
 
         self.check(response)
-        self.assertEqual(response['data'], data)
+        self.assertEqual(response['data']['tires'], data)
         self.assertEqual(response['unit_system'], 'metric')
         self.assertEqual(response['age'], dateutil.parser.parse(age))
 

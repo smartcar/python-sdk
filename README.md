@@ -373,6 +373,39 @@ Returns the vehicle's charge status.
 #### Raises
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
+### `oil(self)`
+
+Returns the vehicle's oil status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's oil status  |
+| Dictionary.`data.lifeRemaining`  | The engine oil's remaining life span (as a percentage). Oil life is based on the current quality of the oil. |
+| Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `tirePressure(self)`
+
+Returns the vehicle's tire pressure status.
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary         | vehicle's tire pressure status  |
+| Dictionary.`data.tires`         | Information about the pressure of each tire.  |
+| Dictionary.`data.tires.frontLeft`  | The current air pressure of the front left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.tires.fronRight`  | The current air pressure of the front right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.tires.backLeft`  | The current air pressure of the back left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`data.tires.backRight`  | The current air pressure of the back right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`unit_system` | the unit system of the fuel data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).|
+| Dictionary.`age`   | A datetime for the age of the data |
+
+#### Raises
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `disconnect(self)`
 
 Disconnect this vehicle from the connected application.
