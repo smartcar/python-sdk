@@ -59,6 +59,26 @@ class Api(object):
 
         return requester.call('POST', url, json=json, headers=self.auth)
 
+    def batch(self, requests):
+        """ Sends POST requests to Smartcar API
+
+        Args:
+            endpoint (str): the Smartcar endpoint of interest
+            action (str): action to be taken
+            **kwargs: information to put into the body of the request
+
+        Returns:
+            Response: response from the request to the Smartcar API
+
+        """
+        endpoint = 'batch'
+        url = self._format(endpoint)
+        json = dict()
+        json["headers"] = { "sc-unit-system" : self.unit_system }
+        json["requests"] = requests
+
+        return requester.call('POST', url, json=json, headers=self.auth)
+
     def get(self, endpoint):
         """ Sends GET requests to Smartcar API
 
