@@ -77,6 +77,10 @@ class Api(object):
         json["headers"] = { "sc-unit-system" : self.unit_system }
         json["requests"] = requests
 
+        print("HERE's BATCH")
+        print(url)
+        print(json)
+        print(self.auth)
         return requester.call('POST', url, json=json, headers=self.auth)
 
     def get(self, endpoint):
