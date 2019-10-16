@@ -63,7 +63,7 @@ class Api(object):
         """ Sends POST requests to Smartcar API
 
         Args:
-            requests (object[]) - an array of objects containing a pat
+            requests (object[]) - an array of objects containing a 'path' key
 
         Returns:
             Response: response from the request to the Smartcar API
