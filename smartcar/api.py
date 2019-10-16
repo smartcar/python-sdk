@@ -63,9 +63,7 @@ class Api(object):
         """ Sends POST requests to Smartcar API
 
         Args:
-            endpoint (str): the Smartcar endpoint of interest
-            action (str): action to be taken
-            **kwargs: information to put into the body of the request
+            requests (object[]) - an array of objects containing a pat
 
         Returns:
             Response: response from the request to the Smartcar API
@@ -77,10 +75,6 @@ class Api(object):
         json["headers"] = { "sc-unit-system" : self.unit_system }
         json["requests"] = requests
 
-        print("HERE's BATCH")
-        print(url)
-        print(json)
-        print(self.auth)
         return requester.call('POST', url, json=json, headers=self.auth)
 
     def get(self, endpoint):

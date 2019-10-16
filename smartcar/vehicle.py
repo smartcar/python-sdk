@@ -261,11 +261,11 @@ class Vehicle(object):
             'status': response.json()['status']
         }
 
-    def batch(self, endpoints):
+    def batch(self, paths):
         """ POST Vehicle.batch
 
         Args:
-            endpoints (str[]): an array of endpoints to make
+            paths (str[]): an array of paths to make
             the batch request to
 
         Returns:
@@ -277,8 +277,8 @@ class Vehicle(object):
 
         """
         requests = []
-        for endpoint in endpoints:
-            requests.append({ "path" : endpoint })
+        for path in paths:
+            requests.append({ "path" : path })
         response = self.api.batch(requests)
         return {
             'responses': response.json()['responses']
