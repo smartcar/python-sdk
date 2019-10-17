@@ -76,7 +76,7 @@ class TestVehicleE2E(TestBase):
         self.assertEqual(unlock["status"], "success")
 
     def test_batch(self):
-        batch_responses = self.vehicle.batch(['/odometer'])
+        batch_responses = self.vehicle.batch(['/odometer', '/location'])
         self.assertIsNotNone(batch_responses)
 
 class TestVehicleDisconnectE2E(TestBase):

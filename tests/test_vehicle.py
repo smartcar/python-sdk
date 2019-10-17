@@ -293,7 +293,8 @@ class TestVehicle(unittest.TestCase):
         request_body['headers'] = headers
         request_body['requests'] = requests
 
-        responses = [
+        expected_response = {
+        "responses": [
             {
                 "headers": headers,
                 "path": '/odometer',
@@ -330,7 +331,6 @@ class TestVehicle(unittest.TestCase):
                 }
             }
         ]
-        data = { "responses" : responses }
         self.queue('POST', 'batch', body=data)
         response = self.vehicle.batch(endpoints)
-        self.assertEqual(response['responses'], responses)
+        self.assertEqual(response['responses'], expected_response.responses)
