@@ -71,9 +71,10 @@ class Api(object):
         """
         endpoint = 'batch'
         url = self._format(endpoint)
-        json = dict()
-        json["headers"] = { "sc-unit-system" : self.unit_system }
-        json["requests"] = requests
+        json = {
+            "headers": { "sc-unit-system" : self.unit_system },
+            "requests": requests
+        }
 
         return requester.call('POST', url, json=json, headers=self.auth)
 

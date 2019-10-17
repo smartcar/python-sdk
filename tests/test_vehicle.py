@@ -283,16 +283,12 @@ class TestVehicle(unittest.TestCase):
     @responses.activate
     def test_batch(self):
         headers = {'sc-unit-system': 'imperial'}
-        endpoints = ['/odometer', '/transmission/fluid', '/fuel', '/sunroof']
-
-        requests = []
-        for path in endpoints:
-            requests.append({ "path" : path })
-
-        request_body = dict()
-        request_body['headers'] = headers
-        request_body['requests'] = requests
-
+        paths = ['/odometer', '/transmission/fluid', '/fuel', '/sunroof']
+        requests = [{"path" : path} for path in paths]
+        request_body = {
+            "headers" : headers,
+            "requests" : requests
+        }
         expected_response = {
         "responses": [
             {
@@ -332,5 +328,7 @@ class TestVehicle(unittest.TestCase):
             }
         ]
         self.queue('POST', 'batch', body=data)
-        response = self.vehicle.batch(endpoints)
+
+        response = self.vehicle.batch(paths)
+
         self.assertEqual(response['responses'], expected_response.responses)
