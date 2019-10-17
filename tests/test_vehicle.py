@@ -290,43 +290,44 @@ class TestVehicle(unittest.TestCase):
             "requests" : requests
         }
         expected_response = {
-        "responses": [
-            {
-                "headers": headers,
-                "path": '/odometer',
-                "code": 200,
-                "body": {
-                    "distance": 32768
+            "responses": [
+                {
+                    "headers": headers,
+                    "path": '/odometer',
+                    "code": 200,
+                    "body": {
+                        "distance": 32768
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/transmission/fluid',
+                    "code": 200,
+                    "body": {
+                        "temperature": 98.2,
+                        "wear": 0.5
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/fuel',
+                    "code": 200,
+                    "body": {
+                        "range": 550.8499755859375,
+                        "percentRemaining": 0.9449999928474426
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/sunroof',
+                    "code": 501,
+                    "body": {
+                        "error": 'vehicle_not_capable_error',
+                        "message": 'Vehicle is not capable of performing request.'
+                    }
                 }
-            },
-            {
-                "headers": headers,
-                "path": '/transmission/fluid',
-                "code": 200,
-                "body": {
-                    "temperature": 98.2,
-                    "wear": 0.5
-                }
-            },
-            {
-                "headers": headers,
-                "path": '/fuel',
-                "code": 200,
-                "body": {
-                    "range": 550.8499755859375,
-                    "percentRemaining": 0.9449999928474426
-                }
-            },
-            {
-                "headers": headers,
-                "path": '/sunroof',
-                "code": 501,
-                "body": {
-                    "error": 'vehicle_not_capable_error',
-                    "message": 'Vehicle is not capable of performing request.'
-                }
-            }
-        ]
+            ]
+        }
         self.queue('POST', 'batch', body=data)
 
         response = self.vehicle.batch(paths)
