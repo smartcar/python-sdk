@@ -328,7 +328,7 @@ class TestVehicle(unittest.TestCase):
                 }
             ]
         }
-        self.queue('POST', 'batch', body=data)
+        self.queue('POST', 'batch', body=expected_response)
 
         response = self.vehicle.batch(paths)
 
