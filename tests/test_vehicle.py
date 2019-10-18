@@ -83,7 +83,7 @@ class TestVehicle(unittest.TestCase):
 
         self.check(response)
         self.assertEqual(response, data['permissions'])
-        
+
     @responses.activate
     def test_has_permissions(self):
         data = {
@@ -279,3 +279,57 @@ class TestVehicle(unittest.TestCase):
         response = self.vehicle.unlock()
         self.check(response, action='UNLOCK')
         self.assertEqual(response['status'], data['status'])
+
+    @responses.activate
+    def test_batch(self):
+        headers = {'sc-unit-system': 'imperial'}
+        paths = ['/odometer', '/transmission/fluid', '/fuel', '/sunroof']
+        requests = [{"path" : path} for path in paths]
+        request_body = {
+            "headers" : headers,
+            "requests" : requests
+        }
+        expected_response = {
+            "responses": [
+                {
+                    "headers": headers,
+                    "path": '/odometer',
+                    "code": 200,
+                    "body": {
+                        "distance": 32768
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/transmission/fluid',
+                    "code": 200,
+                    "body": {
+                        "temperature": 98.2,
+                        "wear": 0.5
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/fuel',
+                    "code": 200,
+                    "body": {
+                        "range": 550.8499755859375,
+                        "percentRemaining": 0.9449999928474426
+                    }
+                },
+                {
+                    "headers": headers,
+                    "path": '/sunroof',
+                    "code": 501,
+                    "body": {
+                        "error": 'vehicle_not_capable_error',
+                        "message": 'Vehicle is not capable of performing request.'
+                    }
+                }
+            ]
+        }
+        self.queue('POST', 'batch', body=expected_response)
+
+        response = self.vehicle.batch(paths)
+
+        self.assertEqual(response['responses'], expected_response['responses'])

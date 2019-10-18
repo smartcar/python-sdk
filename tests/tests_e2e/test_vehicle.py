@@ -31,7 +31,7 @@ class TestVehicleE2E(TestBase):
     def test_tire_pressure(self):
         tire_pressure = self.vehicle.tire_pressure()
         self.assertIsNotNone(tire_pressure)
-        
+
     def test_battery(self):
         battery = self.vehicle.battery()
         self.assertIsNotNone(battery)
@@ -75,6 +75,9 @@ class TestVehicleE2E(TestBase):
         unlock = self.vehicle.unlock()
         self.assertEqual(unlock["status"], "success")
 
+    def test_batch(self):
+        batch_responses = self.vehicle.batch(['/odometer', '/location'])
+        self.assertIsNotNone(batch_responses)
 
 class TestVehicleDisconnectE2E(TestBase):
 

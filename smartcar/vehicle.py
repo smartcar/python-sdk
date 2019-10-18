@@ -73,22 +73,22 @@ class Vehicle(object):
         response = self.api.permissions()
 
         return response.json()['permissions']
-      
+
     def has_permissions(self, permissions):
       """ Checks if vehicle has specified permission(s).
 
         Args:
             permissions (str or list of str): Permission(s) to check
-          
+
         Returns:
             boolean: Whether the vehicle has the specified permission(s)
       """
       vehicle_permissions = self.permissions()
       prefix = "required:"
-      
+
       if isinstance(permissions, list):
         contained = [permission.replace(prefix, '', 1) in vehicle_permissions for permission in permissions]
-        
+
         if False in contained:
           return False
         else:
@@ -235,7 +235,7 @@ class Vehicle(object):
         """ POST Vehicle.unlock
 
         Returns:
-            dict: status
+            array:
 
         Raises:
             SmartcarException
@@ -259,4 +259,27 @@ class Vehicle(object):
         response = self.api.action('security', 'LOCK')
         return {
             'status': response.json()['status']
+        }
+
+    def batch(self, paths):
+        """ POST Vehicle.batch
+
+        Args:
+            paths (str[]): an array of paths to make
+            the batch request to
+
+        Returns:
+            dict: status
+            dict: status.responses: the batch responses
+
+        Raises:
+            SmartcarException
+
+        """
+        requests = []
+        for path in paths:
+            requests.append({ "path" : path })
+        response = self.api.batch(requests)
+        return {
+            'responses': response.json()['responses']
         }
