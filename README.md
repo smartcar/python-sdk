@@ -441,6 +441,30 @@ Lock the vehicle.
 #### Raises
 <code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
+### `batch(self, paths)`
+
+Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smartcar Pro](https://smartcar.com/pricing/) members. Visit https://smartcar.com/pricing to sign up and gain access.
+
+#### Arguments
+| Parameter       | Type | Description   |
+|:--------------- |:---|:------------- |
+| `paths`    | List | A list of paths (i.e. `"/odometer"`) to request data from. |
+
+
+#### Return
+| Type               | Description         |
+|:------------------ |:--------------------|
+| Dictionary.`responses`| An array of response objects. |
+| Dictionary.`responses[].code`| The HTTP status code for this response.  |
+| Dictionary.`responses[].path`| The requested path.  |
+| Dictionary.`responses[].header`| The header object for a response. |
+| Dictionary.`responses[].header.dataAge`| The age of the data in this response. |
+| Dictionary.`responses[].header.unitSystem`| The unit system of the data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`responses[].body`| The body containing the response data. |
+
+#### Raises
+<code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 
 ## Static Methods
 
