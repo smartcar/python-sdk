@@ -332,4 +332,4 @@ class TestVehicle(unittest.TestCase):
 
         response = self.vehicle.batch(paths)
 
-        self.assertEqual(response['responses'], expected_response.responses)
+        self.assertEqual(response['responses'], expected_response['responses'])
