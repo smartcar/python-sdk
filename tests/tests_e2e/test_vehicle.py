@@ -81,7 +81,7 @@ class TestVehicleE2E(TestBase):
 
     def test_batch(self):
         self.vehicle.set_unit_system('imperial')
-        batch_responses = self.vehicle.batch(['/odometer', '/location'])
+        batch_responses = self.vehicle.batch(['/odometer', '/fuel'])
         self.assertEqual(batch_responses["responses"][0]["headers"]["sc-unit-system"], "imperial")
 
 class TestVehicleDisconnectE2E(TestBase):
