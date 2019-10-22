@@ -51,13 +51,12 @@ class Api(object):
         """
         url = self._format(endpoint)
         headers = self.auth
-        headers[const.UNIT_SYSTEM_HEADER] = self.unit_system
         json = { 'action': action }
         for k,v in kwargs.items():
             if v:
                 json[k] = v
 
-        return requester.call('POST', url, json=json, headers=self.auth)
+        return requester.call('POST', url, json=json, headers=headers)
 
     def batch(self, requests):
         """ Sends POST requests to Smartcar API
@@ -72,11 +71,12 @@ class Api(object):
         endpoint = 'batch'
         url = self._format(endpoint)
         json = {
-            "headers": { "sc-unit-system" : self.unit_system },
             "requests": requests
         }
+        headers=self.auth
+        headers[const.UNIT_SYSTEM_HEADER] = self.unit_system
 
-        return requester.call('POST', url, json=json, headers=self.auth)
+        return requester.call('POST', url, json=json, headers=headers)
 
     def get(self, endpoint):
         """ Sends GET requests to Smartcar API
