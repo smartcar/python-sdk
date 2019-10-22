@@ -51,7 +51,6 @@ class Api(object):
         """
         url = self._format(endpoint)
         headers = self.auth
-        headers[const.UNIT_SYSTEM_HEADER] = self.unit_system
         json = { 'action': action }
         for k,v in kwargs.items():
             if v:
