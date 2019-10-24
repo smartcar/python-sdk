@@ -454,13 +454,48 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 #### Return
 | Type               | Description         |
 |:------------------ |:--------------------|
-| Dictionary.`responses`| An array of response objects. |
-| Dictionary.`responses[].code`| The HTTP status code for this response.  |
-| Dictionary.`responses[].path`| The requested path.  |
-| Dictionary.`responses[].headers`| The header object for a response. |
-| Dictionary.`responses[].headers.sc-data-age`| The age of the data in this response. |
-| Dictionary.`responses[].headers.sc-unit-system`| The unit system of the data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| Dictionary.`responses[].body`| The body containing the response data. |
+| Dictionary | An object containing the responses. The keys to this object are requested paths. |
+| Dictionary.`/`| The response from the Vehicle Info endpoint.  |
+| Dictionary.`/vin`| The response from the VIN endpoint.  |
+| Dictionary.`/odometer`| The response from the Odometer endpoint.  |
+| Dictionary.`/fuel`|  The response from the Fuel tank endpoint.  |
+| Dictionary.`/engine/oil`| The response from the Engine oil life endpoint.  |
+| Dictionary.`/tires/pressure`| The response from the Tire pressure endpoint.  |
+| Dictionary.`/battery`| The response from the EV battery endpoint. |
+| Dictionary.`/charge`| The response from the EV charge endpoint.  |
+| Dictionary.`/location`|  The response from the Location endpoint.  |
+| Dictionary.`/ENDPOINT`.`code`| The HTTP response code from the response.  |
+| Dictionary.`/ENDPOINT`.`body`| The response body.  |
+| Dictionary.`/ENDPOINT`.`headers`| The response headers.  |
+| Dictionary.`/ENDPOINT`.`headers`.`sc-data-age`| The timestamp of when the data was last updated.  |
+| Dictionary.`/ENDPOINT`.`headers`.`sc-unit-system`| The unit system for this response (metric/imperial).  |
+
+#### Example Response
+
+```json
+{
+  "/odometer" : {
+      "body": {
+        "distance": 37829
+      },
+      "code": 200,
+      "headers": {
+        "sc-data-age": "2019-10-24T00:43:46.000Z",
+        "sc-unit-system": "metric"
+      }
+  },
+  "/location" : {
+      "body": {
+        "latitude": 37.4292,
+        "longitude": 122.1381
+      },
+      "code": 200,
+      "headers": {
+        "sc-data-age": "2019-10-24T00:43:46.000Z"
+      }
+  }
+}
+```
 
 #### Raises
 <code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.

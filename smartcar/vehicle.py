@@ -269,8 +269,7 @@ class Vehicle(object):
             the batch request to
 
         Returns:
-            dict: status
-            dict: status.responses: the batch responses
+            dict: the HTTP responses, keyed by path
 
         Raises:
             SmartcarException
@@ -278,8 +277,14 @@ class Vehicle(object):
         """
         requests = []
         for path in paths:
-            requests.append({ "path" : path })
+            requests.append({ 'path' : path })
         response = self.api.batch(requests)
-        return {
-            'responses': response.json()['responses']
-        }
+        batch_dict = dict()
+        for response in response.json()['responses']:
+            path = response['path']
+            batch_dict[path] = {
+                'code' : response['code'],
+                'headers' : response['headers'],
+                'body' : response['body']
+            }
+        return batch_dict
