@@ -278,11 +278,14 @@ class Vehicle(object):
         """
         requests = []
         for path in paths:
-            requests.append({ "path" : path })
+            requests.append({ 'path' : path })
         response = self.api.batch(requests)
         batch_dict = dict()
         for response in response.json()['responses']:
-            path = response["path"]
-            del response["path"]
-            batch_dict[path] = response
+            path = response['path']
+            batch_dict[path] = {
+                'code' : response['code'],
+                'headers' : response['headers'],
+                'body' : response['body']
+            }
         return batch_dict
