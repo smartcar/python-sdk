@@ -77,7 +77,7 @@ class TestVehicleE2E(TestBase):
 
     def test_batch(self):
         batch = self.vehicle.batch(['/odometer', '/location'])
-        self.assertIsNotNone(batch_responses)
+        self.assertIsNotNone(batch)
 
     def test_set_unit_system(self):
         self.vehicle.set_unit_system('imperial')
