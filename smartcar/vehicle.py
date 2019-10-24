@@ -269,8 +269,7 @@ class Vehicle(object):
             the batch request to
 
         Returns:
-            dict: status
-            dict: status.responses: the batch responses
+            dict: the HTTP responses, keyed by path
 
         Raises:
             SmartcarException
