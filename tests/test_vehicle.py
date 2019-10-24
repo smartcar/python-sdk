@@ -284,63 +284,63 @@ class TestVehicle(unittest.TestCase):
     def test_batch(self):
         headers = {'sc-unit-system': 'imperial'}
         paths = ['/odometer', '/fuel', '/sunroof']
-        requests = [{"path" : path} for path in paths]
+        requests = [{'path' : path} for path in paths]
         request_body = {
-            "headers" : headers,
-            "requests" : requests
+            'headers' : headers,
+            'requests' : requests
         }
         mock_response = {
-            "responses": [
+            'responses': [
                 {
-                    "headers": headers,
-                    "path": '/odometer',
-                    "code": 200,
-                    "body": {
-                        "distance": 32768
+                    'headers': headers,
+                    'path': '/odometer',
+                    'code': 200,
+                    'body': {
+                        'distance': 32768
                     }
                 },
                 {
-                    "headers": headers,
-                    "path": '/fuel',
-                    "code": 200,
-                    "body": {
-                        "range": 550.8499755859375,
-                        "percentRemaining": 0.9449999928474426
+                    'headers': headers,
+                    'path': '/fuel',
+                    'code': 200,
+                    'body': {
+                        'range': 550.8499755859375,
+                        'percentRemaining': 0.9449999928474426
                     }
                 },
                 {
-                    "headers": {},
-                    "path": '/sunroof',
-                    "code": 501,
-                    "body": {
-                        "error": 'vehicle_not_capable_error',
-                        "message": 'Vehicle is not capable of performing request.'
+                    'headers': {},
+                    'path': '/sunroof',
+                    'code': 501,
+                    'body': {
+                        'error': 'vehicle_not_capable_error',
+                        'message': 'Vehicle is not capable of performing request.'
                     }
                 }
             ]
         }
         expected = {
-                "/odometer" : {
-                    "headers": headers,
-                    "code": 200,
-                    "body": {
-                        "distance": 32768
+                '/odometer' : {
+                    'headers': headers,
+                    'code': 200,
+                    'body': {
+                        'distance': 32768
                     }
                 },
-                "/fuel" : {
-                    "headers": headers,
-                    "code": 200,
-                    "body": {
-                        "range": 550.8499755859375,
-                        "percentRemaining": 0.9449999928474426
+                '/fuel' : {
+                    'headers': headers,
+                    'code': 200,
+                    'body': {
+                        'range': 550.8499755859375,
+                        'percentRemaining': 0.9449999928474426
                     }
                 },
-                "/sunroof" : {
-                    "headers": {},
-                    "code": 501,
-                    "body": {
-                        "error": 'vehicle_not_capable_error',
-                        "message": 'Vehicle is not capable of performing request.'
+                '/sunroof' : {
+                    'headers': {},
+                    'code': 501,
+                    'body': {
+                        'error': 'vehicle_not_capable_error',
+                        'message': 'Vehicle is not capable of performing request.'
                     }
                 }
         }
