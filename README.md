@@ -458,8 +458,8 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 | Dictionary.`responses[].code`| The HTTP status code for this response.  |
 | Dictionary.`responses[].path`| The requested path.  |
 | Dictionary.`responses[].header`| The header object for a response. |
-| Dictionary.`responses[].header.dataAge`| The age of the data in this response. |
-| Dictionary.`responses[].header.unitSystem`| The unit system of the data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| Dictionary.`responses[].header.sc-data-age`| The age of the data in this response. |
+| Dictionary.`responses[].header.sc-unit-system`| The unit system of the data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
 | Dictionary.`responses[].body`| The body containing the response data. |
 
 #### Raises
