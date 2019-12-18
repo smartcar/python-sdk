@@ -1,4 +1,8 @@
-language: python
+services:
+  - docker
+
+language:
+  - python
 
 python:
   - '2.7'
@@ -8,16 +12,12 @@ python:
   - '3.7'
   - '3.8'
 
+if: tag IS blank # do not build tags
+
 install:
-
-  - pip install -e .[dev]
-
-services:
-
-  - docker
+  - pip install -e '.[dev]'
 
 script:
-
   - docker run --name selenium-container -d --net host -v /dev/shm:/dev/shm selenium/standalone-chrome
   - make test args='--verbose'
 
@@ -42,7 +42,7 @@ jobs:
     - stage: publish
       language: python
       python:
-        - '3.6'
+        - '3.8'
       # use 'true' to noop the install and script stageswhich are required for
       # the python language
       install: true
