@@ -261,6 +261,36 @@ class Vehicle(object):
             'status': response.json()['status']
         }
 
+    def start_charge(self):
+        """ POST Vehicle.start_charge
+
+        Returns:
+            array:
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.action('charge', 'START')
+        return {
+            'status': response.json()['status']
+        }
+
+    def stop_charge(self):
+        """ POST Vehicle.stop_charge
+
+        Returns:
+            dict: status
+
+        Raises:
+            SmartcarException
+
+        """
+        response = self.api.action('charge', 'STOP')
+        return {
+            'status': response.json()['status']
+        }
+
     def batch(self, paths):
         """ POST Vehicle.batch
 
