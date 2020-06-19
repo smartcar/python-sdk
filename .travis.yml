@@ -26,7 +26,7 @@ jobs:
     - stage: tag
       language: generic
       # no install necessary for generic language
-      install: false
+      install: true
       script:
         - git config --global user.email "ci@smartcar.com"
         - git config --global user.name "Travis CI User"

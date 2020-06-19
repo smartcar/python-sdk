@@ -281,6 +281,28 @@ class TestVehicle(unittest.TestCase):
         self.assertEqual(response['status'], data['status'])
 
     @responses.activate
+    def test_start_charge(self):
+        data = {
+            'status': 'success'
+        }
+        self.queue('POST', 'charge', body=data)
+
+        response = self.vehicle.start_charge()
+        self.check(response, action='START')
+        self.assertEqual(response['status'], data['status'])
+
+    @responses.activate
+    def test_stop_charge(self):
+        data = {
+            'status': 'success'
+        }
+        self.queue('POST', 'charge', body=data)
+
+        response = self.vehicle.stop_charge()
+        self.check(response, action='STOP')
+        self.assertEqual(response['status'], data['status'])
+
+    @responses.activate
     def test_batch(self):
         headers = {'sc-unit-system': 'imperial'}
         paths = ['/odometer', '/fuel', '/sunroof']

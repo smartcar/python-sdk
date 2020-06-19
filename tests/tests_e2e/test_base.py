@@ -25,7 +25,7 @@ class TestBase(unittest.TestCase):
             driver.get(auth_url)
 
             preamble_button =  WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, 'continue-button')))
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'button#continue-button')))
             preamble_button.click()
 
             chevy_button = WebDriverWait(driver, 10).until(
@@ -66,6 +66,7 @@ class TestBase(unittest.TestCase):
             'required:read_tires',
             'required:read_battery',
             'required:read_charge',
+            'required:control_charge',
         ]
         test_mode = True
 
