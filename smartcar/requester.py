@@ -26,7 +26,7 @@ def call(method, url, **kwargs):
         platform.python_version()
     )
 
-    response = requests.request(method, url, timeout=300, **kwargs)
+    response = requests.request(method, url, timeout=310, **kwargs)
     code = response.status_code
     body = response.json()
 
