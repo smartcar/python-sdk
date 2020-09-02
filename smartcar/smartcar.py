@@ -91,7 +91,7 @@ class AuthClient(object):
         else:
             self.test_mode = test_mode if test_mode else False
 
-    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=None):
+    def get_auth_url(self, force=False, state=None, vehicle_info=None, single_select=None, country=None):
         """ Generate the Connect URL
 
         Args:
@@ -111,6 +111,7 @@ class AuthClient(object):
                 is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
                 with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
                 for more information. Defaults to None.
+            country (str, optional): country code according to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 
         Returns:
             str: authorization url
@@ -154,6 +155,9 @@ class AuthClient(object):
                         query['single_select'] = True
             else:
                 query['single_select'] = single_select == True
+
+        if country:
+            query['country'] = f'country:{country}'
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
@@ -204,7 +208,7 @@ class AuthClient(object):
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
-    def is_compatible(self, vin, scope, country = 'US'):
+    def is_compatible(self, vin, scope, country=None):
         """ Determine if a vehicle is compatible with Smartcar
 
         Args:
@@ -223,7 +227,9 @@ class AuthClient(object):
         query = {
             'vin': vin,
             'scope': " ".join(scope)
-            'country': country,
         }
+        if country:
+            query['country'] = country
+
         response = requester.call(method, url, params=query, auth=self.auth).json()
         return response['compatible']
