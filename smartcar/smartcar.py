@@ -102,11 +102,11 @@ class AuthClient(object):
                 requests. Defaults to None.
             vehicle_info (dict, optional): A dict with a property, make. Allows
                 users to bypass the car brand selection screen, allowing the
-                user to go directly to the vehicle login screen. 
+                user to go directly to the vehicle login screen.
                 Defaults to None.
             single_select (bool or dictionary, optional): An optional value that
                 sets the behavior of the grant dialog displayed to the user. It
-                can be either a bool or dict. If set to True, `single_select` 
+                can be either a bool or dict. If set to True, `single_select`
                 limits the user to selecting only one vehicle. If `single_select`
                 is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
                 with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
@@ -143,7 +143,7 @@ class AuthClient(object):
             for param in valid_parameters:
                 if param in vehicle_info:
                     query[param] = vehicle_info[param]
-        
+
         if single_select is not None:
             query['single_select'] = False
             if isinstance(single_select, dict):
@@ -204,7 +204,7 @@ class AuthClient(object):
         response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
-    def is_compatible(self, vin, scope):
+    def is_compatible(self, vin, scope, country = 'US'):
         """ Determine if a vehicle is compatible with Smartcar
 
         Args:
@@ -223,6 +223,7 @@ class AuthClient(object):
         query = {
             'vin': vin,
             'scope': " ".join(scope)
+            'country': country,
         }
         response = requester.call(method, url, params=query, auth=self.auth).json()
         return response['compatible']

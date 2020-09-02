@@ -271,7 +271,7 @@ class TestSmartcar(unittest.TestCase):
         info = {
             'pizza': 'TESLA'
         }
-        
+
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, development=False)
 
@@ -330,7 +330,7 @@ class TestSmartcar(unittest.TestCase):
         fake_vin = 'vin'
         scope = ['read_odometer', 'read_location']
 
-        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location' }
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', country: 'US' }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         }, match_querystring=True)
