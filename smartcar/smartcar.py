@@ -157,7 +157,7 @@ class AuthClient(object):
                 query['single_select'] = single_select == True
 
         if country:
-            query['country'] = f'country:{country}'
+            query['country'] = 'country:' + country
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 
@@ -214,6 +214,7 @@ class AuthClient(object):
         Args:
             vin (str): the VIN of the vehicle
             scope (list): list of permissions to return compatibility info for
+            country (str, optional): country code according to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) of the provided vin
 
         Returns:
             boolean: true if the vehicle is compatible
