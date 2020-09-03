@@ -294,6 +294,27 @@ class TestSmartcar(unittest.TestCase):
 
         assertDeepEquals(self, expected_params, actual_params)
 
+    def test_get_auth_url_flags_country(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope)
+        actual = client.get_auth_url(force=True, state='stuff', country='DE')
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff',
+            'flags': 'country:DE'
+        })
+        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
+
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
+
+
     @responses.activate
     def test_exchange_code(self):
         body = {
@@ -331,7 +352,7 @@ class TestSmartcar(unittest.TestCase):
         country = 'US'
         scope = ['read_odometer', 'read_location']
 
-        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'flags': 'country:' + country }
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'country': country }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         }, match_querystring=True)
