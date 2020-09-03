@@ -328,13 +328,14 @@ class TestSmartcar(unittest.TestCase):
     @responses.activate
     def test_is_compatible(self):
         fake_vin = 'vin'
+        country = 'US'
         scope = ['read_odometer', 'read_location']
 
-        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', country: 'US' }
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'country': country }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         }, match_querystring=True)
-        actual = self.client.is_compatible(fake_vin, scope)
+        actual = self.client.is_compatible(fake_vin, scope, country)
         self.assertTrue(actual)
 
     @responses.activate
