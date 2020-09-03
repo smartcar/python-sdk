@@ -157,7 +157,7 @@ class AuthClient(object):
                 query['single_select'] = single_select == True
 
         if country:
-            query['country'] = 'country:' + country
+            query['flags'] = 'country:' + country
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 

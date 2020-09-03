@@ -331,7 +331,7 @@ class TestSmartcar(unittest.TestCase):
         country = 'US'
         scope = ['read_odometer', 'read_location']
 
-        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'country': country }
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'flags': 'country:' + country }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         }, match_querystring=True)
