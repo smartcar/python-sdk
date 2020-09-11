@@ -61,7 +61,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -81,7 +82,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -101,7 +103,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -120,7 +123,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -140,7 +144,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -159,7 +164,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -185,7 +191,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'make': 'TESLA'
+            'make': 'TESLA',
+            'flags': 'country:US'
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
@@ -208,7 +215,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': True
+            'single_select': True,
+            'flags': 'country:US'
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
@@ -236,7 +244,8 @@ class TestSmartcar(unittest.TestCase):
             'scope': ' '.join(self.scope),
             'state': 'stuff',
             'single_select_vin': '12345678901234',
-            'single_select': True
+            'single_select': True,
+            'flags': 'country:US'
         })
 
         expected_params = parse_qs(query)
@@ -257,7 +266,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': False
+            'single_select': False,
+            'flags': 'country:US'
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
@@ -284,7 +294,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': False
+            'single_select': False,
+            'flags': 'country:US'
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
