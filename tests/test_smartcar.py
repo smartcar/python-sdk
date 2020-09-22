@@ -61,7 +61,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -81,7 +82,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -101,7 +103,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -120,7 +123,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -140,7 +144,8 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'mode': 'test',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -159,7 +164,8 @@ class TestSmartcar(unittest.TestCase):
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'scope': ' '.join(self.scope),
-            'state': 'stuff'
+            'state': 'stuff',
+            'flags': 'country:US'
         })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
@@ -178,20 +184,20 @@ class TestSmartcar(unittest.TestCase):
 
         actual = client.get_auth_url(force=True, state='stuff', vehicle_info=info)
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'make': 'TESLA'
+            'make': 'TESLA',
+            'flags': 'country:US'
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
@@ -201,20 +207,20 @@ class TestSmartcar(unittest.TestCase):
 
         actual = client.get_auth_url(force=True, state='stuff', single_select=True)
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': True
+            'single_select': True,
+            'flags': 'country:US'
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
 
         assertDeepEquals(self, expected_params, actual_params)
     def test_get_auth_url_single_select_dictionary_vin(self):
@@ -236,7 +242,8 @@ class TestSmartcar(unittest.TestCase):
             'scope': ' '.join(self.scope),
             'state': 'stuff',
             'single_select_vin': '12345678901234',
-            'single_select': True
+            'single_select': True,
+            'flags': 'country:US'
         })
 
         expected_params = parse_qs(query)
@@ -257,13 +264,14 @@ class TestSmartcar(unittest.TestCase):
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': False
+            'single_select': False,
+            'flags': 'country:US'
         })
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(query)
+        actual_params = parse_qs(query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
@@ -271,28 +279,49 @@ class TestSmartcar(unittest.TestCase):
         info = {
             'pizza': 'TESLA'
         }
-        
+
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope, development=False)
 
         actual = client.get_auth_url(force=True, state='stuff', single_select='potato')
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
             'approval_prompt': 'force',
             'state': 'stuff',
             'scope': ' '.join(self.scope),
-            'single_select': False
+            'single_select': False,
+            'flags': 'country:US'
         })
 
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
+
+        assertDeepEquals(self, expected_params, actual_params)
+
+    def test_get_auth_url_flags_country(self):
+        client = smartcar.AuthClient(self.client_id, self.client_secret,
+                self.redirect_uri, self.scope)
+        actual = client.get_auth_url(force=True, state='stuff', country='DE')
+        query = urlencode({
+            'response_type': 'code',
+            'client_id': self.client_id,
+            'redirect_uri': self.redirect_uri,
+            'approval_prompt': 'force',
+            'scope': ' '.join(self.scope),
+            'state': 'stuff',
+            'flags': 'country:DE'
+        })
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
         expected_params = parse_qs(expected)
         actual_params = parse_qs(actual)
 
         assertDeepEquals(self, expected_params, actual_params)
+
 
     @responses.activate
     def test_exchange_code(self):
@@ -330,11 +359,24 @@ class TestSmartcar(unittest.TestCase):
         fake_vin = 'vin'
         scope = ['read_odometer', 'read_location']
 
-        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location' }
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'country': 'US' }
         responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
             'compatible': True
         }, match_querystring=True)
         actual = self.client.is_compatible(fake_vin, scope)
+        self.assertTrue(actual)
+
+    @responses.activate
+    def test_is_compatible_select_country(self):
+        fake_vin = 'vin'
+        country = 'DE'
+        scope = ['read_odometer', 'read_location']
+
+        query = { 'vin': fake_vin, 'scope': 'read_odometer read_location', 'country': country }
+        responses.add('GET', smartcar.const.API_URL + '/compatibility?' + urlencode(query), json={
+            'compatible': True
+        }, match_querystring=True)
+        actual = self.client.is_compatible(fake_vin, scope, country)
         self.assertTrue(actual)
 
     @responses.activate
