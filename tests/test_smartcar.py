@@ -184,7 +184,8 @@ class TestSmartcar(unittest.TestCase):
 
         actual = client.get_auth_url(force=True, state='stuff', vehicle_info=info)
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
@@ -195,10 +196,8 @@ class TestSmartcar(unittest.TestCase):
             'flags': 'country:US'
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
@@ -208,7 +207,8 @@ class TestSmartcar(unittest.TestCase):
 
         actual = client.get_auth_url(force=True, state='stuff', single_select=True)
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
@@ -219,10 +219,8 @@ class TestSmartcar(unittest.TestCase):
             'flags': 'country:US'
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
 
         assertDeepEquals(self, expected_params, actual_params)
     def test_get_auth_url_single_select_dictionary_vin(self):
@@ -272,8 +270,8 @@ class TestSmartcar(unittest.TestCase):
 
         expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
 
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(query)
+        actual_params = parse_qs(query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
@@ -287,7 +285,8 @@ class TestSmartcar(unittest.TestCase):
 
         actual = client.get_auth_url(force=True, state='stuff', single_select='potato')
 
-        query = urlencode({
+        actual_query = urlparse(actual).query
+        expected_query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
@@ -298,10 +297,8 @@ class TestSmartcar(unittest.TestCase):
             'flags': 'country:US'
         })
 
-        expected = smartcar.const.CONNECT_URL + '/oauth/authorize?' + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
+        expected_params = parse_qs(expected_query)
+        actual_params = parse_qs(actual_query)
 
         assertDeepEquals(self, expected_params, actual_params)
 
