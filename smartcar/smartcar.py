@@ -111,7 +111,7 @@ class AuthClient(object):
                 is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
                 with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
                 for more information. Defaults to None.
-            flags (str, optional): List of feature flags that your application has early access to.
+            flags (str[], optional): List of feature flags that your application has early access to.
 
         Returns:
             str: authorization url
@@ -157,7 +157,7 @@ class AuthClient(object):
                 query['single_select'] = single_select == True
 
         if flags:
-            query['flags'] = flags
+            query['flags'] = ' '.join(flags)
 
         return base_url + '/oauth/authorize?' + urlencode(query)
 

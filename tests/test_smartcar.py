@@ -294,7 +294,7 @@ class TestSmartcar(unittest.TestCase):
     def test_get_auth_url_flags_country(self):
         client = smartcar.AuthClient(self.client_id, self.client_secret,
                 self.redirect_uri, self.scope)
-        actual = client.get_auth_url(force=True, state='stuff', flags='country:DE')
+        actual = client.get_auth_url(force=True, state='stuff', flags=['country:DE'])
         query = urlencode({
             'response_type': 'code',
             'client_id': self.client_id,
