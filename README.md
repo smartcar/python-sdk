@@ -119,7 +119,7 @@ A client for accessing the Smartcar API
 | `scope`         | String[] |**Optional** | List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
 | `test_mode`   | Boolean |**Optional** | Launch the Smartcar Connect in test mode. |
 
-### `get_auth_url(self, force=False, state=None, vehicle_info=None, country='US')`
+### `get_auth_url(self, force=False, state=None, vehicle_info=None, flags=None)`
 
 Generate the Connect URL
 
@@ -131,7 +131,7 @@ Generate the Connect URL
 | `vehicle_info['make']`  | String |**Optional** | Including the dict `vehicle_info` with a `make` property allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive. |
 | `single_select` | Boolean or Dictionary | **Optional** | An optional value that sets the behavior of the grant dialog displayed to the user. If set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.
 | `single_select.vin` | String | **Optional** | The VIN (Vehicle Identifier Number) of a vehicle. By passing in `single_select` as a dict with a `vin` property, the single select behavior will be turned on and Smartcar will authorize only the vehicle with the specified VIN. The `single_select_vin` takes precedence over the `make` parameter. Please refer to the [Single Select guide](https://smartcar.com/docs/guides/single-select/).
-| `country` | String | **Optional** | For details on how to specify country code strings refer to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+| `flags` | String | **Optional** | List of feature flags that your application has early access to.
 
 #### Return
 | Type             | Description         |
