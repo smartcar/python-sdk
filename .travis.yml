@@ -8,8 +8,7 @@ addons:
   apt:
     packages: firefox-geckodriver
 
-language:
-  - python
+language: python
 
 python:
   - '2.7'
@@ -30,33 +29,21 @@ script:
 
 jobs:
   include:
-    - stage: tag
-      language: generic
-      # no install necessary for generic language
-      install: true
-      script:
-        - git config --global user.email "ci@smartcar.com"
-        - git config --global user.name "Travis CI User"
-        - export tag=$(cat smartcar/__init__.py | grep '^__version__' | sed "s/^__version__[[:blank:]]*=[[:blank:]]'\(.*\)'/\1/g")
-        - if [ "$TRAVIS_BRANCH" = "master" ]; then git tag -a v$tag -m "Travis Generated Tag"; fi
-      deploy:
-        provider: script
-        skip_cleanup: true
-        script: echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc && git push origin v$tag
-        on:
-          branch: master
-
     - stage: publish
-      language: python
-      python:
-        - '3.8'
-      # use 'true' to noop the install and script stageswhich are required for
-      # the python language
-      install: true
-      script: true
+      python: '3.8'
+      services: []
+      addons:
+        firefox: 'skip'
+        apt: []
+      install:
+        - nvm install 14
+        - npm install semantic-release@15.x.x @google/semantic-release-replace-plugin@1.x.x
+      script:
+        - npx semantic-release
+        - head -1 smartcar/__init__.py
       deploy:
         provider: pypi
-        user: $PYPI_USERNAME
+        username: $PYPI_USERNAME
         password: $PYPI_PASSWORD
         on:
           branch: master

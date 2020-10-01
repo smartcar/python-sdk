@@ -28,7 +28,7 @@ class TestRequester(unittest.TestCase):
         smartcar.requester.call('GET', self.URL)
         self.assertRegexpMatches(
             responses.calls[0].request.headers['User-Agent'],
-            r'^Smartcar\/(\d+\.\d+\.\d+) \((\w+); (\w+)\) Python v(\d+\.\d+\.\d+)$')
+            r'^Smartcar\/semantic-release \((\w+); (\w+)\) Python v(\d+\.\d+\.\d+)$')
 
     @responses.activate
     def test_oauth_error(self):
