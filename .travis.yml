@@ -40,9 +40,9 @@ jobs:
         - npm install semantic-release@15.x.x @google/semantic-release-replace-plugin@1.x.x
       script:
         - npx semantic-release
-        - head -1 smartcar/__init__.py
       deploy:
         provider: pypi
+        skip_cleanup: true
         username: $PYPI_USERNAME
         password: $PYPI_PASSWORD
         on:
