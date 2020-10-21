@@ -1,12 +1,17 @@
+import requests
+
 class SmartcarException(Exception):
     def __init__(self, response):
-        json = response.json()
-        if 'message' in json:
-            self.message = json['message']
-        elif 'error_description' in json:
-            self.message = json['error_description']
-        else:
-            self.message = 'Unknown error'
+        if type(response) is requests.models.Response:
+            json = response.json()
+            if 'message' in json:
+                self.message = json['message']
+            elif 'error_description' in json:
+                self.message = json['error_description']
+            else:
+                self.message = 'Unknown error'
+        elif type(response) is str:
+            self.message = response
 
     def __str__(self):
         return self.message

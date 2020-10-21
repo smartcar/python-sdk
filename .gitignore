@@ -10,6 +10,7 @@ build/
 __pycache__/
 *.py[cod]
 **/flask
+.python_history
 
 # System generated files
 *.log
