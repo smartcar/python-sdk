@@ -88,6 +88,11 @@ class TestRequester(unittest.TestCase):
         self.check(smartcar.MonthlyLimitExceeded)
 
     @responses.activate
+    def test_460(self):
+        self.queue(460)
+        self.check(smartcar.GatewayTimeoutException)
+
+    @responses.activate
     def test_500(self):
         self.queue(500)
         self.check(smartcar.ServerException)
@@ -122,5 +127,17 @@ class TestRequester(unittest.TestCase):
     @responses.activate
     def test_other(self):
         self.queue(503)
-        with self.assertRaises(requests.exceptions.HTTPError):
+        with self.assertRaises(smartcar.SmartcarException) as cm:
             smartcar.requester.call('GET', self.URL)
+        self.assertEquals(cm.exception.message, 'Unexpected error')
+
+    @responses.activate
+    def test_unexpected_response(self):
+        responses.add(
+            'GET',
+            self.URL,
+            status=200,
+        )
+        with self.assertRaises(smartcar.SmartcarException) as cm:
+            smartcar.requester.call('GET', self.URL)
+        self.assertEquals(cm.exception.message, 'Unexpected error')
