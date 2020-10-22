@@ -125,6 +125,21 @@ class TestRequester(unittest.TestCase):
         self.check(smartcar.GatewayTimeoutException)
 
     @responses.activate
+    def test_request_id(self):
+        request_id = '1687c343-3b47-4228-ab1c-94f86850a9be'
+        responses.add(
+            'GET',
+            self.URL,
+            status=500,
+            headers={'SC-Request-ID': request_id},
+            json={
+                'error': 'random_error',
+                'message': self.EXPECTED})
+        with self.assertRaises(smartcar.ServerException) as cm:
+            smartcar.requester.call('GET', self.URL)
+        self.assertEquals(cm.exception.request_id, request_id)
+
+    @responses.activate
     def test_other(self):
         self.queue(503)
         with self.assertRaises(smartcar.SmartcarException) as cm:
