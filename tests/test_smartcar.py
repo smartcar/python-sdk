@@ -4,11 +4,7 @@ import smartcar
 import base64
 import time
 from datetime import datetime, timedelta
-try:
-    from urllib import urlencode
-    from urlparse import parse_qs, urlparse
-except ImportError:
-    from urllib.parse import urlencode, parse_qs, urlparse
+from urllib.parse import urlencode, parse_qs, urlparse
 
 def assertDeepEquals(self, dict1, dict2):
     self.assertEqual(len(dict2), len(dict1))
