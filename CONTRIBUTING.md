@@ -23,6 +23,10 @@ export INTEGRATION_CLIENT_SECRET=''
 
 3. Run tests: `make test args="--verbose"`
 
+## Formatting
+
+All code in this repository is formatted using [black](https://github.com/python/black). Please format all contributions using the tool.
+
 ## Creating a pull request
 
-Please make sure to bump the version number in `smartcar/__init__.py` in accordance with [semver](https://semver.org/) when making a pull request to the `master` branch.
+Please make sure that your commits follow the [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) and the "type" for each commit message conveys the intent with respect to releasing as defined by [semantic-release](https://github.com/semantic-release/semantic-release#commit-message-format).
