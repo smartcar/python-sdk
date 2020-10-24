@@ -5,7 +5,7 @@ from . import __version__
 
 
 def call(method, url, **kwargs):
-    """ Attachs the kwargs into the headers, sends the request to the Smartcar API
+    """Attachs the kwargs into the headers, sends the request to the Smartcar API
         and handles all error cases
 
     Args:
@@ -17,13 +17,10 @@ def call(method, url, **kwargs):
         dict: response from the request to the Smartcar API
 
     """
-    if 'headers' not in kwargs:
-        kwargs['headers'] = {}
-    kwargs['headers']['User-Agent'] = 'Smartcar/{} ({}; {}) Python v{}'.format(
-        __version__,
-        platform.system(),
-        platform.machine(),
-        platform.python_version()
+    if "headers" not in kwargs:
+        kwargs["headers"] = {}
+    kwargs["headers"]["User-Agent"] = "Smartcar/{} ({}; {}) Python v{}".format(
+        __version__, platform.system(), platform.machine(), platform.python_version()
     )
 
     try:
@@ -52,7 +49,7 @@ def call(method, url, **kwargs):
         elif code == 500:
             raise E.ServerException(response)
         elif code == 501:
-            if body['error'] == 'smartcar_not_capable_error':
+            if body["error"] == "smartcar_not_capable_error":
                 raise E.SmartcarNotCapableException(response)
             raise E.VehicleNotCapableException(response)
         elif code == 504:
@@ -64,4 +61,4 @@ def call(method, url, **kwargs):
         if isinstance(e, E.SmartcarException):
             raise e
         else:
-            raise E.SmartcarException('Unexpected error') from e
+            raise E.SmartcarException("Unexpected error") from e

@@ -1,31 +1,35 @@
 import smartcar
 import unittest
-from auth_helpers import (get_auth_client_params, run_auth_flow)
+from auth_helpers import get_auth_client_params, run_auth_flow
+
 
 def get_vehicle(brand, scope):
     client = smartcar.AuthClient(*get_auth_client_params(scope))
     code = run_auth_flow(client.get_auth_url(), brand)
-    access_token = client.exchange_code(code)['access_token']
+    access_token = client.exchange_code(code)["access_token"]
     vehicle_ids = smartcar.get_vehicle_ids(access_token)
-    return smartcar.Vehicle(vehicle_ids['vehicles'][0], access_token)
+    return smartcar.Vehicle(vehicle_ids["vehicles"][0], access_token)
+
 
 class TestVehicleE2E(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
-        cls.volt = get_vehicle('CHEVROLET', [
-            'required:read_vehicle_info',
-            'required:read_location',
-            'required:read_odometer',
-            'required:control_security',
-            'required:read_vin',
-            'required:read_fuel',
-            'required:read_battery',
-            'required:read_charge',
-            'required:read_engine_oil',
-            'required:read_tires',
-        ])
-        cls.egolf = get_vehicle('VOLKSWAGEN', ['required:control_charge'])
+        cls.volt = get_vehicle(
+            "CHEVROLET",
+            [
+                "required:read_vehicle_info",
+                "required:read_location",
+                "required:read_odometer",
+                "required:control_security",
+                "required:read_vin",
+                "required:read_fuel",
+                "required:read_battery",
+                "required:read_charge",
+                "required:read_engine_oil",
+                "required:read_tires",
+            ],
+        )
+        cls.egolf = get_vehicle("VOLKSWAGEN", ["required:control_charge"])
 
     def test_info(self):
         info = self.volt.info()
@@ -80,7 +84,7 @@ class TestVehicleE2E(unittest.TestCase):
         self.assertEqual(response["status"], "success")
 
     def test_batch(self):
-        batch = self.volt.batch(['/odometer', '/location'])
+        batch = self.volt.batch(["/odometer", "/location"])
         self.assertIsNotNone(batch)
 
     def test_permissions(self):
@@ -89,9 +93,13 @@ class TestVehicleE2E(unittest.TestCase):
 
     def test_has_permissions(self):
         single_response = self.volt.has_permissions("required:read_odometer")
-        multi_response = self.volt.has_permissions(["read_odometer", "required:read_vehicle_info"])
+        multi_response = self.volt.has_permissions(
+            ["read_odometer", "required:read_vehicle_info"]
+        )
         false_response = self.volt.has_permissions("read_ignition")
-        false_multi_response = self.volt.has_permissions(["read_odometer", "read_ignition"])
+        false_multi_response = self.volt.has_permissions(
+            ["read_odometer", "read_ignition"]
+        )
 
         self.assertTrue(single_response)
         self.assertTrue(multi_response)
@@ -99,9 +107,9 @@ class TestVehicleE2E(unittest.TestCase):
         self.assertFalse(false_multi_response)
 
     def test_set_unit_system(self):
-        self.volt.set_unit_system('imperial')
-        batch = self.volt.batch(['/odometer', '/fuel'])
-        self.assertEqual(batch['/odometer']['headers']['sc-unit-system'], 'imperial')
+        self.volt.set_unit_system("imperial")
+        batch = self.volt.batch(["/odometer", "/fuel"])
+        self.assertEqual(batch["/odometer"]["headers"]["sc-unit-system"], "imperial")
 
     ## nose runs tests in alphabetical order
     def test_zzzz_disconnect(self):
