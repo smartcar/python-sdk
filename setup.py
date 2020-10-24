@@ -36,6 +36,7 @@ setup(
     ],
     extras_require={
         'dev': [
+            'black',
             'coverage',
             'nose',
             'mock',

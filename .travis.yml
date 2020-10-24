@@ -23,6 +23,7 @@ install:
 script:
   - firefox -headless &
   - make test args='--verbose'
+  - make format args='--check'
 
 jobs:
   include:
