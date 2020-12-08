@@ -198,6 +198,22 @@ class Vehicle(object):
             "age": dateutil.parser.parse(response.headers["sc-data-age"]),
         }
 
+    def battery_capacity(self):
+        """GET Vehicle.battery_capacity
+
+        Returns:
+
+        Raises:
+            SmartcarException
+        """
+        response = self.api.get("battery/capacity")
+
+        return {
+            "data": response.json(),
+            "unit_system": response.headers["sc-unit-system"],
+            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
+        }
+
     def charge(self):
         """GET Vehicle.charge
 

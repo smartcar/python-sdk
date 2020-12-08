@@ -246,6 +246,29 @@ class TestVehicle(unittest.TestCase):
         self.assertEqual(response["age"], dateutil.parser.parse(age))
 
     @responses.activate
+    def test_battery_capacity(self):
+        data = {
+            "capacity": 24,
+        }
+
+        age = "2018-04-30T22:28:52+00:00"
+        self.queue(
+            "GET",
+            "battery/capacity",
+            body=data,
+            headers={
+                "sc-unit-system": "metric",
+                "sc-data-age": age,
+            },
+        )
+        response = self.vehicle.battery_capacity()
+
+        self.check(response)
+        self.assertEqual(response["data"], data)
+        self.assertEqual(response["unit_system"], "metric")
+        self.assertEqual(response["age"], dateutil.parser.parse(age))
+
+    @responses.activate
     def test_charge(self):
         data = {
             "isPluggedIn": True,
