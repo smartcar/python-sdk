@@ -393,7 +393,7 @@ Returns the vehicle's battery status.
 
 ### `batteryCapacity(self)`
 
-Returns the vehicle's battery capacity in kWh.
+Returns the total capacity of an electric vehicle's battery. Please [contact us](mailto:hello@smartcar.com) to request early access.
 
 #### Return
 
