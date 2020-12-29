@@ -391,6 +391,23 @@ Returns the vehicle's battery status.
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
+### `batteryCapacity(self)`
+
+Returns the total capacity of an electric vehicle's battery. Please [contact us](mailto:hello@smartcar.com) to request early access.
+
+#### Return
+
+| Type                               | Description                                                                                                                                                                      |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dictionary                         | vehicle's battery capacity |
+| Dictionary.`data.capacity`            | vehicle's battery capacity in kWh |
+| Dictionary.`unit_system`           | the unit system of the battery data. Only supports metric.                                        |
+| Dictionary.`age`                   | A datetime for the age of the data                                                                                                                                               |
+
+#### Raises
+
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ### `charge(self)`
 
 Returns the vehicle's charge status.
