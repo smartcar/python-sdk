@@ -10,8 +10,8 @@ module.exports = {
         replacements: [
           {
             files: ['smartcar/__init__.py'],
-            from: "__version__ = 'semantic-release'",
-            to: "__version__ = '${nextRelease.version}'",
+            from: "__version__ = \"semantic-release\"",
+            to: "__version__ = \"${nextRelease.version}\"",
             results: [
               {
                 file: 'smartcar/__init__.py',
