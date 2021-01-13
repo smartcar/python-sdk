@@ -391,7 +391,7 @@ Returns the vehicle's battery status.
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `batteryCapacity(self)`
+### `battery_capacity(self)`
 
 Returns the total capacity of an electric vehicle's battery. Please [contact us](mailto:hello@smartcar.com) to request early access.
 
@@ -441,7 +441,7 @@ Returns the vehicle's oil status.
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `tirePressure(self)`
+### `tire_pressure(self)`
 
 Returns the vehicle's tire pressure status.
 
@@ -524,6 +524,7 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 | Dictionary.`/engine/oil`                          | The response from the Engine oil life endpoint.                                  |
 | Dictionary.`/tires/pressure`                      | The response from the Tire pressure endpoint.                                    |
 | Dictionary.`/battery`                             | The response from the EV battery endpoint.                                       |
+| Dictionary.`/battery/capacity`                    | The response from the EV battery capacity endpoint.                              |
 | Dictionary.`/charge`                              | The response from the EV charge endpoint.                                        |
 | Dictionary.`/location`                            | The response from the Location endpoint.                                         |
 | Dictionary.`/ENDPOINT`.`code`                     | The HTTP response code from the response.                                        |
