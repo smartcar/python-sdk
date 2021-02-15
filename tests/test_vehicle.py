@@ -257,7 +257,6 @@ class TestVehicle(unittest.TestCase):
             "battery/capacity",
             body=data,
             headers={
-                "sc-unit-system": "metric",
                 "sc-data-age": age,
             },
         )
@@ -265,7 +264,6 @@ class TestVehicle(unittest.TestCase):
 
         self.check(response)
         self.assertEqual(response["data"], data)
-        self.assertEqual(response["unit_system"], "metric")
         self.assertEqual(response["age"], dateutil.parser.parse(age))
 
     @responses.activate
