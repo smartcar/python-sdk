@@ -401,7 +401,6 @@ Returns the total capacity of an electric vehicle's battery. Please [contact us]
 | :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Dictionary                         | vehicle's battery capacity |
 | Dictionary.`data.capacity`            | vehicle's battery capacity in kWh |
-| Dictionary.`unit_system`           | the unit system of the battery data. Only supports metric.                                        |
 | Dictionary.`age`                   | A datetime for the age of the data                                                                                                                                               |
 
 #### Raises
