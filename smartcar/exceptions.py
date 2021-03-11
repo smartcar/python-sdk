@@ -18,6 +18,31 @@ class SmartcarException(Exception):
         return self.message
 
 
+class SmartcarExceptionV2(Exception):
+    """ Exceptions throw by v2.0 endpoints """
+    def __init__(self, response):
+        if type(response) is requests.models.Response:
+            json = response.json()
+            if "type" in response:
+                self.type = response["type"]
+                self.code = response["code"]
+                self.description = response["description"]
+                self.doc_url = response["docURL"]
+                self.status_code = response["statusCode"]
+                self.request_id = response["requestId"]
+                self.resolution = response["resolution"]
+                self.detail = response["detail"]
+            elif "error_description" in response:
+                self.error_description = response["error_description"]
+                self.error = response["error"]
+                self.error_uri = response["error_uri"]
+        elif type(response) is str:
+            self.description = response
+
+    def __str__(self):
+        return self.description
+
+
 class ValidationException(SmartcarException):
     pass
 
