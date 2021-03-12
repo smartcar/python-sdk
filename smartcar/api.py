@@ -1,6 +1,4 @@
-from . import const, requester
-
-VERSION = '1.0'
+from . import const, requester, smartcar
 
 class Api(object):
     def __init__(self, access_token, vehicle_id=None):
@@ -24,14 +22,6 @@ class Api(object):
         """
         self.unit_system = unit_system
 
-    def set_api_version(self, version):
-        """Update the version of Smartcar API you are using
-
-        Args:
-            version (str): the version of the api you want to use
-        """
-        VERSION = version
-
     def _format(self, endpoint):
         """Generates the formated URL
 
@@ -42,7 +32,7 @@ class Api(object):
             str: formatted url
 
         """
-        return "{}/v{}/vehicles/{}/{}".format(const.API_URL, VERSION, self.vehicle_id, endpoint)
+        return "{}/v{}/vehicles/{}/{}".format(const.API_URL, smartcar.VERSION, self.vehicle_id, endpoint)
 
     def action(self, endpoint, action, **kwargs):
         """Sends POST requests to Smartcar API
@@ -131,7 +121,7 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL, VERSION, "vehicles")
+        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "vehicles")
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def user(self, **params):
@@ -144,5 +134,5 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL, VERSION, "user")
+        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "user")
         return requester.call("GET", url, headers=self.auth, params=params)

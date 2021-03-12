@@ -428,7 +428,7 @@ class TestSmartcar(unittest.TestCase):
         }
         responses.add(
             "GET",
-            smartcar.const.API_URL + "/compatibility?" + urlencode(query),
+            smartcar.const.API_URL + "/v1.0/compatibility?" + urlencode(query),
             json={"compatible": True},
             match_querystring=True,
         )
@@ -448,7 +448,7 @@ class TestSmartcar(unittest.TestCase):
         }
         responses.add(
             "GET",
-            smartcar.const.API_URL + "/compatibility?" + urlencode(query),
+            smartcar.const.API_URL + "/v1.0" + "/compatibility?" + urlencode(query),
             json={"compatible": True},
             match_querystring=True,
         )
@@ -459,7 +459,7 @@ class TestSmartcar(unittest.TestCase):
     def test_get_vehicle_ids(self):
         query = {"limit": 11, "offset": 1}
         access_token = "access_token"
-        url = smartcar.const.API_URL + "/vehicles?" + urlencode(query)
+        url = smartcar.const.API_URL + "/v1.0/vehicles?" + urlencode(query)
         responses.add("GET", url, json=self.expected, match_querystring=True)
         actual = smartcar.get_vehicle_ids(
             access_token, limit=query["limit"], offset=query["offset"]
@@ -473,7 +473,7 @@ class TestSmartcar(unittest.TestCase):
         data = {
             "id": "user_id",
         }
-        url = smartcar.const.API_URL + "/user"
+        url = smartcar.const.API_URL + "/v1.0" + "/user"
         responses.add("GET", url, json=data)
         actual = smartcar.get_user_id(access_token)
         self.assertEqual(actual, data["id"])

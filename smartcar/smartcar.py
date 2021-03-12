@@ -3,6 +3,7 @@ import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
+VERSION = "1.0"
 
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
@@ -22,6 +23,15 @@ def is_expired(expiration):
         bool: true if expired
     """
     return datetime.utcnow() > expiration
+
+
+def set_api_version(version):
+    """Update the version of Smartcar API you are using
+
+    Args:
+        version (str): the version of the api you want to use
+    """
+    VERSION = version
 
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
@@ -232,7 +242,7 @@ class AuthClient(object):
 
         """
         method = "GET"
-        url = "{}/v{}/compatibility".format(const.API_URL, api.VERSION)
+        url = "{}/v{}/compatibility".format(const.API_URL, VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
         response = requester.call(method, url, params=query, auth=self.auth).json()

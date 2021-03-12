@@ -1,6 +1,6 @@
 import platform
 import requests
-import api
+from . import api, smartcar
 from . import exceptions as E
 from . import __version__
 
@@ -31,7 +31,7 @@ def call(method, url, **kwargs):
 
         if response.ok:
             return response
-        elif api.VERSION == "2.0":
+        elif smartcar.VERSION == "2.0":
             raise E.SmartcarExceptionV2(response)
         elif code == 400:
             raise E.ValidationException(response)
