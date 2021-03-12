@@ -232,7 +232,7 @@ class AuthClient(object):
 
         """
         method = "GET"
-        url = const.API_URL + "/compatibility"
+        url = "{}/v{}/compatibility".format(const.API_URL, api.VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
         response = requester.call(method, url, params=query, auth=self.auth).json()
