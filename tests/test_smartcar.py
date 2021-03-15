@@ -478,3 +478,42 @@ class TestSmartcar(unittest.TestCase):
         actual = smartcar.get_user_id(access_token)
         self.assertEqual(actual, data["id"])
         self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+
+    @responses.activate
+    def test_set_api_version(self):
+        access_token = "access_token"
+        data = {
+            "id": "user_id",
+        }
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add("GET", url, json=data)
+        smartcar.set_api_version('2.0')
+
+        actual = smartcar.get_user_id(access_token)
+        self.assertEqual(actual, data["id"])
+        self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+        smartcar.set_api_version('1.0')
+
+    @responses.activate
+    def test_v2_exception(self):
+        access_token = "access_token"
+        error = {
+            "type": "TYPE",
+            "statusCode": 404,
+            "code": "",
+            "description": "",
+            "docURL": "",
+            "requestId": "",
+            "resolution": "",
+            "detail": "",
+        }
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add("GET", url, json=error, status=404)
+        smartcar.set_api_version('2.0')
+
+        try:
+            actual = smartcar.get_user_id(access_token)
+        except smartcar.exceptions.SmartcarExceptionV2 as err:
+            self.assertTrue(err.type == 'TYPE')
+        finally:
+            smartcar.set_api_version('1.0')

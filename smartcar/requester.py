@@ -31,7 +31,7 @@ def call(method, url, **kwargs):
 
         if response.ok:
             return response
-        elif smartcar.VERSION == "2.0":
+        elif "v2.0" in url:
             raise E.SmartcarExceptionV2(response)
         elif code == 400:
             raise E.ValidationException(response)
@@ -61,7 +61,7 @@ def call(method, url, **kwargs):
             response.raise_for_status()
 
     except Exception as e:
-        if isinstance(e, E.SmartcarException):
+        if isinstance(e, E.SmartcarException) or isinstance(e, E.SmartcarExceptionV2):
             raise e
         else:
             raise E.SmartcarException("Unexpected error") from e

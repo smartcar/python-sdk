@@ -31,6 +31,7 @@ def set_api_version(version):
     Args:
         version (str): the version of the api you want to use
     """
+    global VERSION
     VERSION = version
 
 

@@ -23,19 +23,19 @@ class SmartcarExceptionV2(Exception):
     def __init__(self, response):
         if type(response) is requests.models.Response:
             json = response.json()
-            if "type" in response:
-                self.type = response["type"]
-                self.code = response["code"]
-                self.description = response["description"]
-                self.doc_url = response["docURL"]
-                self.status_code = response["statusCode"]
-                self.request_id = response["requestId"]
-                self.resolution = response["resolution"]
-                self.detail = response["detail"]
-            elif "error_description" in response:
-                self.error_description = response["error_description"]
-                self.error = response["error"]
-                self.error_uri = response["error_uri"]
+            if "type" in json:
+                self.type = json["type"]
+                self.code = json["code"]
+                self.description = json["description"]
+                self.doc_url = json["docURL"]
+                self.status_code = json["statusCode"]
+                self.request_id = json["requestId"]
+                self.resolution = json["resolution"]
+                self.detail = json["detail"]
+            elif "error_description" in json:
+                self.error_description = json["error_description"]
+                self.error = json["error"]
+                self.error_uri = json["error_uri"]
         elif type(response) is str:
             self.description = response
 
