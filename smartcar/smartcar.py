@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 VERSION = "1.0"
 
+
 def set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
     refresh_expire_date = datetime.utcnow() + timedelta(days=60)

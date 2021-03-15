@@ -20,6 +20,7 @@ class SmartcarException(Exception):
 
 class SmartcarExceptionV2(Exception):
     """ Exceptions throw by v2.0 endpoints """
+
     def __init__(self, response):
         if type(response) is requests.models.Response:
             json = response.json()
