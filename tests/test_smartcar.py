@@ -517,3 +517,22 @@ class TestSmartcar(unittest.TestCase):
             self.assertTrue(err.type == 'TYPE')
         finally:
             smartcar.set_api_version('1.0')
+
+    @responses.activate
+    def test_v2_exception_oauth_error(self):
+        access_token = "access_token"
+        error = {
+            "error_description": "sample",
+            "error": "sample-error",
+            "error_uri": "sample.com",
+        }
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add("GET", url, json=error, status=401)
+        smartcar.set_api_version('2.0')
+
+        try:
+            actual = smartcar.get_user_id(access_token)
+        except smartcar.exceptions.SmartcarExceptionV2 as err:
+            self.assertTrue(err.error_description == 'sample')
+        finally:
+            smartcar.set_api_version('1.0')
