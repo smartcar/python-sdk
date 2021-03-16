@@ -505,7 +505,7 @@ class TestSmartcar(unittest.TestCase):
             "docURL": "",
             "requestId": "",
             "resolution": "",
-            "detail": "",
+            "detail": None,
         }
         url = smartcar.const.API_URL + "/v2.0" + "/user"
         responses.add("GET", url, json=error, status=404)
