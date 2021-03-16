@@ -100,6 +100,8 @@ odometer = vehicle.odometer()['data']['distance']
 |     501     | smartcar.SmartcarNotCapableException |
 |     504     | smartcar.GatewayTimeoutException     |
 
+- For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`. All exceptions will be of type `smartcar.SmartcarExceptionV2`
+
 Checkout our [Errors documentation][errors] to learn more.
 
 ## AuthClient
