@@ -497,7 +497,7 @@ class TestSmartcar(unittest.TestCase):
     @responses.activate
     def test_v2_exception(self):
         access_token = "access_token"
-        error = '''{
+        error = """{
             "type": "TYPE",
             "statusCode": 404,
             "code": "",
@@ -506,7 +506,7 @@ class TestSmartcar(unittest.TestCase):
             "requestId": "",
             "resolution": "",
             "detail": null
-        }'''
+        }"""
         url = smartcar.const.API_URL + "/v2.0" + "/user"
         responses.add("GET", url, body=error, status=404)
         smartcar.set_api_version("2.0")
