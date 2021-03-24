@@ -18,7 +18,7 @@ class SmartcarException(Exception):
         return self.message
 
 
-class SmartcarExceptionV2(Exception):
+class SmartcarExceptionV2(SmartcarException):
     """ Exceptions throw by v2.0 endpoints """
 
     def __init__(self, response):

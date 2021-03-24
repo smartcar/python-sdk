@@ -61,7 +61,7 @@ def call(method, url, **kwargs):
             response.raise_for_status()
 
     except Exception as e:
-        if isinstance(e, E.SmartcarException) or isinstance(e, E.SmartcarExceptionV2):
+        if isinstance(e, E.SmartcarException):
             raise e
         else:
             raise E.SmartcarException("Unexpected error") from e
