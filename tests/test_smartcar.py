@@ -500,11 +500,11 @@ class TestSmartcar(unittest.TestCase):
         error = """{
             "type": "TYPE",
             "statusCode": 404,
-            "code": "",
-            "description": "",
-            "docURL": "",
+            "code": "CODE",
+            "description": "DESCRIPTION",
+            "docURL": null,
             "requestId": "",
-            "resolution": "",
+            "resolution": null,
             "detail": null
         }"""
         url = smartcar.const.API_URL + "/v2.0" + "/user"
@@ -514,6 +514,28 @@ class TestSmartcar(unittest.TestCase):
         try:
             actual = smartcar.get_user_id(access_token)
         except smartcar.exceptions.SmartcarExceptionV2 as err:
-            self.assertTrue(err.type == "TYPE")
+            self.assertEqual(err.type, "TYPE")
+            self.assertEqual(err.code, "CODE")
+            self.assertEqual(err.description, "DESCRIPTION")
+            self.assertEqual(err.doc_url, None)
+            self.assertEqual(err.resolution, None)
+            self.assertEqual(err.detail, None)
+            self.assertEqual(str(err), "TYPE:CODE - DESCRIPTION")
+        finally:
+            smartcar.set_api_version("1.0")
+
+    @responses.activate
+    def test_v2_exception_string_response(self):
+        access_token = "access_token"
+        error = "This error is just a message"
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add("GET", url, body=error, status=404)
+        smartcar.set_api_version("2.0")
+
+        try:
+            actual = smartcar.get_user_id(access_token)
+        except smartcar.exceptions.SmartcarExceptionV2 as err:
+            self.assertEqual(err.description, error)
+            self.assertEqual(str(err), error)
         finally:
             smartcar.set_api_version("1.0")

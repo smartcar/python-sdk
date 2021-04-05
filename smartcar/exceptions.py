@@ -36,6 +36,8 @@ class SmartcarExceptionV2(SmartcarException):
             self.description = response
 
     def __str__(self):
+        if self.type != None:
+            return "{}:{} - {}".format(self.type, self.code, self.description)
         return self.description
 
 
