@@ -147,7 +147,7 @@ class TestRequester(unittest.TestCase):
             self.URL,
             status=400,
             body="not json",
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
         with self.assertRaises(smartcar.SmartcarException) as cm:
             smartcar.requester.call("GET", self.URL)

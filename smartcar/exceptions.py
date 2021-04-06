@@ -6,7 +6,7 @@ class SmartcarException(Exception):
         print(response)
         self.message = "Unknown error"
         if type(response) is requests.models.Response:
-            content_type = response.headers['Content-Type']
+            content_type = response.headers["Content-Type"]
             print(content_type)
             if "application/json" in content_type:
                 json = response.json()
@@ -15,7 +15,7 @@ class SmartcarException(Exception):
                     self.message = json["message"]
                 elif "error_description" in json:
                     self.message = json["error_description"]
-            elif 'text/html' in content_type:
+            elif "text/html" in content_type:
                 self.message = response.text
         elif type(response) is str:
             self.message = response
@@ -30,7 +30,7 @@ class SmartcarExceptionV2(SmartcarException):
     def __init__(self, response):
         self.type = None
         if type(response) is requests.models.Response:
-            content_type = response.headers['Content-Type']
+            content_type = response.headers["Content-Type"]
             print(content_type)
             if "application/json" in content_type:
                 json = response.json()
@@ -42,7 +42,7 @@ class SmartcarExceptionV2(SmartcarException):
                 self.request_id = json["requestId"]
                 self.resolution = json["resolution"]
                 self.detail = json["detail"]
-            elif 'text/html' in content_type:
+            elif "text/html" in content_type:
                 self.description = response.text
         elif type(response) is str:
             self.description = response

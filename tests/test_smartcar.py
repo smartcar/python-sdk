@@ -508,7 +508,13 @@ class TestSmartcar(unittest.TestCase):
             "detail": null
         }"""
         url = smartcar.const.API_URL + "/v2.0" + "/user"
-        responses.add("GET", url, body=error, status=404, headers={'Content-Type': 'application/json'})
+        responses.add(
+            "GET",
+            url,
+            body=error,
+            status=404,
+            headers={"Content-Type": "application/json"},
+        )
         smartcar.set_api_version("2.0")
 
         try:
@@ -529,7 +535,9 @@ class TestSmartcar(unittest.TestCase):
         access_token = "access_token"
         error = "This error is just a message"
         url = smartcar.const.API_URL + "/v2.0" + "/user"
-        responses.add("GET", url, body=error, status=404, headers={'Content-Type': 'text/html'})
+        responses.add(
+            "GET", url, body=error, status=404, headers={"Content-Type": "text/html"}
+        )
         smartcar.set_api_version("2.0")
 
         try:
