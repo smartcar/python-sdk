@@ -83,7 +83,7 @@ odometer = vehicle.odometer()['data']['distance']
 ## Handling Exceptions
 
 - Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with some exception handling code.
-- 
+
 - For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`. 
 
 ### API Version 1.0
