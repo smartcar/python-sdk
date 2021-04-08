@@ -3,11 +3,9 @@ import requests
 
 class SmartcarException(Exception):
     def __init__(self, response):
-        print(response)
         self.message = "Unknown error"
         if type(response) is requests.models.Response:
             content_type = response.headers["Content-Type"]
-            print(content_type)
             if "application/json" in content_type:
                 json = response.json()
                 self.request_id = response.headers.get("sc-request-id")
@@ -31,7 +29,6 @@ class SmartcarExceptionV2(SmartcarException):
         self.type = None
         if type(response) is requests.models.Response:
             content_type = response.headers["Content-Type"]
-            print(content_type)
             if "application/json" in content_type:
                 json = response.json()
                 self.type = json["type"]
