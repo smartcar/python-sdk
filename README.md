@@ -567,6 +567,22 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 
 ## Static Methods
 
+### `smartcar.set_api_version(version)`
+
+Sets the version of Smartcar API to use
+
+#### Arguments
+
+| Parameter    | Type     | Description         |
+| :----------- | :------- | :------------------ |
+| `version` | string | version number |
+
+#### Returns
+
+| Type    | 
+| :------ | 
+| None |
+
 ### `smartcar.is_expired(expiration)`
 
 Check if an expiration is expired
