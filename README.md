@@ -575,7 +575,7 @@ Sets the version of Smartcar API to use
 
 | Parameter    | Type     | Description         |
 | :----------- | :------- | :------------------ |
-| `version` | string | version number |
+| `version` | string | version number (example: "2.0") |
 
 #### Returns
 
