@@ -38,7 +38,8 @@ class SmartcarExceptionV2(SmartcarException):
                 self.status_code = json["statusCode"]
                 self.request_id = json["requestId"]
                 self.resolution = json["resolution"]
-                self.detail = json["detail"]
+                if "detail" in json:
+                    self.detail = json["detail"]
             elif "text/html" in content_type:
                 self.description = response.text
         elif type(response) is str:
