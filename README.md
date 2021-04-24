@@ -84,7 +84,7 @@ odometer = vehicle.odometer()['data']['distance']
 
 - Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with some exception handling code.
 
-- For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`. 
+- For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`.
 
 ### API Version 1.0
 Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle.
@@ -107,7 +107,8 @@ Whenever a request through the SDK returns a non 200 status code, the SDK will t
 
 All exceptions will be of type `smartcar.SmartcarExceptionV2`
 
-Checkout our [Errors documentation][errors] to learn more.
+Check out our [API Reference](https://smartcar.com/docs/api/?version=v2.0#errors) and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn more.
+
 
 ## AuthClient
 
@@ -584,8 +585,8 @@ Sets the version of Smartcar API to use
 
 #### Returns
 
-| Type    | 
-| :------ | 
+| Type    |
+| :------ |
 | None |
 
 ### `smartcar.is_expired(expiration)`
@@ -653,4 +654,3 @@ Retrieve the userId associated with the access_token
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
 [pypi-url]: https://badge.fury.io/py/smartcar
 [pypi-image]: https://badge.fury.io/py/smartcar.svg
-[errors]: https://smartcar.com/docs/api#errors
