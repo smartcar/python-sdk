@@ -84,7 +84,10 @@ odometer = vehicle.odometer()['data']['distance']
 
 - Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with some exception handling code.
 
-- Fortunately for you, we've made this as easy as we can! Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle.
+- For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`.
+
+### API Version 1.0
+Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle.
 
 | status code | exception name                       |
 | :---------: | ------------------------------------ |
@@ -100,7 +103,12 @@ odometer = vehicle.odometer()['data']['distance']
 |     501     | smartcar.SmartcarNotCapableException |
 |     504     | smartcar.GatewayTimeoutException     |
 
-Checkout our [Errors documentation][errors] to learn more.
+### API Version 2.0
+
+All exceptions will be of type `smartcar.SmartcarExceptionV2`
+
+Check out our [API Reference](https://smartcar.com/docs/api/?version=v2.0#errors) and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn more.
+
 
 ## AuthClient
 
@@ -565,6 +573,22 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 
 ## Static Methods
 
+### `smartcar.set_api_version(version)`
+
+Sets the version of Smartcar API to use
+
+#### Arguments
+
+| Parameter    | Type     | Description         |
+| :----------- | :------- | :------------------ |
+| `version` | String | version number (example: "2.0") |
+
+#### Returns
+
+| Type    |
+| :------ |
+| None |
+
 ### `smartcar.is_expired(expiration)`
 
 Check if an expiration is expired
@@ -630,4 +654,3 @@ Retrieve the userId associated with the access_token
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
 [pypi-url]: https://badge.fury.io/py/smartcar
 [pypi-image]: https://badge.fury.io/py/smartcar.svg
-[errors]: https://smartcar.com/docs/api#errors

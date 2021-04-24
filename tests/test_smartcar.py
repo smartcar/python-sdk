@@ -428,7 +428,7 @@ class TestSmartcar(unittest.TestCase):
         }
         responses.add(
             "GET",
-            smartcar.const.API_URL + "/compatibility?" + urlencode(query),
+            smartcar.const.API_URL + "/v1.0/compatibility?" + urlencode(query),
             json={"compatible": True},
             match_querystring=True,
         )
@@ -448,7 +448,7 @@ class TestSmartcar(unittest.TestCase):
         }
         responses.add(
             "GET",
-            smartcar.const.API_URL + "/compatibility?" + urlencode(query),
+            smartcar.const.API_URL + "/v1.0" + "/compatibility?" + urlencode(query),
             json={"compatible": True},
             match_querystring=True,
         )
@@ -459,7 +459,7 @@ class TestSmartcar(unittest.TestCase):
     def test_get_vehicle_ids(self):
         query = {"limit": 11, "offset": 1}
         access_token = "access_token"
-        url = smartcar.const.API_URL + "/vehicles?" + urlencode(query)
+        url = smartcar.const.API_URL + "/v1.0/vehicles?" + urlencode(query)
         responses.add("GET", url, json=self.expected, match_querystring=True)
         actual = smartcar.get_vehicle_ids(
             access_token, limit=query["limit"], offset=query["offset"]
@@ -473,8 +473,77 @@ class TestSmartcar(unittest.TestCase):
         data = {
             "id": "user_id",
         }
-        url = smartcar.const.API_URL + "/user"
+        url = smartcar.const.API_URL + "/v1.0" + "/user"
         responses.add("GET", url, json=data)
         actual = smartcar.get_user_id(access_token)
         self.assertEqual(actual, data["id"])
         self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+
+    @responses.activate
+    def test_set_api_version(self):
+        access_token = "access_token"
+        data = {
+            "id": "user_id",
+        }
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add("GET", url, json=data)
+        smartcar.set_api_version("2.0")
+
+        actual = smartcar.get_user_id(access_token)
+        self.assertEqual(actual, data["id"])
+        self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+        smartcar.set_api_version("1.0")
+
+    @responses.activate
+    def test_v2_exception(self):
+        access_token = "access_token"
+        error = """{
+            "type": "TYPE",
+            "statusCode": 404,
+            "code": "CODE",
+            "description": "DESCRIPTION",
+            "docURL": null,
+            "requestId": "",
+            "resolution": null,
+            "detail": null
+        }"""
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add(
+            "GET",
+            url,
+            body=error,
+            status=404,
+            headers={"Content-Type": "application/json"},
+        )
+        smartcar.set_api_version("2.0")
+
+        try:
+            actual = smartcar.get_user_id(access_token)
+        except smartcar.exceptions.SmartcarExceptionV2 as err:
+            self.assertEqual(err.type, "TYPE")
+            self.assertEqual(err.code, "CODE")
+            self.assertEqual(err.description, "DESCRIPTION")
+            self.assertEqual(err.doc_url, None)
+            self.assertEqual(err.resolution, None)
+            self.assertEqual(err.detail, None)
+            self.assertEqual(str(err), "TYPE:CODE - DESCRIPTION")
+        finally:
+            smartcar.set_api_version("1.0")
+
+    @responses.activate
+    def test_v2_exception_string_response(self):
+        access_token = "access_token"
+        error = "This error is just a message"
+        url = smartcar.const.API_URL + "/v2.0" + "/user"
+        responses.add(
+            "GET", url, body=error, status=404, headers={"Content-Type": "text/html"}
+        )
+        smartcar.set_api_version("2.0")
+
+        try:
+            actual = smartcar.get_user_id(access_token)
+        except smartcar.exceptions.SmartcarExceptionV2 as err:
+            self.assertEqual(err.description, error)
+            self.assertEqual(str(err), error)
+        finally:
+            smartcar.set_api_version("1.0")

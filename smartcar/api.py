@@ -1,4 +1,4 @@
-from . import const, requester
+from . import const, requester, smartcar
 
 
 class Api(object):
@@ -33,7 +33,9 @@ class Api(object):
             str: formatted url
 
         """
-        return "{}/vehicles/{}/{}".format(const.API_URL, self.vehicle_id, endpoint)
+        return "{}/v{}/vehicles/{}/{}".format(
+            const.API_URL, smartcar.VERSION, self.vehicle_id, endpoint
+        )
 
     def action(self, endpoint, action, **kwargs):
         """Sends POST requests to Smartcar API
@@ -122,7 +124,7 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/{}".format(const.API_URL, "vehicles")
+        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "vehicles")
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def user(self, **params):
@@ -135,5 +137,5 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/{}".format(const.API_URL, "user")
+        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "user")
         return requester.call("GET", url, headers=self.auth, params=params)

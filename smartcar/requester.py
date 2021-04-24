@@ -26,10 +26,11 @@ def call(method, url, **kwargs):
     try:
         response = requests.request(method, url, timeout=310, **kwargs)
         code = response.status_code
-        body = response.json()
 
         if response.ok:
             return response
+        elif "/v2.0/" in url:
+            raise E.SmartcarExceptionV2(response)
         elif code == 400:
             raise E.ValidationException(response)
         elif code == 401:
@@ -49,6 +50,7 @@ def call(method, url, **kwargs):
         elif code == 500:
             raise E.ServerException(response)
         elif code == 501:
+            body = response.json()
             if body["error"] == "smartcar_not_capable_error":
                 raise E.SmartcarNotCapableException(response)
             raise E.VehicleNotCapableException(response)
