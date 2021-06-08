@@ -98,17 +98,17 @@ class AuthClient(object):
         self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(
-        self, force=False, state=None, scope=None, vehicle_info=None, single_select=None, flags=None
+        self, scope, force=False, state=None, vehicle_info=None, single_select=None, flags=None
     ):
         """Generate the Connect URL
 
         Args:
+            scope (str[], required): A list of permissions requested by the application
             force (bool, optional): Set to True in order to force the approval
                 dialog shown to the user. Defaults to False.
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
-            scope (list, optional): A list of permissions requested by the application
             vehicle_info (dict, optional): A dict with a property, make. Allows
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen.
@@ -139,11 +139,10 @@ class AuthClient(object):
             "approval_prompt": approval_prompt,
         }
 
+        query["scope"] = " ".join(scope)
+
         if self.test_mode:
             query["mode"] = "test"
-
-        if scope:
-            query["scope"] = " ".join(scope)
 
         if state:
             query["state"] = state
