@@ -79,7 +79,6 @@ class AuthClient(object):
         redirect_uri,
         scope=None,
         test_mode=None,
-        development=None,
     ):
         """A client for accessing the Smartcar API
 
@@ -93,25 +92,13 @@ class AuthClient(object):
                 present in the Redirect URIs field in the application dashboard
             scope (list, optional): A list of permissions requested by the application
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
-            development (bool, optional): DEPRECATED Launch the Smartcar auth flow in development mode
-                to enable mock vehicle brands.
-
         """
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.scope = scope
-
-        if development:
-            import warnings
-
-            message = """Development flag is deprecated. This is discouraged and will be
-                         removed in the next major release. Use testMode instead."""
-            warnings.warn(message, DeprecationWarning, stacklevel=2)
-            self.test_mode = development
-        else:
-            self.test_mode = test_mode if test_mode else False
+        self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(
         self, force=False, state=None, vehicle_info=None, single_select=None, flags=None
@@ -205,7 +192,8 @@ class AuthClient(object):
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
-        response = requester.call(method, url, data=data, auth=self.auth).json()
+        response = requester.call(
+            method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
     def exchange_refresh_token(self, refresh_token):
@@ -225,7 +213,8 @@ class AuthClient(object):
         method = "POST"
         url = const.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
-        response = requester.call(method, url, data=data, auth=self.auth).json()
+        response = requester.call(
+            method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
     def is_compatible(self, vin, scope, country="US"):
@@ -247,5 +236,6 @@ class AuthClient(object):
         url = "{}/v{}/compatibility".format(const.API_URL, VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
-        response = requester.call(method, url, params=query, auth=self.auth).json()
+        response = requester.call(
+            method, url, params=query, auth=self.auth).json()
         return response["compatible"]
