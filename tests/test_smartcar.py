@@ -153,59 +153,6 @@ class TestSmartcar(unittest.TestCase):
 
         assertDeepEquals(self, expected_params, actual_params)
 
-    def test_get_auth_url_development_true(self):
-        client = smartcar.AuthClient(
-            self.client_id,
-            self.client_secret,
-            self.redirect_uri,
-            self.scope,
-            development=True,
-        )
-        actual = client.get_auth_url(force=True, state="stuff")
-        query = urlencode(
-            {
-                "response_type": "code",
-                "client_id": self.client_id,
-                "redirect_uri": self.redirect_uri,
-                "approval_prompt": "force",
-                "mode": "test",
-                "scope": " ".join(self.scope),
-                "state": "stuff",
-            }
-        )
-        expected = smartcar.const.CONNECT_URL + "/oauth/authorize?" + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
-
-        assertDeepEquals(self, expected_params, actual_params)
-
-    def test_get_auth_url_development_false(self):
-        client = smartcar.AuthClient(
-            self.client_id,
-            self.client_secret,
-            self.redirect_uri,
-            self.scope,
-            development=False,
-        )
-        actual = client.get_auth_url(force=True, state="stuff")
-        query = urlencode(
-            {
-                "response_type": "code",
-                "client_id": self.client_id,
-                "redirect_uri": self.redirect_uri,
-                "approval_prompt": "force",
-                "scope": " ".join(self.scope),
-                "state": "stuff",
-            }
-        )
-        expected = smartcar.const.CONNECT_URL + "/oauth/authorize?" + query
-
-        expected_params = parse_qs(expected)
-        actual_params = parse_qs(actual)
-
-        assertDeepEquals(self, expected_params, actual_params)
-
     def test_get_auth_url_vehicle_info_dictionary(self):
         info = {"make": "TESLA"}
 
@@ -214,10 +161,10 @@ class TestSmartcar(unittest.TestCase):
             self.client_secret,
             self.redirect_uri,
             self.scope,
-            development=False,
         )
 
-        actual = client.get_auth_url(force=True, state="stuff", vehicle_info=info)
+        actual = client.get_auth_url(
+            force=True, state="stuff", vehicle_info=info)
 
         actual_query = urlparse(actual).query
         expected_query = urlencode(
@@ -243,10 +190,11 @@ class TestSmartcar(unittest.TestCase):
             self.client_secret,
             self.redirect_uri,
             self.scope,
-            development=False,
+
         )
 
-        actual = client.get_auth_url(force=True, state="stuff", single_select=True)
+        actual = client.get_auth_url(
+            force=True, state="stuff", single_select=True)
 
         actual_query = urlparse(actual).query
         expected_query = urlencode(
@@ -274,7 +222,7 @@ class TestSmartcar(unittest.TestCase):
             self.client_secret,
             self.redirect_uri,
             self.scope,
-            development=False,
+
         )
 
         actual = client.get_auth_url(
@@ -306,10 +254,10 @@ class TestSmartcar(unittest.TestCase):
             self.client_secret,
             self.redirect_uri,
             self.scope,
-            development=False,
         )
 
-        actual = client.get_auth_url(force=True, state="stuff", single_select="potato")
+        actual = client.get_auth_url(
+            force=True, state="stuff", single_select="potato")
 
         query = urlencode(
             {
@@ -338,10 +286,10 @@ class TestSmartcar(unittest.TestCase):
             self.client_secret,
             self.redirect_uri,
             self.scope,
-            development=False,
         )
 
-        actual = client.get_auth_url(force=True, state="stuff", single_select="potato")
+        actual = client.get_auth_url(
+            force=True, state="stuff", single_select="potato")
 
         actual_query = urlparse(actual).query
         expected_query = urlencode(
@@ -365,7 +313,8 @@ class TestSmartcar(unittest.TestCase):
         client = smartcar.AuthClient(
             self.client_id, self.client_secret, self.redirect_uri, self.scope
         )
-        actual = client.get_auth_url(force=True, state="stuff", flags=["country:DE"])
+        actual = client.get_auth_url(
+            force=True, state="stuff", flags=["country:DE"])
         query = urlencode(
             {
                 "response_type": "code",
@@ -398,13 +347,15 @@ class TestSmartcar(unittest.TestCase):
         self.assertTrue(actual["refresh_expiration"] > datetime.utcnow())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(
-            request().headers["Content-Type"], "application/x-www-form-urlencoded"
+            request(
+            ).headers["Content-Type"], "application/x-www-form-urlencoded"
         )
         self.assertEqual(request().body, urlencode(body))
 
     @responses.activate
     def test_exchange_token(self):
-        body = {"grant_type": "refresh_token", "refresh_token": "refresh_token"}
+        body = {"grant_type": "refresh_token",
+                "refresh_token": "refresh_token"}
         responses.add("POST", smartcar.const.AUTH_URL, json=self.expected)
         actual = self.client.exchange_refresh_token("refresh_token")
         self.assertIn("key", actual)
@@ -412,7 +363,8 @@ class TestSmartcar(unittest.TestCase):
         self.assertTrue(actual["refresh_expiration"] > datetime.utcnow())
         self.assertEqual(request().headers["Authorization"], self.basic_auth)
         self.assertEqual(
-            request().headers["Content-Type"], "application/x-www-form-urlencoded"
+            request(
+            ).headers["Content-Type"], "application/x-www-form-urlencoded"
         )
         self.assertEqual(request().body, urlencode(body))
 
@@ -448,7 +400,8 @@ class TestSmartcar(unittest.TestCase):
         }
         responses.add(
             "GET",
-            smartcar.const.API_URL + "/v1.0" + "/compatibility?" + urlencode(query),
+            smartcar.const.API_URL + "/v1.0" +
+            "/compatibility?" + urlencode(query),
             json={"compatible": True},
             match_querystring=True,
         )
@@ -465,7 +418,8 @@ class TestSmartcar(unittest.TestCase):
             access_token, limit=query["limit"], offset=query["offset"]
         )
         self.assertEqual(actual, self.expected)
-        self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+        self.assertEqual(
+            request().headers["Authorization"], "Bearer " + access_token)
 
     @responses.activate
     def test_get_user_id(self):
@@ -477,7 +431,8 @@ class TestSmartcar(unittest.TestCase):
         responses.add("GET", url, json=data)
         actual = smartcar.get_user_id(access_token)
         self.assertEqual(actual, data["id"])
-        self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+        self.assertEqual(
+            request().headers["Authorization"], "Bearer " + access_token)
 
     @responses.activate
     def test_set_api_version(self):
@@ -491,7 +446,8 @@ class TestSmartcar(unittest.TestCase):
 
         actual = smartcar.get_user_id(access_token)
         self.assertEqual(actual, data["id"])
-        self.assertEqual(request().headers["Authorization"], "Bearer " + access_token)
+        self.assertEqual(
+            request().headers["Authorization"], "Bearer " + access_token)
         smartcar.set_api_version("1.0")
 
     @responses.activate
