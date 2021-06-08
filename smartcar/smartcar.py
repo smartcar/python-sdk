@@ -98,7 +98,7 @@ class AuthClient(object):
         self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(
-        self, scope, force=False, state=None, vehicle_info=None, single_select=None, flags=None
+        self, scope, force=False, state=None, make_bypass=None, single_select=None, flags=None
     ):
         """Generate the Connect URL
 
@@ -109,7 +109,7 @@ class AuthClient(object):
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
-            vehicle_info (dict, optional): A dict with a property, make. Allows
+            make_bypass (str, optional): A string that represents a make(car brand). Allows
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen.
                 Defaults to None.
@@ -147,11 +147,8 @@ class AuthClient(object):
         if state:
             query["state"] = state
 
-        if vehicle_info:
-            valid_parameters = ["make"]
-            for param in valid_parameters:
-                if param in vehicle_info:
-                    query[param] = vehicle_info[param]
+        if make_bypass:
+            query["make"] = make_bypass
 
         if single_select is not None:
             query["single_select"] = False
