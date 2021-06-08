@@ -4,8 +4,8 @@ from auth_helpers import get_auth_client_params, run_auth_flow
 
 
 def get_vehicle(brand, scope):
-    client = smartcar.AuthClient(*get_auth_client_params(scope))
-    code = run_auth_flow(client.get_auth_url(), brand)
+    client = smartcar.AuthClient(*get_auth_client_params())
+    code = run_auth_flow(client.get_auth_url(scope), brand)
     access_token = client.exchange_code(code)["access_token"]
     vehicle_ids = smartcar.get_vehicle_ids(access_token)
     return smartcar.Vehicle(vehicle_ids["vehicles"][0], access_token)
@@ -109,9 +109,10 @@ class TestVehicleE2E(unittest.TestCase):
     def test_set_unit_system(self):
         self.volt.set_unit_system("imperial")
         batch = self.volt.batch(["/odometer", "/fuel"])
-        self.assertEqual(batch["/odometer"]["headers"]["sc-unit-system"], "imperial")
+        self.assertEqual(batch["/odometer"]["headers"]
+                         ["sc-unit-system"], "imperial")
 
-    ## nose runs tests in alphabetical order
+    # nose runs tests in alphabetical order
     def test_zzzz_disconnect(self):
         disconnected = self.volt.disconnect()
         self.assertIsNone(disconnected)
