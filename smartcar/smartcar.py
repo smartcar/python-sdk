@@ -77,7 +77,6 @@ class AuthClient(object):
         client_id,
         client_secret,
         redirect_uri,
-        scope=None,
         test_mode=None,
     ):
         """A client for accessing the Smartcar API
@@ -90,18 +89,16 @@ class AuthClient(object):
             redirect_uri (str): The URL to redirect to after the user accepts
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
-            scope (list, optional): A list of permissions requested by the application
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
         """
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
-        self.scope = scope
         self.test_mode = test_mode if test_mode else False
 
     def get_auth_url(
-        self, force=False, state=None, vehicle_info=None, single_select=None, flags=None
+        self, force=False, state=None, scope=None, vehicle_info=None, single_select=None, flags=None
     ):
         """Generate the Connect URL
 
@@ -111,6 +108,7 @@ class AuthClient(object):
             state (bool, optional): A random string that will be passed back on
                 redirect, this allows protection against cross-site forgery
                 requests. Defaults to None.
+            scope (list, optional): A list of permissions requested by the application
             vehicle_info (dict, optional): A dict with a property, make. Allows
                 users to bypass the car brand selection screen, allowing the
                 user to go directly to the vehicle login screen.
@@ -144,8 +142,8 @@ class AuthClient(object):
         if self.test_mode:
             query["mode"] = "test"
 
-        if self.scope:
-            query["scope"] = " ".join(self.scope)
+        if scope:
+            query["scope"] = " ".join(scope)
 
         if state:
             query["state"] = state
