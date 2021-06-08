@@ -171,18 +171,17 @@ class TestSmartcar(unittest.TestCase):
 
         assertDeepEquals(self, expected_params, actual_params)
 
-    def test_get_auth_url_vehicle_info_dictionary(self):
-        info = {"make": "TESLA"}
+    def test_get_auth_url_make_bypass(self):
+        test_bypass = "BMW"
 
         client = smartcar.AuthClient(
             self.client_id,
             self.client_secret,
-            self.redirect_uri,
+            self.redirect_uri
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", vehicle_info=info)
-
+            force=True, state="stuff", make_bypass=test_bypass)
         actual_query = urlparse(actual).query
         expected_query = urlencode(
             {
@@ -191,7 +190,7 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "make": "TESLA",
+                "make": "BMW",
             }
         )
 
