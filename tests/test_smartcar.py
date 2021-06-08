@@ -30,7 +30,7 @@ class TestSmartcar(unittest.TestCase):
         self.client_id = "client-id"
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
-        self.scope = ['a', 'b', 'c']
+        self.scope = ["a", "b", "c"]
         self.client = smartcar.AuthClient(
             self.client_id, self.client_secret, self.redirect_uri, True
         )
@@ -59,12 +59,14 @@ class TestSmartcar(unittest.TestCase):
         client = smartcar.AuthClient(
             self.client_id, self.client_secret, self.redirect_uri
         )
-        actual = client.get_auth_url(force=True, state="stuff")
+        actual = client.get_auth_url(
+            scope=self.scope, force=True, state="stuff")
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
             }
@@ -107,12 +109,14 @@ class TestSmartcar(unittest.TestCase):
             self.redirect_uri,
             test_mode=True,
         )
-        actual = client.get_auth_url(force=True, state="stuff")
+        actual = client.get_auth_url(
+            scope=self.scope, force=True, state="stuff")
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "mode": "test",
                 "state": "stuff",
@@ -129,12 +133,14 @@ class TestSmartcar(unittest.TestCase):
         client = smartcar.AuthClient(
             self.client_id, self.client_secret, self.redirect_uri,  True
         )
-        actual = client.get_auth_url(force=True, state="stuff")
+        actual = client.get_auth_url(
+            scope=self.scope, force=True, state="stuff")
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "mode": "test",
                 "state": "stuff",
@@ -154,12 +160,14 @@ class TestSmartcar(unittest.TestCase):
             self.redirect_uri,
             test_mode=False,
         )
-        actual = client.get_auth_url(force=True, state="stuff")
+        actual = client.get_auth_url(
+            scope=self.scope, force=True, state="stuff")
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
             }
@@ -181,13 +189,14 @@ class TestSmartcar(unittest.TestCase):
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", make_bypass=test_bypass)
+            scope=self.scope, force=True, state="stuff", make_bypass=test_bypass)
         actual_query = urlparse(actual).query
         expected_query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "make": "BMW",
@@ -207,7 +216,7 @@ class TestSmartcar(unittest.TestCase):
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", single_select=True)
+            scope=self.scope, force=True, state="stuff", single_select=True)
 
         actual_query = urlparse(actual).query
         expected_query = urlencode(
@@ -215,6 +224,7 @@ class TestSmartcar(unittest.TestCase):
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "single_select": True,
@@ -236,14 +246,14 @@ class TestSmartcar(unittest.TestCase):
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", single_select=single_select
-        )
+            scope=self.scope, force=True, state="stuff", single_select=single_select)
 
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "state": "stuff",
@@ -265,13 +275,14 @@ class TestSmartcar(unittest.TestCase):
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", single_select="potato")
+            scope=self.scope, force=True, state="stuff", single_select="potato")
 
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "single_select": False,
@@ -295,7 +306,7 @@ class TestSmartcar(unittest.TestCase):
         )
 
         actual = client.get_auth_url(
-            force=True, state="stuff", single_select="potato")
+            scope=self.scope, force=True, state="stuff", single_select="potato")
 
         actual_query = urlparse(actual).query
         expected_query = urlencode(
@@ -303,6 +314,7 @@ class TestSmartcar(unittest.TestCase):
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "single_select": False,
@@ -319,12 +331,13 @@ class TestSmartcar(unittest.TestCase):
             self.client_id, self.client_secret, self.redirect_uri
         )
         actual = client.get_auth_url(
-            force=True, state="stuff", flags=["country:DE"])
+            scope=self.scope, force=True, state="stuff", flags=["country:DE"])
         query = urlencode(
             {
                 "response_type": "code",
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
+                "scope": " ".join(self.scope),
                 "approval_prompt": "force",
                 "state": "stuff",
                 "flags": "country:DE",
