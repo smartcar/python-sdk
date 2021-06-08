@@ -1,12 +1,13 @@
 import smartcar
 import unittest
-from auth_helpers import get_auth_client_params, run_auth_flow
+from auth_helpers import get_auth_client_params, run_auth_flow, DEFAULT_SCOPE
 
 
 class TestSmartcarAuthE2E(unittest.TestCase):
     def test_exchange_code(self):
-        client = smartcar.AuthClient(*get_auth_client_params())
-        code = run_auth_flow(client.get_auth_url())
+        client = smartcar.AuthClient(
+            *get_auth_client_params())
+        code = run_auth_flow(client.get_auth_url(scope=DEFAULT_SCOPE))
 
         def assert_access_object(access_object):
             self.assertIsNotNone(access_object)
@@ -44,7 +45,7 @@ class TestSmartcarStaticE2E(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         client = smartcar.AuthClient(*get_auth_client_params())
-        code = run_auth_flow(client.get_auth_url())
+        code = run_auth_flow(client.get_auth_url(scope=DEFAULT_SCOPE))
         access_object = client.exchange_code(code)
 
         cls.access_token = access_object["access_token"]
