@@ -30,9 +30,9 @@ class TestSmartcar(unittest.TestCase):
         self.client_id = "client-id"
         self.client_secret = "client-secret"
         self.redirect_uri = "https://redirect.uri"
-        self.scope = ["a", "b", "c"]
+        self.scope = ['a', 'b', 'c']
         self.client = smartcar.AuthClient(
-            self.client_id, self.client_secret, self.redirect_uri, self.scope, True
+            self.client_id, self.client_secret, self.redirect_uri, True
         )
         self.maxDiff = None
         self.basic_auth = basic_auth(self.client_id, self.client_secret)
@@ -57,7 +57,7 @@ class TestSmartcar(unittest.TestCase):
 
     def test_get_auth_url(self):
         client = smartcar.AuthClient(
-            self.client_id, self.client_secret, self.redirect_uri, self.scope
+            self.client_id, self.client_secret, self.redirect_uri
         )
         actual = client.get_auth_url(force=True, state="stuff")
         query = urlencode(
@@ -66,7 +66,30 @@ class TestSmartcar(unittest.TestCase):
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
-                "scope": " ".join(self.scope),
+                "state": "stuff",
+            }
+        )
+        expected = smartcar.const.CONNECT_URL + "/oauth/authorize?" + query
+
+        expected_params = parse_qs(expected)
+        actual_params = parse_qs(actual)
+
+        assertDeepEquals(self, expected_params, actual_params)
+
+    def test_get_auth_url_with_scope(self):
+        client = smartcar.AuthClient(
+            self.client_id, self.client_secret, self.redirect_uri)
+
+        test_scope = ['a', 'b', 'c']
+        actual = client.get_auth_url(
+            force=True, state="stuff", scope=test_scope)
+        query = urlencode(
+            {
+                "response_type": "code",
+                "client_id": self.client_id,
+                "redirect_uri": self.redirect_uri,
+                "approval_prompt": "force",
+                "scope": " ".join(test_scope),
                 "state": "stuff",
             }
         )
@@ -82,7 +105,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
             test_mode=True,
         )
         actual = client.get_auth_url(force=True, state="stuff")
@@ -93,7 +115,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "mode": "test",
-                "scope": " ".join(self.scope),
                 "state": "stuff",
             }
         )
@@ -106,7 +127,7 @@ class TestSmartcar(unittest.TestCase):
 
     def test_get_auth_url_test_mode_no_keyword_true(self):
         client = smartcar.AuthClient(
-            self.client_id, self.client_secret, self.redirect_uri, self.scope, True
+            self.client_id, self.client_secret, self.redirect_uri,  True
         )
         actual = client.get_auth_url(force=True, state="stuff")
         query = urlencode(
@@ -116,7 +137,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "mode": "test",
-                "scope": " ".join(self.scope),
                 "state": "stuff",
             }
         )
@@ -132,7 +152,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
             test_mode=False,
         )
         actual = client.get_auth_url(force=True, state="stuff")
@@ -142,7 +161,6 @@ class TestSmartcar(unittest.TestCase):
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
-                "scope": " ".join(self.scope),
                 "state": "stuff",
             }
         )
@@ -160,7 +178,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
         )
 
         actual = client.get_auth_url(
@@ -174,7 +191,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "scope": " ".join(self.scope),
                 "make": "TESLA",
             }
         )
@@ -189,8 +205,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
-
         )
 
         actual = client.get_auth_url(
@@ -204,7 +218,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "scope": " ".join(self.scope),
                 "single_select": True,
             }
         )
@@ -221,8 +234,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
-
         )
 
         actual = client.get_auth_url(
@@ -236,7 +247,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "scope": " ".join(self.scope),
                 "state": "stuff",
                 "single_select_vin": "12345678901234",
                 "single_select": True,
@@ -253,7 +263,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
         )
 
         actual = client.get_auth_url(
@@ -266,7 +275,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "scope": " ".join(self.scope),
                 "single_select": False,
             }
         )
@@ -285,7 +293,6 @@ class TestSmartcar(unittest.TestCase):
             self.client_id,
             self.client_secret,
             self.redirect_uri,
-            self.scope,
         )
 
         actual = client.get_auth_url(
@@ -299,7 +306,6 @@ class TestSmartcar(unittest.TestCase):
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
                 "state": "stuff",
-                "scope": " ".join(self.scope),
                 "single_select": False,
             }
         )
@@ -311,7 +317,7 @@ class TestSmartcar(unittest.TestCase):
 
     def test_get_auth_url_flags_country(self):
         client = smartcar.AuthClient(
-            self.client_id, self.client_secret, self.redirect_uri, self.scope
+            self.client_id, self.client_secret, self.redirect_uri
         )
         actual = client.get_auth_url(
             force=True, state="stuff", flags=["country:DE"])
@@ -321,7 +327,6 @@ class TestSmartcar(unittest.TestCase):
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
                 "approval_prompt": "force",
-                "scope": " ".join(self.scope),
                 "state": "stuff",
                 "flags": "country:DE",
             }
