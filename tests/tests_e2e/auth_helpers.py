@@ -43,13 +43,10 @@ DEFAULT_SCOPE = [
 ]
 
 
-def get_auth_client_params(scope=None):
-    if scope is None:
-        scope = DEFAULT_SCOPE
-
+def get_auth_client_params():
     redirect_uri = "https://example.com/auth"
     test_mode = True
-    return [CLIENT_ID, CLIENT_SECRET, redirect_uri, scope, test_mode]
+    return [CLIENT_ID, CLIENT_SECRET, redirect_uri, test_mode]
 
 
 def get_code_from_url(url):
