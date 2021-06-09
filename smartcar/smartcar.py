@@ -1,4 +1,5 @@
 from . import api, const, requester, vehicle
+import re
 import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
@@ -33,8 +34,12 @@ def set_api_version(version):
     Args:
         version (str): the version of the api you want to use
     """
-    global API_VERSION
-    API_VERSION = version
+    if re.match('\d+\.\d+', version):
+        global API_VERSION
+        API_VERSION = version
+    else:
+        raise ValueError(
+            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
 
 
 def set_auth_version(version: str):
@@ -45,8 +50,12 @@ def set_auth_version(version: str):
     Args:
         version (str): the version of auth you want to use
     """
-    global AUTH_VERSION
-    AUTH_VERSION = version
+    if re.match('\d+\.\d+', version):
+        global AUTH_VERSION
+        AUTH_VERSION = version
+    else:
+        raise ValueError(
+            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
 
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
