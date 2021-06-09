@@ -28,7 +28,7 @@ def is_expired(expiration):
     return datetime.utcnow() > expiration
 
 
-def set_api_version(version):
+def set_api_version(version: str) -> None:
     """Update the version of Smartcar API you are using
 
     Args:
@@ -42,7 +42,7 @@ def set_api_version(version):
             f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
 
 
-def set_auth_version(version: str):
+def set_auth_version(version: str) -> None:
     """Update the Authentication version you are using
 
     *Not yet implemented
