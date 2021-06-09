@@ -3,7 +3,8 @@ import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
-VERSION = "1.0"
+API_VERSION = "2.0"
+AUTH_VERSION = "1.0"
 
 
 def set_expiration(access):
@@ -32,8 +33,20 @@ def set_api_version(version):
     Args:
         version (str): the version of the api you want to use
     """
-    global VERSION
-    VERSION = version
+    global API_VERSION
+    API_VERSION = version
+
+
+def set_auth_version(version: str):
+    """Update the Authentication version you are using
+
+    *Not yet implemented
+
+    Args:
+        version (str): the version of auth you want to use
+    """
+    global AUTH_VERSION
+    AUTH_VERSION = version
 
 
 def get_vehicle_ids(access_token, limit=10, offset=0):
@@ -78,6 +91,9 @@ class AuthClient(object):
         client_secret,
         redirect_uri,
         test_mode=None,
+        flags=None,
+        version='2.0',
+        origin=None
     ):
         """A client for accessing the Smartcar API
 
@@ -96,6 +112,7 @@ class AuthClient(object):
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.test_mode = test_mode if test_mode else False
+        self.version = version
 
     def get_auth_url(
         self, scope, force=False, state=None, make_bypass=None, single_select=None, flags=None
@@ -227,7 +244,7 @@ class AuthClient(object):
 
         """
         method = "GET"
-        url = "{}/v{}/compatibility".format(const.API_URL, VERSION)
+        url = "{}/v{}/compatibility".format(const.API_URL, API_VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
         response = requester.call(
