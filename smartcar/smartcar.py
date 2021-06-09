@@ -77,14 +77,14 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 
-def get_user_id(access_token):
+def get_user(access_token: str):
     """Retrieve the userId associated with the access_token
 
     Args:
         access_token (str): Smartcar access token
 
     Returns:
-        str: userId
+        { "id" : <id> }
 
     Raises:
         SmartcarException
