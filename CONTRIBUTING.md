@@ -11,17 +11,18 @@ Please be sure to read the contribution guidelines before making or requesting a
 
 ## Running Tests
 
-The tests do make requests to the Smartcar API, so you'll need to create an application on Smartcar and get the client id and client secret
+The tests make requests to the Smartcar API, so you'll need to create an application on Smartcar and get your client id and client secret. You'll also need to add the testing redirect URI to your application.
 
 1. Create an application on the [developer dashboard](https://dashboard.smartcar.com)
-2. Pass the client id and client secret to the tests as environment variables
+2. Add `https://example.com/auth` as a redirect URI
+3. Pass the client id and client secret to the tests as environment variables
 
 ```
-export INTEGRATION_CLIENT_ID=''
-export INTEGRATION_CLIENT_SECRET=''
+export INTEGRATION_CLIENT_ID='<YOUR CLIENT ID>'
+export INTEGRATION_CLIENT_SECRET='<YOUR CLIENT SECRET>'
 ```
 
-3. Run tests: `make test args="--verbose"`
+4. Run tests: `make test args="--verbose"`
 
 ## Formatting
 
