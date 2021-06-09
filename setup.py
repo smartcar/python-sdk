@@ -44,6 +44,7 @@ setup(
             "responses",
             "selenium",
             "retrying",
+            "wheel"
         ]
     },
 )
