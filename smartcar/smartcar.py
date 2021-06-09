@@ -58,7 +58,7 @@ def set_auth_version(version: str) -> None:
             f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
 
 
-def get_vehicle(access_token, paging={"limit": 10, "offset": 0}):
+def get_vehicles(access_token, paging={"limit": 10, "offset": 0}):
     """Get a list of the user's vehicle ids
 
     Args:

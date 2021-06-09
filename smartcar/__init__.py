@@ -3,8 +3,8 @@ __version__ = "semantic-release"
 from .smartcar import (
     AuthClient,
     is_expired,
-    get_user_id,
-    get_vehicle_ids,
+    get_user,
+    get_vehicles,
     set_api_version,
 )
 from .vehicle import Vehicle

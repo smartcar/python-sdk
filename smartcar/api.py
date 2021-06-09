@@ -34,7 +34,7 @@ class Api(object):
 
         """
         return "{}/v{}/vehicles/{}/{}".format(
-            const.API_URL, smartcar.VERSION, self.vehicle_id, endpoint
+            const.API_URL, smartcar.API_VERSION, self.vehicle_id, endpoint
         )
 
     def action(self, endpoint, action, **kwargs):
@@ -124,7 +124,8 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "vehicles")
+        url = "{}/v{}/{}".format(const.API_URL,
+                                 smartcar.API_VERSION, "vehicles")
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def user(self, **params):
@@ -137,5 +138,5 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL, smartcar.VERSION, "user")
+        url = "{}/v{}/{}".format(const.API_URL, smartcar.API_VERSION, "user")
         return requester.call("GET", url, headers=self.auth, params=params)

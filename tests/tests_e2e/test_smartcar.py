@@ -51,9 +51,9 @@ class TestSmartcarStaticE2E(unittest.TestCase):
         cls.access_token = access_object["access_token"]
 
     def test_get_vehicle_ids(self):
-        vehicle_ids = smartcar.get_vehicle_ids(self.access_token)
+        vehicle_ids = smartcar.get_vehicles(self.access_token)
         self.assertIsNotNone(vehicle_ids)
 
     def test_get_user_id(self):
-        user_id = smartcar.get_user_id(self.access_token)
+        user_id = smartcar.get_user(self.access_token)
         self.assertIsNotNone(user_id)
