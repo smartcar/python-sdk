@@ -58,7 +58,7 @@ def set_auth_version(version: str) -> None:
             f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
 
 
-def get_vehicle_ids(access_token, limit=10, offset=0):
+def get_vehicle(access_token, paging={"limit": 10, "offset": 0}):
     """Get a list of the user's vehicle ids
 
     Args:
@@ -74,6 +74,8 @@ def get_vehicle_ids(access_token, limit=10, offset=0):
         SmartcarException
 
     """
+    limit = paging['limit']
+    offset = paging['offset']
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 
