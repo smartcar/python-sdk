@@ -22,7 +22,7 @@ install:
 
 script:
   - firefox -headless &
-  - make test'
+  - make test
   - make format args='--check'
 
 jobs:
