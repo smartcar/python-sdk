@@ -32,7 +32,13 @@ coverage
 htmlcover
 .coverage
 
+# Misc
+.t.sh
+
 # Editors
+
+## Pycharm
+.idea/
 
 ## Vscode
 .vscode
