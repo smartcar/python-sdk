@@ -11,7 +11,7 @@ class Api(object):
         """
         self.access_token = access_token
         self.vehicle_id = vehicle_id
-        self.auth = {"Authorization": "Bearer {}".format(access_token)}
+        self.auth = {"Authorization": f"Bearer {access_token}"}
         self.unit_system = "metric"
 
     def set_unit_system(self, unit_system):
@@ -33,9 +33,7 @@ class Api(object):
             str: formatted url
 
         """
-        return "{}/v{}/vehicles/{}/{}".format(
-            const.API_URL, smartcar.API_VERSION, self.vehicle_id, endpoint
-        )
+        return f"{const.API_URL}/v{smartcar.API_VERSION}/vehicles/{self.vehicle_id}/{endpoint}"
 
     def action(self, endpoint, action, **kwargs):
         """Sends POST requests to Smartcar API
@@ -124,8 +122,7 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL,
-                                 smartcar.API_VERSION, "vehicles")
+        url = f"{const.API_URL}/v{smartcar.API_VERSION}/{'vehicles'}"
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def user(self, **params):
@@ -138,5 +135,5 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = "{}/v{}/{}".format(const.API_URL, smartcar.API_VERSION, "user")
+        url = f"{const.API_URL}/v{smartcar.API_VERSION}/{'user'}"
         return requester.call("GET", url, headers=self.auth, params=params)
