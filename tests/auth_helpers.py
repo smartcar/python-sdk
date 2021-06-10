@@ -1,11 +1,9 @@
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from distutils.util import strtobool
-import unittest
 import uuid
 
 try:
@@ -14,7 +12,6 @@ except BaseException:
     # python 3
     import urllib.parse as urlparse
 
-import smartcar
 
 if (
     not "INTEGRATION_CLIENT_ID" in os.environ

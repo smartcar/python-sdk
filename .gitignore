@@ -1,6 +1,7 @@
 # Repo Specific
 examples/app/requests*
 examples/app/smartcar
+.t/
 
 # Python
 *env*/
@@ -33,7 +34,7 @@ htmlcover
 .coverage
 
 # Misc
-.t.sh
+.t/.t.sh
 
 # Editors
 

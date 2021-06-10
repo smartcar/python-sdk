@@ -1,118 +1,105 @@
 import smartcar
-import unittest
-from auth_helpers import get_auth_client_params, run_auth_flow
+from tests.auth_helpers import get_auth_client_params, run_auth_flow
 
 
-def get_vehicle(brand, scope):
-    client = smartcar.AuthClient(*get_auth_client_params())
-    code = run_auth_flow(client.get_auth_url(scope), brand)
-    access_token = client.exchange_code(code)["access_token"]
-    vehicle_ids = smartcar.get_vehicles(access_token)
-    return smartcar.Vehicle(vehicle_ids["vehicles"][0], access_token)
+# Tests
+def test_info(chevy_volt):
+    info = chevy_volt.info()
+    assert info is not None
 
 
-class TestVehicleE2E(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.volt = get_vehicle(
-            "CHEVROLET",
-            [
-                "required:read_vehicle_info",
-                "required:read_location",
-                "required:read_odometer",
-                "required:control_security",
-                "required:read_vin",
-                "required:read_fuel",
-                "required:read_battery",
-                "required:read_charge",
-                "required:read_engine_oil",
-                "required:read_tires",
-            ],
-        )
-        cls.egolf = get_vehicle("VOLKSWAGEN", ["required:control_charge"])
+def test_vin(chevy_volt):
+    vin = chevy_volt.vin()
+    assert vin is not None
 
-    def test_info(self):
-        info = self.volt.info()
-        self.assertIsNotNone(info)
 
-    def test_vin(self):
-        vin = self.volt.vin()
-        self.assertIsNotNone(vin)
+def test_location(chevy_volt):
+    location = chevy_volt.location()
+    assert location is not None
 
-    def test_location(self):
-        location = self.volt.location()
-        self.assertIsNotNone(location)
 
-    def test_odometer(self):
-        odometer = self.volt.odometer()
-        self.assertIsNotNone(odometer)
+def test_odometer(chevy_volt):
+    odometer = chevy_volt.odometer()
+    assert odometer is not None
 
-    def test_fuel(self):
-        fuel = self.volt.fuel()
-        self.assertIsNotNone(fuel)
 
-    def test_oil(self):
-        oil = self.volt.oil()
-        self.assertIsNotNone(oil)
+def test_fuel(chevy_volt):
+    fuel = chevy_volt.fuel()
+    assert fuel is not None
 
-    def test_tire_pressure(self):
-        tire_pressure = self.volt.tire_pressure()
-        self.assertIsNotNone(tire_pressure)
 
-    def test_battery(self):
-        battery = self.volt.battery()
-        self.assertIsNotNone(battery)
+def test_oil(chevy_volt):
+    oil = chevy_volt.oil()
+    assert oil is not None
 
-    def test_charge(self):
-        charge = self.volt.charge()
-        self.assertIsNotNone(charge)
 
-    def test_lock(self):
-        lock = self.volt.lock()
-        self.assertEqual(lock["status"], "success")
+def test_tire_pressure(chevy_volt):
+    tire_pressure = chevy_volt.tire_pressure()
+    assert tire_pressure is not None
 
-    def test_unlock(self):
-        unlock = self.volt.unlock()
-        self.assertEqual(unlock["status"], "success")
 
-    def test_start_charge(self):
-        response = self.egolf.start_charge()
-        self.assertEqual(response["status"], "success")
+def test_battery(chevy_volt):
+    battery = chevy_volt.battery()
+    assert battery is not None
 
-    def test_stop_charge(self):
-        response = self.egolf.stop_charge()
-        self.assertEqual(response["status"], "success")
 
-    def test_batch(self):
-        batch = self.volt.batch(["/odometer", "/location"])
-        self.assertIsNotNone(batch)
+def test_charge(chevy_volt):
+    charge = chevy_volt.charge()
+    assert charge is not None
 
-    def test_permissions(self):
-        permissions = self.volt.permissions()
-        self.assertIsNotNone(permissions)
 
-    def test_has_permissions(self):
-        single_response = self.volt.has_permissions("required:read_odometer")
-        multi_response = self.volt.has_permissions(
-            ["read_odometer", "required:read_vehicle_info"]
-        )
-        false_response = self.volt.has_permissions("read_ignition")
-        false_multi_response = self.volt.has_permissions(
-            ["read_odometer", "read_ignition"]
-        )
+def test_lock(chevy_volt):
+    lock = chevy_volt.lock()
+    assert lock["status"] == "success"
 
-        self.assertTrue(single_response)
-        self.assertTrue(multi_response)
-        self.assertFalse(false_response)
-        self.assertFalse(false_multi_response)
 
-    def test_set_unit_system(self):
-        self.volt.set_unit_system("imperial")
-        batch = self.volt.batch(["/odometer", "/fuel"])
-        self.assertEqual(batch["/odometer"]["headers"]
-                         ["sc-unit-system"], "imperial")
+def test_unlock(chevy_volt):
+    unlock = chevy_volt.unlock()
+    assert unlock["status"] == "success"
 
-    # nose runs tests in alphabetical order
-    def test_zzzz_disconnect(self):
-        disconnected = self.volt.disconnect()
-        self.assertIsNone(disconnected)
+
+def test_start_charge(vw_egolf):
+    response = vw_egolf.start_charge()
+    assert response["status"] == "success"
+
+
+def test_stop_charge(vw_egolf):
+    response = vw_egolf.stop_charge()
+    assert response["status"] == "success"
+
+
+def test_batch(chevy_volt):
+    batch = chevy_volt.batch(["/odometer", "/location"])
+    assert batch is not None
+
+
+def test_permissions(chevy_volt):
+    permissions = chevy_volt.permissions()
+    assert permissions is not None
+
+
+def test_has_permissions(chevy_volt):
+    single_response = chevy_volt.has_permissions("required:read_odometer")
+    multi_response = chevy_volt.has_permissions(
+        ["read_odometer", "required:read_vehicle_info"]
+    )
+    false_response = chevy_volt.has_permissions("read_ignition")
+    false_multi_response = chevy_volt.has_permissions(
+        ["read_odometer", "read_ignition"]
+    )
+
+    assert single_response
+    assert multi_response
+    assert not false_response
+    assert not false_multi_response
+
+
+def test_set_unit_system(chevy_volt):
+    chevy_volt.set_unit_system("imperial")
+    batch = chevy_volt.batch(["/odometer", "/fuel"])
+    assert batch["/odometer"]["headers"]["sc-unit-system"] == "imperial"
+
+
+def test_disconnect(chevy_volt):
+    disconnected = chevy_volt.disconnect()
+    assert disconnected is None
