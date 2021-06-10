@@ -38,10 +38,10 @@ setup(
     extras_require={
         "dev": [
             "black",
-            "coverage",
-            "nose",
             "mock",
             "responses",
+            "pytest",
+            "pytest-cov",
             "selenium",
             "retrying",
             "wheel",
