@@ -5,6 +5,7 @@ examples/app/smartcar
 
 # Python
 *env*/
+*venv*/
 build/
 *.egg-info/
 .cache
