@@ -1,6 +1,5 @@
 from . import api, const, requester, vehicle
 import re
-import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
@@ -34,12 +33,13 @@ def set_api_version(version: str) -> None:
     Args:
         version (str): the version of the api you want to use
     """
-    if re.match('\d+\.\d+', version):
+    if re.match("\d+\.\d+", version):
         global API_VERSION
         API_VERSION = version
     else:
         raise ValueError(
-            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
+            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+        )
 
 
 def set_auth_version(version: str) -> None:
@@ -50,15 +50,16 @@ def set_auth_version(version: str) -> None:
     Args:
         version (str): the version of auth you want to use
     """
-    if re.match('\d+\.\d+', version):
+    if re.match("\d+\.\d+", version):
         global AUTH_VERSION
         AUTH_VERSION = version
     else:
         raise ValueError(
-            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'")
+            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+        )
 
 
-def get_vehicles(access_token, paging={"limit": 10, "offset": 0}):
+def get_vehicles(access_token, paging=None):
     """Get a list of the user's vehicle ids
 
     Args:
@@ -74,8 +75,11 @@ def get_vehicles(access_token, paging={"limit": 10, "offset": 0}):
         SmartcarException
 
     """
-    limit = paging['limit']
-    offset = paging['offset']
+    if paging is None:
+        paging = {"limit": 10, "offset": 0}
+
+    limit = paging["limit"]
+    offset = paging["offset"]
     return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
 
 
@@ -97,14 +101,14 @@ def get_user(access_token: str):
 
 class AuthClient(object):
     def __init__(
-        self,
-        client_id,
-        client_secret,
-        redirect_uri,
-        test_mode=None,
-        flags=None,
-        version='2.0',
-        origin=None
+            self,
+            client_id,
+            client_secret,
+            redirect_uri,
+            test_mode=None,
+            flags=None,
+            version="2.0",
+            origin=None,
     ):
         """A client for accessing the Smartcar API
 
@@ -126,7 +130,13 @@ class AuthClient(object):
         self.version = version
 
     def get_auth_url(
-        self, scope, force=False, state=None, make_bypass=None, single_select=None, flags=None
+            self,
+            scope,
+            force=False,
+            state=None,
+            make_bypass=None,
+            single_select=None,
+            flags=None,
     ):
         """Generate the Connect URL
 
@@ -165,9 +175,8 @@ class AuthClient(object):
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
             "approval_prompt": approval_prompt,
+            "scope": " ".join(scope)
         }
-
-        query["scope"] = " ".join(scope)
 
         if self.test_mode:
             query["mode"] = "test"
@@ -214,8 +223,7 @@ class AuthClient(object):
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
-        response = requester.call(
-            method, url, data=data, auth=self.auth).json()
+        response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
     def exchange_refresh_token(self, refresh_token):
@@ -235,8 +243,7 @@ class AuthClient(object):
         method = "POST"
         url = const.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
-        response = requester.call(
-            method, url, data=data, auth=self.auth).json()
+        response = requester.call(method, url, data=data, auth=self.auth).json()
         return set_expiration(response)
 
     def is_compatible(self, vin, scope, country="US"):
@@ -258,6 +265,5 @@ class AuthClient(object):
         url = "{}/v{}/compatibility".format(const.API_URL, API_VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
-        response = requester.call(
-            method, url, params=query, auth=self.auth).json()
+        response = requester.call(method, url, params=query, auth=self.auth).json()
         return response["compatible"]
