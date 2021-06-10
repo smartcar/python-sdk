@@ -122,7 +122,7 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = f"{const.API_URL}/v{smartcar.API_VERSION}/{'vehicles'}"
+        url = f"{const.API_URL}/v{smartcar.API_VERSION}/vehicles"
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def user(self, **params):
@@ -135,5 +135,5 @@ class Api(object):
             Response: response from the request to the Smartcar API
 
         """
-        url = f"{const.API_URL}/v{smartcar.API_VERSION}/{'user'}"
+        url = f"{const.API_URL}/v{smartcar.API_VERSION}/user"
         return requester.call("GET", url, headers=self.auth, params=params)
