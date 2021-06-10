@@ -12,20 +12,19 @@ except BaseException:
     # python 3
     import urllib.parse as urlparse
 
-
 if (
-    not "INTEGRATION_CLIENT_ID" in os.environ
-    or not "INTEGRATION_CLIENT_SECRET" in os.environ
+        not "E2E_SMARTCAR_CLIENT_ID" in os.environ
+        or not "E2E_SMARTCAR_CLIENT_SECRET" in os.environ
 ):
     raise Exception(
-        '"INTEGRATION_CLIENT_ID" and "INTEGRATION_CLIENT_SECRET" environment variables must be set'
+        '"E2E_SMARTCAR_CLIENT_ID" and "E2E_SMARTCAR_CLIENT_SECRET" environment variables must be set'
     )
 
 HEADLESS = "CI" in os.environ or (
-    "HEADLESS" in os.environ and strtobool(os.environ["HEADLESS"])
+        "HEADLESS" in os.environ and strtobool(os.environ["HEADLESS"])
 )
-CLIENT_ID = os.environ["INTEGRATION_CLIENT_ID"]
-CLIENT_SECRET = os.environ["INTEGRATION_CLIENT_SECRET"]
+CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
+CLIENT_SECRET = os.environ["E2E_SMARTCAR_CLIENT_SECRET"]
 DEFAULT_SCOPE = [
     "required:read_vehicle_info",
     "required:read_location",
