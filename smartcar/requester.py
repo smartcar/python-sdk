@@ -4,7 +4,7 @@ from . import exceptions as E
 from . import __version__
 
 
-def call(method, url, **kwargs):
+def call(method: str, url: str, **kwargs) -> requests.models.Response:
     """Attaches the kwargs into the headers, sends the request to the Smartcar API
         and handles all error cases
 
@@ -14,7 +14,7 @@ def call(method, url, **kwargs):
         **kwargs: parameters for the request
 
     Returns:
-        dict: response from the request to the Smartcar API
+        requests.models.Response: response from the request to the Smartcar API
 
     """
     if "headers" not in kwargs:
