@@ -3,6 +3,7 @@ from typing import List
 
 import smartcar.api as api
 import smartcar.helpers as helpers
+import smartcar.type_hints as th
 
 API_VERSION = "2.0"
 
@@ -42,15 +43,17 @@ def get_user(access_token: str) -> dict:
     return {"id": user_id}
 
 
-def get_vehicles(access_token, paging=None):
+def get_vehicles(access_token: str, paging: dict = None) -> th.AllVehicles:
     """
     Get a list of the user's vehicle ids
 
     Args:
         access_token (str): A valid access token from a previously retrieved
             access object
-        limit (integer, optional): The number of vehicle ids to return
-        offset (integer, optional): The index to start the vehicle list at
+
+        paging (dictionary, optional): Can include "limit" and "offset" keys:
+            limit (int, optional): The number of vehicle ids to return
+            offset (int, optional): The index to start the vehicle list at
 
     Returns:
         dict: response containing the list of vehicle ids and paging information
@@ -61,9 +64,11 @@ def get_vehicles(access_token, paging=None):
     if paging is None:
         paging = {"limit": 10, "offset": 0}
 
-    limit = paging["limit"]
-    offset = paging["offset"]
-    return api.Smartcar(access_token).vehicles(limit=limit, offset=offset).json()
+    limit = paging.get("limit")
+    offset = paging.get("offset")
+
+    response = api.Smartcar(access_token).vehicles(limit=limit, offset=offset)
+    return response.json()
 
 
 def get_compatibility(access_token, vin: str, scope: List[str], country: str = 'US', options: dict = None):
