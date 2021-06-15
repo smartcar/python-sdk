@@ -16,12 +16,6 @@ def test_refresh_code(client, access_object):
     new_access_object = client.exchange_refresh_token(access_object.get("refresh_token"))
     test_correct_keys_in_access_object(new_access_object)
 
-
-def test_get_compatibility(access_object, chevy_volt):
-    access_token = access_object.get("access_token")
-    res = static.get_compatibility(access_token, vin=chevy_volt.vin(), scope=['read_vehicle_info'],
-                                   options={"client_id": ah.CLIENT_ID, "client_secret": ah.CLIENT_SECRET})
-
-    import ipdb;
-    ipdb.set_trace()
-    assert "compatibility" in res
+# Test INVALID access token
+# Test set_env and environments
+# Test base_url
