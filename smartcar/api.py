@@ -19,6 +19,7 @@ class Smartcar(object):
         self.vehicle_id = vehicle_id
         self.auth = {"Authorization": f"Bearer {access_token}"}
         self.unit_system = "metric"
+        self.base_url = f"{constants.API_URL}/v{static.API_VERSION}"
         self.client_id = None
         self.client_secret = None
         self.client_redirect_uri = None
@@ -54,18 +55,6 @@ class Smartcar(object):
         """
         self.unit_system = unit_system
 
-    def _format(self, endpoint):
-        """
-        Generates the formatted URL
-
-        Args:
-            endpoint (str): the Smartcar endpoint of interest
-
-        Returns:
-            str: formatted url
-        """
-        return f"{constants.API_URL}/v{static.API_VERSION}/vehicles/{self.vehicle_id}/{endpoint}"
-
     def action(self, endpoint, action, **kwargs):
         """
         Sends POST requests to Smartcar API
@@ -78,7 +67,7 @@ class Smartcar(object):
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = self._format(endpoint)
+        url = self._format_vehicle_endpoint(endpoint)
         headers = self.auth
         json = {"action": action}
         for k, v in kwargs.items():
@@ -98,7 +87,7 @@ class Smartcar(object):
             Response: response from the request to the Smartcar API
         """
         endpoint = "batch"
-        url = self._format(endpoint)
+        url = self._format_vehicle_endpoint(endpoint)
         json = {"requests": requests}
         headers = self.auth
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
@@ -125,7 +114,7 @@ class Smartcar(object):
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = self._format(endpoint)
+        url = self._format_vehicle_endpoint(endpoint)
         headers = self.auth
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
         return requester.call("GET", url, headers=headers)
@@ -140,7 +129,7 @@ class Smartcar(object):
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = self._format("permissions")
+        url = self._format_vehicle_endpoint("permissions")
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def disconnect(self):
@@ -150,7 +139,7 @@ class Smartcar(object):
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = self._format("application")
+        url = self._format_vehicle_endpoint("application")
         return requester.call("DELETE", url, headers=self.auth)
 
     def vehicles(self, **params):
@@ -163,18 +152,30 @@ class Smartcar(object):
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = f"{constants.API_URL}/v{static.API_VERSION}/vehicles"
+        url = f"{self.base_url}/vehicles"
         return requester.call("GET", url, headers=self.auth, params=params)
 
-    def user(self, **params):
+    def user(self):
         """
         Sends a request to /user
-
-        Args:
-            **params: parameters for the request
 
         Returns:
             Response: response from the request to the Smartcar API
         """
-        url = f"{constants.API_URL}/v{static.API_VERSION}/user"
-        return requester.call("GET", url, headers=self.auth, params=params)
+        url = f"{self.base_url}/user"
+        return requester.call("GET", url, headers=self.auth)
+
+    # PRIVATE ENDPOINTS:
+
+    def _format_vehicle_endpoint(self, endpoint):
+        """
+        Generates the formatted URL to <base_url>/vehicles/<vehicle_id>/<endpoint>
+        These vehicle-related endpoints are widely used to get vehicle information.
+
+        Args:
+            endpoint (str): the Smartcar vehicle endpoint of interest
+
+        Returns:
+            str: formatted url
+        """
+        return f"{self.base_url}/vehicles/{self.vehicle_id}/{endpoint}"
