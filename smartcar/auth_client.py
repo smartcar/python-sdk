@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import List
 from urllib.parse import urlencode
 
 import smartcar.constants as constants
@@ -7,14 +8,12 @@ import smartcar.requester as requester
 
 class AuthClient(object):
     def __init__(
-            self,
-            client_id,
-            client_secret,
-            redirect_uri,
-            test_mode=None,
-            flags=None,
-            version="2.0",
-            origin=None,
+        self,
+        client_id,
+        client_secret,
+        redirect_uri,
+        test_mode=None,
+        origin=None,
     ):
         """
         A client for accessing the Smartcar API
@@ -34,39 +33,32 @@ class AuthClient(object):
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.test_mode = test_mode if test_mode else False
-        self.version = version
+        self.origin = origin if origin else constants.AUTH_URL
 
-    def get_auth_url(
-            self,
-            scope,
-            force=False,
-            state=None,
-            make_bypass=None,
-            single_select=None,
-            flags=None,
-    ):
+    def get_auth_url(self, scope: List[str], options: dict = None):
         """
         Generate the Connect URL
 
         Args:
             scope (str[], required): A list of permissions requested by the application
-            force (bool, optional): Set to True in order to force the approval
-                dialog shown to the user. Defaults to False.
-            state (bool, optional): A random string that will be passed back on
-                redirect, this allows protection against cross-site forgery
-                requests. Defaults to None.
-            make_bypass (str, optional): A string that represents a make(car brand). Allows
-                users to bypass the car brand selection screen, allowing the
-                user to go directly to the vehicle login screen.
-                Defaults to None.
-            single_select (bool or dictionary, optional): An optional value that
-                sets the behavior of the grant dialog displayed to the user. It
-                can be either a bool or dict. If set to True, `single_select`
-                limits the user to selecting only one vehicle. If `single_select`
-                is a dictionary with the property `vin`, Smartcar will only authorize the vehicle
-                with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
-                for more information. Defaults to None.
-            flags (str[], optional): List of feature flags that your application has early access to.
+            options (dict, optional): Can have the following keys:
+                force_prompt (bool, optional): Set to True in order to force the approval
+                    dialog shown to the user. Defaults to False.
+                state (str, optional): A random string that will be passed back on
+                    redirect, this allows protection against cross-site forgery
+                    requests. Defaults to None.
+                make_bypass (str, optional): A string that represents a make(car brand).
+                    Allows users to bypass the car brand selection screen, allowing the
+                    user to go directly to the vehicle login screen. Defaults to None.
+                single_select (dictionary, optional): An optional value that
+                    sets the behavior of the grant dialog displayed to the user.
+                    Can have keys of enabled(bool) and vin(str).
+                    if options['enabled'] == True, `single_select`
+                    limits the user to selecting only one vehicle. If `single_select`
+                    contains a property of `vin`, Smartcar will only authorize the vehicle
+                    with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
+                    for more information. Defaults to None.
+                flags:
 
         Returns:
             str: authorization url
@@ -76,37 +68,39 @@ class AuthClient(object):
         """
         base_url = constants.CONNECT_URL
 
-        approval_prompt = "force" if force else "auto"
         query = {
             "response_type": "code",
             "client_id": self.client_id,
             "redirect_uri": self.redirect_uri,
-            "approval_prompt": approval_prompt,
-            "scope": " ".join(scope)
+            "approval_prompt": "auto",
+            "scope": " ".join(scope),
         }
-
         if self.test_mode:
             query["mode"] = "test"
 
-        if state:
-            query["state"] = state
+        if options:
+            if options.get("force_prompt"):
+                query["approval_prompt"] = "force"
 
-        if make_bypass:
-            query["make"] = make_bypass
+            if options.get("state"):
+                query["state"] = options["state"]
 
-        if single_select is not None:
-            query["single_select"] = False
-            if isinstance(single_select, dict):
-                valid_parameters = ["vin"]
-                for param in valid_parameters:
-                    if param in single_select:
-                        query["single_select_" + param] = single_select[param]
-                        query["single_select"] = True
-            else:
-                query["single_select"] = single_select == True
+            if options.get("make_bypass"):
+                query["make"] = options["make_bypass"]
 
-        if flags:
-            query["flags"] = " ".join(flags)
+            if options.get("single_select"):
+                single_select = options["single_select"]
+
+                if single_select.get("vin"):
+                    query['single_select"vin'] = single_select["vin"]
+                    query["single_select"] = True
+                elif single_select.get("enabled"):
+                    query["single_select"] = True
+                else:
+                    query["single_select"] = False
+
+            if options.get("flags"):
+                query["flags"] = " ".join(options["flags"])
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
@@ -177,6 +171,7 @@ class AuthClient(object):
 
 
 # Static helpers for AuthClient
+
 
 def _set_expiration(access):
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
