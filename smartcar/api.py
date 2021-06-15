@@ -52,7 +52,7 @@ class Smartcar(object):
 
     def set_env_custom(self, client_id: str = None, client_secret: str = None) -> None:
         """
-        Set self.client_id and self.client_secret to a custom set
+        Set self.client_id and/or self.client_secret to custom values.
 
         Args:
             client_id (str)
