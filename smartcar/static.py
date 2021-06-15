@@ -23,7 +23,7 @@ def set_api_version(version: str) -> None:
         )
 
 
-def get_user(access_token: str):
+def get_user(access_token: str) -> dict:
     """
     Retrieve the userId associated with the access_token
 
@@ -36,7 +36,10 @@ def get_user(access_token: str):
     Raises:
         SmartcarException
     """
-    return api.Smartcar(access_token).user().json()["id"]
+    response = api.Smartcar(access_token).user()
+    user_id = response.json()["id"]
+
+    return {"id": user_id}
 
 
 def get_vehicles(access_token, paging=None):
