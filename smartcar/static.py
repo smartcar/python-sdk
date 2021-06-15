@@ -71,8 +71,43 @@ def get_vehicles(access_token: str, paging: dict = None) -> th.AllVehicles:
     return response.json()
 
 
-def get_compatibility(access_token, vin: str, scope: List[str], country: str = 'US', options: dict = None):
-    helpers.validate_env()
+def get_compatibility(access_token, vin: str, scope: List[str], country: str = 'US',
+                      options: dict = None) -> th.GetCompatibility:
+    """
+    Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
+    specific vehicle is compatible with the permissions provided.
+
+    A compatible vehicle is one that:
+        1. Has hardware required for internet connectivity
+        2. Belongs to the makes and models Smartcar is compatible with
+        3. Is compatible with the required permissions (scope) that your app is requesting
+            access to
+
+    Args:
+        access_token (str)
+        vin (str)
+        scope (List[str]): List of scopes (permissions) -> to check if vehicle is compatible
+        country (str, optional)
+        options (dictionary): Can contain client_id and client_secret. Technically, they are
+            both optional, but if using a client_id other than the one provided through
+            environment variables, it'll be likely that a client_secret will have to be
+            provided. Regardless, authentication will be verified.
+
+    Returns:
+        dict: containing key of "compatible" (bool)
+    """
+    sc_api = api.Smartcar(access_token)
+
+    if options is None:
+        helpers.validate_env()
+    else:
+        if options.get("client_id"):
+            sc_api.set_env_custom(client_id=options["client_id"])
+
+        if options.get("client_secret"):
+            sc_api.set_env_custom(client_secret=options["client_secret"])
+
     scope_param = " ".join(scope)
 
-    return api.Smartcar(access_token).compatibility(vin=vin, scope=scope_param, country=country).json()
+    response = sc_api.compatibility(vin=vin, scope=scope_param, country=country)
+    return response.json()

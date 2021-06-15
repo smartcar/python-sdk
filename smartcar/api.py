@@ -25,6 +25,10 @@ class Smartcar(object):
         self.client_redirect_uri = None
         self.set_env()
 
+    # ===========================================
+    # Utility Methods
+    # ===========================================
+
     def set_env(self, testing: bool = False) -> None:
         """
         Set self.client_id, self.client_secret, and self.client_redirect_uri
@@ -45,6 +49,20 @@ class Smartcar(object):
         self.client_id = os.environ.get(f"{environment}_CLIENT_ID")
         self.client_secret = os.environ.get(f"{environment}_CLIENT_SECRET")
         self.client_redirect_uri = os.environ.get(f"{environment}_REDIRECT_URI")
+
+    def set_env_custom(self, client_id: str = None, client_secret: str = None) -> None:
+        """
+        Set self.client_id and self.client_secret to a custom set
+
+        Args:
+            client_id (str)
+            client_secret (str)
+        """
+        if client_id:
+            self.client_id = client_id
+
+        if client_secret:
+            self.client_secret = client_secret
 
     def set_unit_system(self, unit_system):
         """
@@ -94,16 +112,6 @@ class Smartcar(object):
 
         return requester.call("POST", url, json=json, headers=headers)
 
-    def compatibility(self, **params):
-        url = f"{constants.API_URL}/v{static.API_VERSION}/compatibility"
-        id_secret = f'{self.client_id}:{self.client_secret}'
-        encoded_id_secret = id_secret.encode('ascii')
-        base64_bytes = base64.b64encode(encoded_id_secret)
-        base64_id_secret = base64_bytes.decode('ascii')
-        headers = {'Authorization': f'Basic {base64_id_secret}'}
-
-        return requester.call("GET", url, headers=headers, params=params)
-
     def get(self, endpoint):
         """
         Sends GET requests to Smartcar API
@@ -142,6 +150,20 @@ class Smartcar(object):
         url = self._format_vehicle_endpoint("application")
         return requester.call("DELETE", url, headers=self.auth)
 
+    # ===========================================
+    # Methods directly related to static.py
+    # ===========================================
+
+    def user(self):
+        """
+        Sends a request to /user
+
+        Returns:
+            Response: response from the request to the Smartcar API
+        """
+        url = f"{self.base_url}/user"
+        return requester.call("GET", url, headers=self.auth)
+
     def vehicles(self, **params):
         """
         Sends a request to /vehicles
@@ -155,17 +177,19 @@ class Smartcar(object):
         url = f"{self.base_url}/vehicles"
         return requester.call("GET", url, headers=self.auth, params=params)
 
-    def user(self):
-        """
-        Sends a request to /user
+    def compatibility(self, **params):
+        url = f"{constants.API_URL}/v{static.API_VERSION}/compatibility"
+        id_secret = f'{self.client_id}:{self.client_secret}'
+        encoded_id_secret = id_secret.encode('ascii')
+        base64_bytes = base64.b64encode(encoded_id_secret)
+        base64_id_secret = base64_bytes.decode('ascii')
+        headers = {'Authorization': f'Basic {base64_id_secret}'}
 
-        Returns:
-            Response: response from the request to the Smartcar API
-        """
-        url = f"{self.base_url}/user"
-        return requester.call("GET", url, headers=self.auth)
+        return requester.call("GET", url, headers=headers, params=params)
 
-    # PRIVATE ENDPOINTS:
+    # ===========================================
+    # Private Methods
+    # ===========================================
 
     def _format_vehicle_endpoint(self, endpoint):
         """
