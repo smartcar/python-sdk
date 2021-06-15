@@ -71,8 +71,9 @@ def get_vehicles(access_token: str, paging: dict = None) -> th.AllVehicles:
     return response.json()
 
 
-def get_compatibility(access_token, vin: str, scope: List[str], country: str = 'US',
-                      options: dict = None) -> th.GetCompatibility:
+def get_compatibility(
+    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
+) -> th.GetCompatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.

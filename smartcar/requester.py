@@ -21,9 +21,10 @@ def call(method: str, url: str, **kwargs) -> requests.models.Response:
     if "headers" not in kwargs:
         kwargs["headers"] = {}
 
-    kwargs["headers"][
-        "User-Agent"] = f"Smartcar/{__version__}({platform.system()}; " \
-                        f"{platform.machine()}) Python v{platform.python_version()}"
+    kwargs["headers"]["User-Agent"] = (
+        f"Smartcar/{__version__}({platform.system()}; "
+        f"{platform.machine()}) Python v{platform.python_version()}"
+    )
 
     try:
         response = requests.request(method, url, timeout=310, **kwargs)

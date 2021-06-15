@@ -11,6 +11,7 @@ class AllVehicles(TypedDict):
         "vehicles": str[]
     }
     """
+
     paging: dict
     vehicles: List[str]
 
@@ -21,4 +22,5 @@ class GetCompatibility(TypedDict):
         "compatible": bool
     }
     """
+
     compatible: bool

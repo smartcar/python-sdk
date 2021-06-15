@@ -179,11 +179,11 @@ class Smartcar(object):
 
     def compatibility(self, **params):
         url = f"{constants.API_URL}/v{static.API_VERSION}/compatibility"
-        id_secret = f'{self.client_id}:{self.client_secret}'
-        encoded_id_secret = id_secret.encode('ascii')
+        id_secret = f"{self.client_id}:{self.client_secret}"
+        encoded_id_secret = id_secret.encode("ascii")
         base64_bytes = base64.b64encode(encoded_id_secret)
-        base64_id_secret = base64_bytes.decode('ascii')
-        headers = {'Authorization': f'Basic {base64_id_secret}'}
+        base64_id_secret = base64_bytes.decode("ascii")
+        headers = {"Authorization": f"Basic {base64_id_secret}"}
 
         return requester.call("GET", url, headers=headers, params=params)
 

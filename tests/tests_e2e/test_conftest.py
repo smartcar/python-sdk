@@ -9,7 +9,10 @@ def test_correct_keys_in_access_object(access_object):
 
 
 def test_refresh_code(client, access_object):
-    new_access_object = client.exchange_refresh_token(access_object.get("refresh_token"))
+    new_access_object = client.exchange_refresh_token(
+        access_object.get("refresh_token")
+    )
     test_correct_keys_in_access_object(new_access_object)
+
 
 # Test base_url

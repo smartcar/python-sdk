@@ -15,8 +15,8 @@ def validate_env(test_mode: bool = False) -> None:
     prefix = "E2E_SMARTCAR" if test_mode else "SMARTCAR"
 
     if (
-            not f"{prefix}_CLIENT_ID" in os.environ
-            or not f"{prefix}_CLIENT_SECRET" in os.environ
+        not f"{prefix}_CLIENT_ID" in os.environ
+        or not f"{prefix}_CLIENT_SECRET" in os.environ
     ):
         raise Exception(
             f'"{prefix}_CLIENT_ID" and "{prefix}_CLIENT_SECRET" environment variables must be set'

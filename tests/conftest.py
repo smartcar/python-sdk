@@ -70,7 +70,9 @@ def vw_egolf(access_object):
         vw_egolf(smartcar.Vehicle)
     """
     client = sc.AuthClient(*ah.get_auth_client_params())
-    code = ah.run_auth_flow(client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN")
+    code = ah.run_auth_flow(
+        client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN"
+    )
     access_token = client.exchange_code(code)["access_token"]
     vehicle_ids = sc.get_vehicles(access_token)
     egolf_id = vehicle_ids["vehicles"][0]
