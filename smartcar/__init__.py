@@ -1,14 +1,17 @@
 __version__ = "semantic-release"
 
-from .smartcar import (
-    AuthClient,
-    is_expired,
+from smartcar.auth_client import AuthClient
+
+from smartcar.static import (
+    set_api_version,
     get_user,
     get_vehicles,
-    set_api_version,
+    get_compatibility
 )
-from .vehicle import Vehicle
-from .exceptions import (
+
+from smartcar.vehicle import Vehicle
+
+from smartcar.exceptions import (
     SmartcarException,
     SmartcarExceptionV2,
     ValidationException,

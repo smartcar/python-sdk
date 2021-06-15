@@ -1,29 +1,29 @@
 import dateutil.parser
-from .api import Api
+from smartcar.api import Smartcar
 
 
 class Vehicle(object):
     def __init__(self, vehicle_id, access_token, unit_system="metric"):
-        """Initializes a new Vehicle to use for making requests to the Smartcar API.
+        """
+        Initializes a new Vehicle to use for making requests to the Smartcar API.
 
         Args:
             vehicle_id (str): the vehicle's unique identifier
             access_token (str): a valid access token
             unit_system (str, optional): the unit system to use for vehicle data.
                 Defaults to metric.
-
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
-        self.api = Api(access_token, vehicle_id)
+        self.api = Smartcar(access_token, vehicle_id=vehicle_id)
         self.api.set_unit_system("metric" if unit_system == "metric" else "imperial")
 
     def set_unit_system(self, unit_system):
-        """Update the unit system to use in requests to the Smartcar API.
+        """
+        Update the unit system to use in requests to the Smartcar API.
 
         Args:
             unit_system (str): the unit system to use (metric/imperial)
-
         """
         if unit_system not in ("metric", "imperial"):
             raise ValueError("unit must be either metric or imperial")
@@ -31,49 +31,49 @@ class Vehicle(object):
             self.api.set_unit_system(unit_system)
 
     def info(self):
-        """GET Vehicle.info
+        """
+        GET Vehicle.info
 
         Returns:
             dict: vehicle's info
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("")
-
         return response.json()
 
     def vin(self):
-        """GET Vehicle.vin
+        """
+        GET Vehicle.vin
 
         Returns:
             str: vehicle's vin
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("vin")
 
         return response.json()["vin"]
 
     def permissions(self):
-        """GET Vehicle.permissions
+        """
+        GET Vehicle.permissions
 
         Returns:
             list: vehicle's permissions
 
         Raises:
             SmartcarException
-
         """
         response = self.api.permissions()
 
         return response.json()["permissions"]
 
     def has_permissions(self, permissions):
-        """Checks if vehicle has specified permission(s).
+        """
+        Checks if vehicle has specified permission(s).
 
         Args:
             permissions (str or list of str): Permission(s) to check
@@ -98,7 +98,8 @@ class Vehicle(object):
             return permissions.replace(prefix, "", 1) in vehicle_permissions
 
     def disconnect(self):
-        """Disconnect this vehicle from the connected application.
+        """
+        Disconnect this vehicle from the connected application.
 
         Note: Calling this method will invalidate your access token and you will
         have to have the user reauthorize the vehicle to your application if you
@@ -106,12 +107,12 @@ class Vehicle(object):
 
         Raises:
             SmartcarException
-
         """
         self.api.disconnect()
 
     def odometer(self):
-        """GET Vehicle.odometer
+        """
+        GET Vehicle.odometer
 
         Returns:
             dict: vehicle's odometer
@@ -128,14 +129,14 @@ class Vehicle(object):
         }
 
     def fuel(self):
-        """GET Vehicle.fuel
+        """
+        GET Vehicle.fuel
 
         Returns:
             dict: vehicle's fuel status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("fuel")
 
@@ -146,14 +147,14 @@ class Vehicle(object):
         }
 
     def oil(self):
-        """GET Vehicle.oil
+        """
+        GET Vehicle.oil
 
         Returns:
             dict: vehicle's oil status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("engine/oil")
 
@@ -163,14 +164,14 @@ class Vehicle(object):
         }
 
     def tire_pressure(self):
-        """GET Vehicle.tire_pressure
+        """
+        GET Vehicle.tire_pressure
 
         Returns:
             dict: vehicle's tire pressure status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("tires/pressure")
 
@@ -181,14 +182,14 @@ class Vehicle(object):
         }
 
     def battery(self):
-        """GET Vehicle.battery
+        """
+        GET Vehicle.battery
 
         Returns:
             dict: vehicle's battery status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("battery")
 
@@ -199,7 +200,8 @@ class Vehicle(object):
         }
 
     def battery_capacity(self):
-        """GET Vehicle.battery_capacity
+        """
+        GET Vehicle.battery_capacity
 
         Returns:
 
@@ -214,14 +216,14 @@ class Vehicle(object):
         }
 
     def charge(self):
-        """GET Vehicle.charge
+        """
+        GET Vehicle.charge
 
         Returns:
             dict: vehicle's charge status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("charge")
 
@@ -231,14 +233,14 @@ class Vehicle(object):
         }
 
     def location(self):
-        """GET Vehicle.location
+        """
+        GET Vehicle.location
 
         Returns:
             dict: vehicle's location
 
         Raises:
             SmartcarException
-
         """
         response = self.api.get("location")
 
@@ -248,59 +250,60 @@ class Vehicle(object):
         }
 
     def unlock(self):
-        """POST Vehicle.unlock
+        """
+        POST Vehicle.unlock
 
         Returns:
             array:
 
         Raises:
             SmartcarException
-
         """
         response = self.api.action("security", "UNLOCK")
         return {"status": response.json()["status"]}
 
     def lock(self):
-        """POST Vehicle.lock
+        """
+        POST Vehicle.lock
 
         Returns:
             dict: status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.action("security", "LOCK")
         return {"status": response.json()["status"]}
 
     def start_charge(self):
-        """POST Vehicle.start_charge
+        """
+        POST Vehicle.start_charge
 
         Returns:
             array:
 
         Raises:
             SmartcarException
-
         """
         response = self.api.action("charge", "START")
         return {"status": response.json()["status"]}
 
     def stop_charge(self):
-        """POST Vehicle.stop_charge
+        """
+        POST Vehicle.stop_charge
 
         Returns:
             dict: status
 
         Raises:
             SmartcarException
-
         """
         response = self.api.action("charge", "STOP")
         return {"status": response.json()["status"]}
 
     def batch(self, paths):
-        """POST Vehicle.batch
+        """
+        POST Vehicle.batch
 
         Args:
             paths (str[]): an array of paths to make
@@ -311,7 +314,6 @@ class Vehicle(object):
 
         Raises:
             SmartcarException
-
         """
         requests = []
         for path in paths:

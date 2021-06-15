@@ -23,7 +23,9 @@ class SmartcarException(Exception):
 
 
 class SmartcarExceptionV2(SmartcarException):
-    """ Exceptions throw by v2.0 endpoints """
+    """
+    Exceptions throw by v2.0 endpoints
+    """
 
     def __init__(self, response):
         self.type = None

@@ -1,10 +1,10 @@
-from selenium import webdriver
 import os
+import uuid
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from distutils.util import strtobool
-import uuid
 
 try:
     import urlparse

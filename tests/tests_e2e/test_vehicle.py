@@ -1,7 +1,3 @@
-import smartcar
-from tests.auth_helpers import get_auth_client_params, run_auth_flow
-
-
 # Tests
 def test_info(chevy_volt):
     info = chevy_volt.info()

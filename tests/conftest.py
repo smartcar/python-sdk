@@ -1,6 +1,7 @@
-import smartcar
-from .auth_helpers import run_auth_flow, get_auth_client_params, DEFAULT_SCOPE
 import pytest
+
+import smartcar as sc
+import tests.auth_helpers as ah
 
 
 # Fixtures that can be used throughout the testing suite:
@@ -18,7 +19,7 @@ def client():
         client(smartcar.AuthClient)
         A smartcar auth client that can be used across all tests.
     """
-    client = smartcar.AuthClient(*get_auth_client_params())
+    client = sc.AuthClient(*ah.get_auth_client_params())
     yield client
 
 
@@ -33,8 +34,8 @@ def access_object(client):
     Yields:
         access_object(dict)
     """
-    auth_url = client.get_auth_url(scope=DEFAULT_SCOPE)
-    code = run_auth_flow(auth_url)
+    auth_url = client.get_auth_url(scope=ah.DEFAULT_SCOPE)
+    code = ah.run_auth_flow(auth_url)
     access_object = client.exchange_code(code)
     yield access_object
 
@@ -52,9 +53,9 @@ def chevy_volt(access_object):
         chevy_volt(smartcar.Vehicle)
     """
     access_token = access_object["access_token"]
-    vehicle_ids = smartcar.get_vehicles(access_token)
+    vehicle_ids = sc.get_vehicles(access_token)
     volt_id = vehicle_ids["vehicles"][0]
-    return smartcar.Vehicle(volt_id, access_token)
+    return sc.Vehicle(volt_id, access_token)
 
 
 @pytest.fixture(scope="module")
@@ -68,9 +69,9 @@ def vw_egolf(access_object):
     Yields:
         vw_egolf(smartcar.Vehicle)
     """
-    client = smartcar.AuthClient(*get_auth_client_params())
-    code = run_auth_flow(client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN")
+    client = sc.AuthClient(*ah.get_auth_client_params())
+    code = ah.run_auth_flow(client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN")
     access_token = client.exchange_code(code)["access_token"]
-    vehicle_ids = smartcar.get_vehicles(access_token)
+    vehicle_ids = sc.get_vehicles(access_token)
     egolf_id = vehicle_ids["vehicles"][0]
-    return smartcar.Vehicle(egolf_id, access_token)
+    return sc.Vehicle(egolf_id, access_token)

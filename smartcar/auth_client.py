@@ -1,102 +1,8 @@
-from . import api, const, requester, vehicle
-import re
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
-API_VERSION = "2.0"
-AUTH_VERSION = "1.0"
-
-
-def set_expiration(access):
-    expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
-    refresh_expire_date = datetime.utcnow() + timedelta(days=60)
-    access["expiration"] = expire_date
-    access["refresh_expiration"] = refresh_expire_date
-    return access
-
-
-def is_expired(expiration):
-    """Check if an expiration is expired
-
-    Args:
-        expiration (datetime): expiration datetime
-
-    Returns:
-        bool: true if expired
-    """
-    return datetime.utcnow() > expiration
-
-
-def set_api_version(version: str) -> None:
-    """Update the version of Smartcar API you are using
-
-    Args:
-        version (str): the version of the api you want to use
-    """
-    if re.match("\d+\.\d+", version):
-        global API_VERSION
-        API_VERSION = version
-    else:
-        raise ValueError(
-            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
-        )
-
-
-def set_auth_version(version: str) -> None:
-    """Update the Authentication version you are using
-
-    *Not yet implemented
-
-    Args:
-        version (str): the version of auth you want to use
-    """
-    if re.match("\d+\.\d+", version):
-        global AUTH_VERSION
-        AUTH_VERSION = version
-    else:
-        raise ValueError(
-            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
-        )
-
-
-def get_vehicles(access_token, paging=None):
-    """Get a list of the user's vehicle ids
-
-    Args:
-        access_token (str): A valid access token from a previously retrieved
-            access object
-        limit (integer, optional): The number of vehicle ids to return
-        offset (integer, optional): The index to start the vehicle list at
-
-    Returns:
-        dict: response containing the list of vehicle ids and paging information
-
-    Raises:
-        SmartcarException
-
-    """
-    if paging is None:
-        paging = {"limit": 10, "offset": 0}
-
-    limit = paging["limit"]
-    offset = paging["offset"]
-    return api.Api(access_token).vehicles(limit=limit, offset=offset).json()
-
-
-def get_user(access_token: str):
-    """Retrieve the userId associated with the access_token
-
-    Args:
-        access_token (str): Smartcar access token
-
-    Returns:
-        { "id" : <id> }
-
-    Raises:
-        SmartcarException
-
-    """
-    return api.Api(access_token).user().json()["id"]
+import smartcar.constants as constants
+import smartcar.requester as requester
 
 
 class AuthClient(object):
@@ -110,7 +16,8 @@ class AuthClient(object):
             version="2.0",
             origin=None,
     ):
-        """A client for accessing the Smartcar API
+        """
+        A client for accessing the Smartcar API
 
         Args:
             client_id (str): The application id, provided in the application
@@ -138,7 +45,8 @@ class AuthClient(object):
             single_select=None,
             flags=None,
     ):
-        """Generate the Connect URL
+        """
+        Generate the Connect URL
 
         Args:
             scope (str[], required): A list of permissions requested by the application
@@ -165,9 +73,8 @@ class AuthClient(object):
 
         Raises:
             SmartcarException
-
         """
-        base_url = const.CONNECT_URL
+        base_url = constants.CONNECT_URL
 
         approval_prompt = "force" if force else "auto"
         query = {
@@ -204,7 +111,8 @@ class AuthClient(object):
         return base_url + "/oauth/authorize?" + urlencode(query)
 
     def exchange_code(self, code):
-        """Exchange an authentication code for an access dictionary
+        """
+        Exchange an authentication code for an access dictionary
 
         Args:
             code (str): A valid authorization code
@@ -214,20 +122,20 @@ class AuthClient(object):
 
         Raises:
             SmartcarException
-
         """
         method = "POST"
-        url = const.AUTH_URL
+        url = constants.AUTH_URL
         data = {
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
         response = requester.call(method, url, data=data, auth=self.auth).json()
-        return set_expiration(response)
+        return _set_expiration(response)
 
     def exchange_refresh_token(self, refresh_token):
-        """Exchange a refresh token for a new access dictionary
+        """
+        Exchange a refresh token for a new access dictionary
 
         Args:
             refresh_token (str): A valid refresh token from a previously retrieved
@@ -238,16 +146,16 @@ class AuthClient(object):
 
         Raises:
             SmartcarException
-
         """
         method = "POST"
-        url = const.AUTH_URL
+        url = constants.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
         response = requester.call(method, url, data=data, auth=self.auth).json()
-        return set_expiration(response)
+        return _set_expiration(response)
 
     def is_compatible(self, vin, scope, country="US"):
-        """Determine if a vehicle is compatible with Smartcar
+        """
+        Determine if a vehicle is compatible with Smartcar
 
         Args:
             vin (str): the VIN of the vehicle
@@ -259,11 +167,20 @@ class AuthClient(object):
 
         Raises:
             SmartcarException
-
         """
         method = "GET"
-        url = "{}/v{}/compatibility".format(const.API_URL, API_VERSION)
+        url = "{}/v{}/compatibility".format(constants.API_URL, API_VERSION)
         query = {"vin": vin, "scope": " ".join(scope), "country": country}
 
         response = requester.call(method, url, params=query, auth=self.auth).json()
         return response["compatible"]
+
+
+# Static helpers for AuthClient
+
+def _set_expiration(access):
+    expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
+    refresh_expire_date = datetime.utcnow() + timedelta(days=60)
+    access["expiration"] = expire_date
+    access["refresh_expiration"] = refresh_expire_date
+    return access

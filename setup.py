@@ -38,6 +38,7 @@ setup(
     extras_require={
         "dev": [
             "black",
+            "ipdb",
             "mock",
             "responses",
             "pytest",
