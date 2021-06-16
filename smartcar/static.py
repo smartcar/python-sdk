@@ -3,7 +3,7 @@ from typing import List
 
 import smartcar.api as api
 import smartcar.helpers as helpers
-import smartcar.type_hints as th
+import smartcar.types as ty
 
 API_VERSION = "2.0"
 
@@ -43,7 +43,7 @@ def get_user(access_token: str) -> dict:
     return {"id": user_id}
 
 
-def get_vehicles(access_token: str, paging: dict = None) -> th.AllVehicles:
+def get_vehicles(access_token: str, paging: dict = None) -> ty.AllVehicles:
     """
     Get a list of the user's vehicle ids
 
@@ -73,7 +73,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> th.AllVehicles:
 
 def get_compatibility(
     access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> th.GetCompatibility:
+) -> ty.GetCompatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
