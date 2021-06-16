@@ -15,16 +15,16 @@ def set_api_version(version: str) -> None:
     Args:
         version (str): the version of the api you want to use
     """
-    if re.match("\d+\.\d+", version):
+    if re.match(r"\d+\.\d+", version):
         global API_VERSION
         API_VERSION = version
     else:
         raise ValueError(
-            f"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+            fr"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
         )
 
 
-def get_user(access_token: str) -> dict:
+def get_user(access_token: str) -> ty.User:
     """
     Retrieve the userId associated with the access_token
 
@@ -32,18 +32,18 @@ def get_user(access_token: str) -> dict:
         access_token (str): Smartcar access token
 
     Returns:
-        { "id" : <id> }
+        User: NamedTuple("User", [("id", str), ("meta", Meta)])
 
     Raises:
         SmartcarException
     """
     response = api.Smartcar(access_token).user()
-    user_id = response.json()["id"]
+    data = response.json()
+    result = ty.User(data["id"], ty.Meta(**response.headers))
+    return result
 
-    return {"id": user_id}
 
-
-def get_vehicles(access_token: str, paging: dict = None) -> ty.AllVehicles:
+def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
     """
     Get a list of the user's vehicle ids
 
@@ -56,7 +56,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.AllVehicles:
             offset (int, optional): The index to start the vehicle list at
 
     Returns:
-        dict: response containing the list of vehicle ids and paging information
+        Vehicles: NamedTuple("Vehicles", [("vehicles", List[str]), ("paging", Paging), ("meta", Meta)])
 
     Raises:
         SmartcarException
@@ -66,14 +66,19 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.AllVehicles:
 
     limit = paging.get("limit")
     offset = paging.get("offset")
-
     response = api.Smartcar(access_token).vehicles(limit=limit, offset=offset)
-    return response.json()
+    data = response.json()
+    result = ty.Vehicles(data["vehicles"], ty.Paging(data["paging"]["count"], data["paging"]["offset"]),
+                         ty.Meta(**response.headers))
+    return result
 
 
 def get_compatibility(
-    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> ty.GetCompatibility:
+        access_token,
+        vin: str,
+        scope: List[str],
+        country: str = "US",
+        options: dict = None) -> ty.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -95,7 +100,7 @@ def get_compatibility(
             provided. Regardless, authentication will be verified.
 
     Returns:
-        dict: containing key of "compatible" (bool)
+        Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", Meta)])
     """
     sc_api = api.Smartcar(access_token)
 
@@ -111,4 +116,6 @@ def get_compatibility(
     scope_param = " ".join(scope)
 
     response = sc_api.compatibility(vin=vin, scope=scope_param, country=country)
-    return response.json()
+    data = response.json()
+    result = ty.Compatibility(data["compatible"], ty.Meta(**response.headers))
+    return result

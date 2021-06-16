@@ -29,6 +29,42 @@ class Smartcar(object):
     # Utility Methods
     # ===========================================
 
+    def get(self, endpoint):
+        """
+        Sends GET requests to Smartcar API
+
+        Args:
+            endpoint (str): the Smartcar endpoint of interest
+
+        Returns:
+            Response: response from the request to the Smartcar API
+        """
+        url = self._format_vehicle_endpoint(endpoint)
+        headers = self.auth
+        headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
+        return requester.call("GET", url, headers=headers)
+
+    def action(self, endpoint, action, **kwargs):
+        """
+        Sends POST requests to Smartcar API
+
+        Args:
+            endpoint (str): the Smartcar endpoint of interest
+            action (str): action to be taken
+            **kwargs: information to put into the body of the request
+
+        Returns:
+            Response: response from the request to the Smartcar API
+        """
+        url = self._format_vehicle_endpoint(endpoint)
+        headers = self.auth
+        json = {"action": action}
+        for k, v in kwargs.items():
+            if v:
+                json[k] = v
+
+        return requester.call("POST", url, json=json, headers=headers)
+
     def set_env(self, testing: bool = False) -> None:
         """
         Set self.client_id, self.client_secret, and self.client_redirect_uri
@@ -73,26 +109,9 @@ class Smartcar(object):
         """
         self.unit_system = unit_system
 
-    def action(self, endpoint, action, **kwargs):
-        """
-        Sends POST requests to Smartcar API
-
-        Args:
-            endpoint (str): the Smartcar endpoint of interest
-            action (str): action to be taken
-            **kwargs: information to put into the body of the request
-
-        Returns:
-            Response: response from the request to the Smartcar API
-        """
-        url = self._format_vehicle_endpoint(endpoint)
-        headers = self.auth
-        json = {"action": action}
-        for k, v in kwargs.items():
-            if v:
-                json[k] = v
-
-        return requester.call("POST", url, json=json, headers=headers)
+    # ===========================================
+    # Methods directly related to vehicle.py
+    # ===========================================
 
     def batch(self, requests):
         """
@@ -111,21 +130,6 @@ class Smartcar(object):
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
 
         return requester.call("POST", url, json=json, headers=headers)
-
-    def get(self, endpoint):
-        """
-        Sends GET requests to Smartcar API
-
-        Args:
-            endpoint (str): the Smartcar endpoint of interest
-
-        Returns:
-            Response: response from the request to the Smartcar API
-        """
-        url = self._format_vehicle_endpoint(endpoint)
-        headers = self.auth
-        headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
-        return requester.call("GET", url, headers=headers)
 
     def permissions(self, **params):
         """

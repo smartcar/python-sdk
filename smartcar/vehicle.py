@@ -1,22 +1,27 @@
 import dateutil.parser
+import smartcar.types as ty
 from smartcar.api import Smartcar
 
 
 class Vehicle(object):
-    def __init__(self, vehicle_id, access_token, unit_system="metric"):
+    def __init__(self, vehicle_id: str, access_token: str, options: dict = None):
         """
         Initializes a new Vehicle to use for making requests to the Smartcar API.
 
         Args:
             vehicle_id (str): the vehicle's unique identifier
             access_token (str): a valid access token
-            unit_system (str, optional): the unit system to use for vehicle data.
-                Defaults to metric.
+            options (dict, optional): Can contain the following keys:
+                unit_system (str, optional): the unit system to use for vehicle data.
+                    Defaults to metric.
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
         self.api = Smartcar(access_token, vehicle_id=vehicle_id)
-        self.api.set_unit_system("metric" if unit_system == "metric" else "imperial")
+
+        if options:
+            if options.get('unit_system'):
+                self.set_unit_system(options['unit_system'])
 
     def set_unit_system(self, unit_system):
         """
@@ -30,20 +35,7 @@ class Vehicle(object):
         else:
             self.api.set_unit_system(unit_system)
 
-    def info(self):
-        """
-        GET Vehicle.info
-
-        Returns:
-            dict: vehicle's info
-
-        Raises:
-            SmartcarException
-        """
-        response = self.api.get("")
-        return response.json()
-
-    def vin(self):
+    def vin(self) -> str:
         """
         GET Vehicle.vin
 
@@ -54,114 +46,68 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("vin")
-
         return response.json()["vin"]
 
-    def permissions(self):
+    def charge(self) -> ty.Charge:
         """
-        GET Vehicle.permissions
+        GET Vehicle.charge
 
         Returns:
-            list: vehicle's permissions
+            Charge: NamedTuple("Charge", [("is_plugged_in", bool), ("status", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        response = self.api.permissions()
+        response = self.api.get("charge")
+        data = response.json()
+        result = ty.Charge(data['isPluggedIn'], data['state'], ty.Meta(**response.headers))
+        return result
 
-        return response.json()["permissions"]
-
-    def has_permissions(self, permissions):
+    def battery(self) -> ty.Battery:
         """
-        Checks if vehicle has specified permission(s).
-
-        Args:
-            permissions (str or list of str): Permission(s) to check
+        GET Vehicle.battery
 
         Returns:
-            boolean: Whether the vehicle has the specified permission(s)
-        """
-        vehicle_permissions = self.permissions()
-        prefix = "required:"
-
-        if isinstance(permissions, list):
-            contained = [
-                permission.replace(prefix, "", 1) in vehicle_permissions
-                for permission in permissions
-            ]
-
-            if False in contained:
-                return False
-            else:
-                return True
-        else:
-            return permissions.replace(prefix, "", 1) in vehicle_permissions
-
-    def disconnect(self):
-        """
-        Disconnect this vehicle from the connected application.
-
-        Note: Calling this method will invalidate your access token and you will
-        have to have the user reauthorize the vehicle to your application if you
-        wish to make requests to it
+            Battery: NamedTuple("Battery", [("percent_remaining", float), ("range", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        self.api.disconnect()
+        response = self.api.get("battery")
+        data = response.json()
+        result = ty.Battery(data['percentRemaining'], data['range'], ty.Meta(**response.headers))
+        return result
 
-    def odometer(self):
+    def battery_capacity(self) -> ty.BatteryCapacity:
         """
-        GET Vehicle.odometer
+        GET Vehicle.battery_capacity
 
         Returns:
-            dict: vehicle's odometer
+            BatteryCapacity: NamedTuple("BatteryCapacity", [("capacity", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        response = self.api.get("odometer")
+        response = self.api.get("battery/capacity")
+        data = response.json()
+        result = ty.BatteryCapacity(data['capacity'], ty.Meta(**response.headers))
+        return result
 
-        return {
-            "data": response.json(),
-            "unit_system": response.headers["sc-unit-system"],
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def fuel(self):
+    def fuel(self) -> ty.Fuel:
         """
         GET Vehicle.fuel
 
         Returns:
-            dict: vehicle's fuel status
+            Fuel: NamedTuple("Fuel", [("range", float),
+                ("percentRemaining", float), ("amountRemaining", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.get("fuel")
-
-        return {
-            "data": response.json(),
-            "unit_system": response.headers["sc-unit-system"],
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def oil(self):
-        """
-        GET Vehicle.oil
-
-        Returns:
-            dict: vehicle's oil status
-
-        Raises:
-            SmartcarException
-        """
-        response = self.api.get("engine/oil")
-
-        return {
-            "data": response.json(),
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
+        data = response.json()
+        result = ty.Fuel(data['range'], data['percentRemaining'], data['amountRemaining'], ty.Meta(**response.headers))
+        return result
 
     def tire_pressure(self):
         """
@@ -174,132 +120,130 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("tires/pressure")
+        data = response.json()
+        result = ty.TirePressure(data['frontLeft'], data['frontRight'], data['backLeft'], data['backRight'],
+                                 ty.Meta(**response.headers))
+        return result
 
-        return {
-            "data": {"tires": response.json()},
-            "unit_system": response.headers["sc-unit-system"],
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def battery(self):
+    def oil(self) -> ty.Oil:
         """
-        GET Vehicle.battery
+        GET Vehicle.oil
 
         Returns:
-            dict: vehicle's battery status
+            Oil: NamedTuple("Oil", [("life_remaining", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        response = self.api.get("battery")
+        response = self.api.get("engine/oil")
+        data = response.json()
+        result = ty.Oil(data['lifeRemaining'], ty.Meta(**response.headers))
+        return result
 
-        return {
-            "data": response.json(),
-            "unit_system": response.headers["sc-unit-system"],
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def battery_capacity(self):
+    def odometer(self) -> ty.Odometer:
         """
-        GET Vehicle.battery_capacity
+        GET Vehicle.odometer
 
         Returns:
+            Odometer: NamedTuple("Odometer", [("distance", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        response = self.api.get("battery/capacity")
+        response = self.api.get("odometer")
+        data = response.json()
+        result = ty.Odometer(data["distance"], ty.Meta(**response.headers))
+        return result
 
-        return {
-            "data": response.json(),
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def charge(self):
-        """
-        GET Vehicle.charge
-
-        Returns:
-            dict: vehicle's charge status
-
-        Raises:
-            SmartcarException
-        """
-        response = self.api.get("charge")
-
-        return {
-            "data": response.json(),
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def location(self):
+    def location(self) -> ty.Location:
         """
         GET Vehicle.location
 
         Returns:
-            dict: vehicle's location
+            Location: NamedTuple("Location", [("latitude", float), ("longitude", float), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.get("location")
+        data = response.json()
+        result = ty.Location(data["latitude"], data["longitude"], ty.Meta(**response.headers))
+        return result
 
-        return {
-            "data": response.json(),
-            "age": dateutil.parser.parse(response.headers["sc-data-age"]),
-        }
-
-    def unlock(self):
+    def info(self) -> ty.Info:
         """
-        POST Vehicle.unlock
+        GET Vehicle.info
 
         Returns:
-            array:
+            Info: NamedTuple("Info", [("id", str), ("make", str), ("model", str), ("year", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
-        response = self.api.action("security", "UNLOCK")
-        return {"status": response.json()["status"]}
+        response = self.api.get("")
+        data = response.json()
+        result = ty.Info(data["id"], data["make"], data["model"], data["year"], ty.Meta(**response.headers))
+        return result
 
-    def lock(self):
+    def lock(self) -> ty.Status:
         """
         POST Vehicle.lock
 
         Returns:
-            dict: status
+            Status: NamedTuple("Status", [("status", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.action("security", "LOCK")
-        return {"status": response.json()["status"]}
+        data = response.json()
+        result = ty.Status(data['status'], ty.Meta(**response.headers))
+        return result
 
-    def start_charge(self):
+    def unlock(self) -> ty.Status:
+        """
+        POST Vehicle.unlock
+
+        Returns:
+            Status: NamedTuple("Status", [("status", str), ("meta", Meta)])
+
+        Raises:
+            SmartcarException
+        """
+        response = self.api.action("security", "UNLOCK")
+        data = response.json()
+        result = ty.Status(data['status'], ty.Meta(**response.headers))
+        return result
+
+    def start_charge(self) -> ty.Status:
         """
         POST Vehicle.start_charge
 
         Returns:
-            array:
+            Status: NamedTuple("Status", [("status", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.action("charge", "START")
-        return {"status": response.json()["status"]}
+        data = response.json()
+        result = ty.Status(data['status'], ty.Meta(**response.headers))
+        return result
 
-    def stop_charge(self):
+    def stop_charge(self) -> ty.Status:
         """
         POST Vehicle.stop_charge
 
         Returns:
-            dict: status
+            Status: NamedTuple("Status", [("status", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.action("charge", "STOP")
-        return {"status": response.json()["status"]}
+        data = response.json()
+        result = ty.Status(data['status'], ty.Meta(**response.headers))
+        return result
 
     def batch(self, paths):
         """
@@ -328,3 +272,35 @@ class Vehicle(object):
                 "body": response["body"],
             }
         return batch_dict
+
+    def permissions(self):
+        """
+        GET Vehicle.permissions
+
+        Returns:
+            list: vehicle's permissions
+
+        Raises:
+            SmartcarException
+        """
+        response = self.api.permissions()
+        return response.json()["permissions"]
+
+    def disconnect(self) -> ty.Status:
+        """
+        Disconnect this vehicle from the connected application.
+
+        Note: Calling this method will invalidate your access token and you will
+        have to have the user reauthorize the vehicle to your application if you
+        wish to make requests to it
+
+        Returns:
+            Status: NamedTuple("Status", [("status", str), ("meta", Meta)])
+
+        Raises:
+            SmartcarException
+        """
+        response = self.api.disconnect()
+        data = response.json()
+        result = ty.Status(data['status'], ty.Meta(**response.headers))
+        return result

@@ -54,7 +54,7 @@ def chevy_volt(access_object):
     """
     access_token = access_object["access_token"]
     vehicle_ids = sc.get_vehicles(access_token)
-    volt_id = vehicle_ids["vehicles"][0]
+    volt_id = vehicle_ids.vehicles[0]
     return sc.Vehicle(volt_id, access_token)
 
 
@@ -75,5 +75,5 @@ def vw_egolf(access_object):
     )
     access_token = client.exchange_code(code)["access_token"]
     vehicle_ids = sc.get_vehicles(access_token)
-    egolf_id = vehicle_ids["vehicles"][0]
+    egolf_id = vehicle_ids.vehicles[0]
     return sc.Vehicle(egolf_id, access_token)
