@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 
 import smartcar.constants as constants
 import smartcar.requester as requester
+import smartcar.helpers as helpers
 
 
 class AuthClient(object):
@@ -13,7 +14,6 @@ class AuthClient(object):
         client_secret,
         redirect_uri,
         test_mode=None,
-        origin=None,
     ):
         """
         A client for accessing the Smartcar API
@@ -33,7 +33,6 @@ class AuthClient(object):
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
         self.test_mode = test_mode if test_mode else False
-        self.origin = origin if origin else constants.AUTH_URL
 
     def get_auth_url(self, scope: List[str], options: dict = None):
         """
@@ -54,11 +53,12 @@ class AuthClient(object):
                     sets the behavior of the grant dialog displayed to the user.
                     Can have keys of enabled(bool) and vin(str).
                     if options['enabled'] == True, `single_select`
-                    limits the user to selecting only one vehicle. If `single_select`
-                    contains a property of `vin`, Smartcar will only authorize the vehicle
-                    with the specified VIN. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
+                    limits the user to selecting only one vehicle. If `single_select` contains a property
+                    of `vin`, Smartcar will only authorize the vehicle with the specified VIN.
+                    See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
                     for more information. Defaults to None.
-                flags:
+                flags: dictionary(str, bool): An optional list of feature flags that your
+                    application has early access to.
 
         Returns:
             str: authorization url
@@ -100,16 +100,19 @@ class AuthClient(object):
                     query["single_select"] = False
 
             if options.get("flags"):
-                query["flags"] = " ".join(options["flags"])
+                flags_str = helpers.format_flag_query(options["flags"])
+                query["flags"] = flags_str
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code):
+    def exchange_code(self, code: str, flags: dict = None) -> dict:
         """
         Exchange an authentication code for an access dictionary
 
         Args:
             code (str): A valid authorization code
+            flags: dictionary(str, bool): An optional list of feature flags that your
+                    application has early access to.
 
         Returns:
             dict: dict containing the access and refresh token
@@ -124,16 +127,27 @@ class AuthClient(object):
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
-        response = requester.call(method, url, data=data, auth=self.auth).json()
-        return _set_expiration(response)
 
-    def exchange_refresh_token(self, refresh_token):
+        if flags:
+            flags_str = helpers.format_flag_query(flags)
+            response = requester.call(
+                method, url, data=data, auth=self.auth, flags=flags_str
+            )
+        else:
+            response = requester.call(method, url, data=data, auth=self.auth)
+
+        data = response.json()
+        return _set_expiration(data)
+
+    def exchange_refresh_token(self, refresh_token: str, flags: dict = None) -> dict:
         """
         Exchange a refresh token for a new access dictionary
 
         Args:
             refresh_token (str): A valid refresh token from a previously retrieved
                 access object
+            flags: dictionary(str, bool): An optional list of feature flags that your
+                    application has early access to.
 
         Returns:
             dict: dict containing access and refresh token
@@ -144,30 +158,17 @@ class AuthClient(object):
         method = "POST"
         url = constants.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
-        response = requester.call(method, url, data=data, auth=self.auth).json()
-        return _set_expiration(response)
 
-    def is_compatible(self, vin, scope, country="US"):
-        """
-        Determine if a vehicle is compatible with Smartcar
+        if flags:
+            flags_str = helpers.format_flag_query(flags)
+            response = requester.call(
+                method, url, data=data, auth=self.auth, flags=flags_str
+            )
+        else:
+            response = requester.call(method, url, data=data, auth=self.auth)
 
-        Args:
-            vin (str): the VIN of the vehicle
-            scope (list): list of permissions to return compatibility info for
-            country (str, optional): country code according to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) of the provided vin
-
-        Returns:
-            boolean: true if the vehicle is compatible
-
-        Raises:
-            SmartcarException
-        """
-        method = "GET"
-        url = "{}/v{}/compatibility".format(constants.API_URL, API_VERSION)
-        query = {"vin": vin, "scope": " ".join(scope), "country": country}
-
-        response = requester.call(method, url, params=query, auth=self.auth).json()
-        return response["compatible"]
+        data = response.json()
+        return _set_expiration(data)
 
 
 # Static helpers for AuthClient
