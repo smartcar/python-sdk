@@ -62,8 +62,8 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
     if paging is None:
         paging = {"limit": 10, "offset": 0}
 
-    limit = paging.get("limit")
-    offset = paging.get("offset")
+    limit = paging.get("limit", 10)
+    offset = paging.get("offset", 0)
 
     response = api.Smartcar(access_token).vehicles(limit=limit, offset=offset)
     return ty.select_named_tuple("vehicles", response)

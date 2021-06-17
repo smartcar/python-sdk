@@ -147,6 +147,10 @@ Status = NamedTuple("Status", [("status", str), ("meta", Meta)])
 Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", Meta)])
 
 
+# This version of Permissions will be implemented when "paging" is verified to be returned from Smartcar API:
+# Permissions = NamedTuple("Permissions", [("permissions", list), ("paging", Paging), ("meta", Meta)])
+
+
 # ===========================================
 # Named Tuple Selector Function
 # ===========================================
@@ -243,10 +247,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         return Location(data["latitude"], data["longitude"], Meta(**headers))
 
     elif path == "permissions":
-        return Permissions(
-            data["permissions"],
-            Meta(**headers),
-        )
+        return Permissions(data["permissions"], Meta(**headers))
 
     elif (
         path == "lock"
@@ -255,7 +256,6 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         or path == "stop_charge"
         or path == "disconnect"
     ):
-
         return Status(data["status"], Meta(**headers))
 
     elif path == "":

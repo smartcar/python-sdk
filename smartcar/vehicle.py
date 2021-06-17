@@ -154,9 +154,14 @@ class Vehicle(object):
         response = self.api.get("location")
         return ty.select_named_tuple("location", response)
 
-    def permissions(self):
+    def permissions(self, paging: dict = None):
         """
         GET Vehicle.permissions
+
+        Args:
+            paging (dict, optional): Can contain "limit" or "offset":
+                limit (int, optional): The number of permissions to return
+                offset (int, optional): The index to start permission list at
 
         Returns:
             list: vehicle's permissions
@@ -164,7 +169,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.permissions()
+        if paging is None:
+            paging = {"limit": 3, "offset": 2}
+
+        limit = paging.get("limit", 25)
+        offset = paging.get("offset", 0)
+
+        response = self.api.permissions(limit=limit, offset=offset)
         return ty.select_named_tuple("permissions", response)
 
     def info(self) -> ty.Info:
