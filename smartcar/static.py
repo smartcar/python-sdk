@@ -70,7 +70,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
 
 
 def get_compatibility(
-    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
+        access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
 ) -> ty.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
@@ -87,15 +87,19 @@ def get_compatibility(
         vin (str)
         scope (List[str]): List of scopes (permissions) -> to check if vehicle is compatible
         country (str, optional)
-        options (dictionary): Can contain client_id and client_secret. Technically, they are
-            both optional, but if using a client_id other than the one provided through
-            environment variables, it'll be likely that a client_secret will have to be
-            provided. Regardless, authentication will be verified.
+        options (dictionary): Can contain client_id, client_secret, and flags.
+            client_id & client_secret(str, optional): Technically, they are
+                both optional, but if using a client_id other than the one provided through
+                environment variables, it'll be likely that a client_secret will have to be
+                provided. Regardless, authentication will be verified.
+            flags: dictionary(str, bool): An optional list of feature flags
+
 
     Returns:
         Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", Meta)])
     """
     sc_api = api.Smartcar(access_token)
+    flags_str = None
 
     if options is None:
         helpers.validate_env()
@@ -106,7 +110,10 @@ def get_compatibility(
         if options.get("client_secret"):
             sc_api.set_env_custom(client_secret=options["client_secret"])
 
+        if options.get("flags"):
+            flags_str = helpers.format_flag_query(options["flags"])
+
     scope_param = " ".join(scope)
 
-    response = sc_api.compatibility(vin=vin, scope=scope_param, country=country)
+    response = sc_api.compatibility(vin=vin, scope=scope_param, country=country, flags=flags_str)
     return ty.select_named_tuple("compatibility", response)

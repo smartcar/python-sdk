@@ -189,6 +189,9 @@ class Smartcar(object):
         base64_id_secret = base64_bytes.decode("ascii")
         headers = {"Authorization": f"Basic {base64_id_secret}"}
 
+        if params.get("flags") is None:
+            params.pop("flags")
+
         return requester.call("GET", url, headers=headers, params=params)
 
     # ===========================================
