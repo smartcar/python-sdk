@@ -79,10 +79,10 @@ def test_permissions(chevy_volt):
     assert permissions is not None
 
 
-def test_set_unit_system(chevy_volt):
+def test_batch_and_set_unit_system(chevy_volt):
     chevy_volt.set_unit_system("imperial")
     batch = chevy_volt.batch(["/odometer", "/fuel"])
-    assert batch["/odometer"]["headers"]["sc-unit-system"] == "imperial"
+    assert batch.odometer.meta.sc_unit_system == "imperial"
 
 
 def test_disconnect(chevy_volt):

@@ -35,7 +35,7 @@ def test_get_compatibility(access_object, chevy_volt):
     access_token = access_object.get("access_token")
     res = get_compatibility(
         access_token,
-        vin=chevy_volt.vin(),
+        vin=chevy_volt.vin().vin,
         scope=["read_vehicle_info"],
         options={"client_id": ah.CLIENT_ID, "client_secret": ah.CLIENT_SECRET},
     )

@@ -38,9 +38,7 @@ def get_user(access_token: str) -> ty.User:
         SmartcarException
     """
     response = api.Smartcar(access_token).user()
-    data = response.json()
-    result = ty.User(data["id"], ty.Meta(**response.headers))
-    return result
+    return ty.select_named_tuple("user", response)
 
 
 def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
@@ -66,19 +64,14 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
 
     limit = paging.get("limit")
     offset = paging.get("offset")
+
     response = api.Smartcar(access_token).vehicles(limit=limit, offset=offset)
-    data = response.json()
-    result = ty.Vehicles(data["vehicles"], ty.Paging(data["paging"]["count"], data["paging"]["offset"]),
-                         ty.Meta(**response.headers))
-    return result
+    return ty.select_named_tuple("vehicles", response)
 
 
 def get_compatibility(
-        access_token,
-        vin: str,
-        scope: List[str],
-        country: str = "US",
-        options: dict = None) -> ty.Compatibility:
+    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
+) -> ty.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -116,6 +109,4 @@ def get_compatibility(
     scope_param = " ".join(scope)
 
     response = sc_api.compatibility(vin=vin, scope=scope_param, country=country)
-    data = response.json()
-    result = ty.Compatibility(data["compatible"], ty.Meta(**response.headers))
-    return result
+    return ty.select_named_tuple("compatibility", response)

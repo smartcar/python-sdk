@@ -1,4 +1,5 @@
-import dateutil.parser
+from typing import List
+
 import smartcar.types as ty
 from smartcar.api import Smartcar
 
@@ -20,8 +21,8 @@ class Vehicle(object):
         self.api = Smartcar(access_token, vehicle_id=vehicle_id)
 
         if options:
-            if options.get('unit_system'):
-                self.set_unit_system(options['unit_system'])
+            if options.get("unit_system"):
+                self.set_unit_system(options["unit_system"])
 
     def set_unit_system(self, unit_system):
         """
@@ -35,18 +36,18 @@ class Vehicle(object):
         else:
             self.api.set_unit_system(unit_system)
 
-    def vin(self) -> str:
+    def vin(self) -> ty.Vin:
         """
         GET Vehicle.vin
 
         Returns:
-            str: vehicle's vin
+            Vin: NamedTuple("Vin", [("vin", str), ("meta", Meta)])
 
         Raises:
             SmartcarException
         """
         response = self.api.get("vin")
-        return response.json()["vin"]
+        return ty.select_named_tuple("vin", response)
 
     def charge(self) -> ty.Charge:
         """
@@ -59,9 +60,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("charge")
-        data = response.json()
-        result = ty.Charge(data['isPluggedIn'], data['state'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("charge", response)
 
     def battery(self) -> ty.Battery:
         """
@@ -74,9 +73,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("battery")
-        data = response.json()
-        result = ty.Battery(data['percentRemaining'], data['range'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("battery", response)
 
     def battery_capacity(self) -> ty.BatteryCapacity:
         """
@@ -89,9 +86,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("battery/capacity")
-        data = response.json()
-        result = ty.BatteryCapacity(data['capacity'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("battery/capacity", response)
 
     def fuel(self) -> ty.Fuel:
         """
@@ -105,9 +100,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("fuel")
-        data = response.json()
-        result = ty.Fuel(data['range'], data['percentRemaining'], data['amountRemaining'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("fuel", response)
 
     def tire_pressure(self):
         """
@@ -120,10 +113,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("tires/pressure")
-        data = response.json()
-        result = ty.TirePressure(data['frontLeft'], data['frontRight'], data['backLeft'], data['backRight'],
-                                 ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("tires/pressure", response)
 
     def oil(self) -> ty.Oil:
         """
@@ -136,9 +126,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("engine/oil")
-        data = response.json()
-        result = ty.Oil(data['lifeRemaining'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("engine/oil", response)
 
     def odometer(self) -> ty.Odometer:
         """
@@ -151,9 +139,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("odometer")
-        data = response.json()
-        result = ty.Odometer(data["distance"], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("odometer", response)
 
     def location(self) -> ty.Location:
         """
@@ -166,9 +152,20 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("location")
-        data = response.json()
-        result = ty.Location(data["latitude"], data["longitude"], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("location", response)
+
+    def permissions(self):
+        """
+        GET Vehicle.permissions
+
+        Returns:
+            list: vehicle's permissions
+
+        Raises:
+            SmartcarException
+        """
+        response = self.api.permissions()
+        return ty.select_named_tuple("permissions", response)
 
     def info(self) -> ty.Info:
         """
@@ -181,9 +178,11 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.get("")
-        data = response.json()
-        result = ty.Info(data["id"], data["make"], data["model"], data["year"], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("", response)
+
+    # ===========================================
+    # Action (POST) Requests
+    # ===========================================
 
     def lock(self) -> ty.Status:
         """
@@ -196,9 +195,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.action("security", "LOCK")
-        data = response.json()
-        result = ty.Status(data['status'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("lock", response)
 
     def unlock(self) -> ty.Status:
         """
@@ -211,9 +208,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.action("security", "UNLOCK")
-        data = response.json()
-        result = ty.Status(data['status'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("unlock", response)
 
     def start_charge(self) -> ty.Status:
         """
@@ -226,9 +221,7 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.action("charge", "START")
-        data = response.json()
-        result = ty.Status(data['status'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("start_charge", response)
 
     def stop_charge(self) -> ty.Status:
         """
@@ -241,11 +234,9 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.action("charge", "STOP")
-        data = response.json()
-        result = ty.Status(data['status'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("stop_charge", response)
 
-    def batch(self, paths):
+    def batch(self, paths: List[str]) -> ty.Batch:
         """
         POST Vehicle.batch
 
@@ -260,31 +251,25 @@ class Vehicle(object):
             SmartcarException
         """
         requests = []
+
         for path in paths:
             requests.append({"path": path})
+
         response = self.api.batch(requests)
         batch_dict = dict()
-        for response in response.json()["responses"]:
-            path = response["path"]
-            batch_dict[path] = {
-                "code": response["code"],
-                "headers": response["headers"],
-                "body": response["body"],
-            }
-        return batch_dict
 
-    def permissions(self):
-        """
-        GET Vehicle.permissions
+        for res in response.json()["responses"]:
+            path = res["path"][1:] if res["path"][0] == "/" else res["path"]
+            batch_dict[path] = ty.select_named_tuple(path, res)
 
-        Returns:
-            list: vehicle's permissions
+        batch = ty.Batch(**batch_dict)
+        batch.meta = ty.Meta(**response.headers)
 
-        Raises:
-            SmartcarException
-        """
-        response = self.api.permissions()
-        return response.json()["permissions"]
+        return batch
+
+    # ===========================================
+    # DELETE requests
+    # ===========================================
 
     def disconnect(self) -> ty.Status:
         """
@@ -301,6 +286,4 @@ class Vehicle(object):
             SmartcarException
         """
         response = self.api.disconnect()
-        data = response.json()
-        result = ty.Status(data['status'], ty.Meta(**response.headers))
-        return result
+        return ty.select_named_tuple("disconnect", response)
