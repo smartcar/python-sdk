@@ -1,7 +1,7 @@
 import platform
 import requests
 
-import smartcar.exceptions as E
+import smartcar.exception as sce
 from smartcar import __version__
 
 
@@ -29,41 +29,18 @@ def call(method: str, url: str, **kwargs) -> requests.models.Response:
     try:
         response = requests.request(method, url, timeout=310, **kwargs)
         code = response.status_code
+        headers = response.headers
+        body = response.text
 
         if response.ok:
             return response
-        elif "/v2.0/" in url:
-            raise E.SmartcarExceptionV2(response)
-        elif code == 400:
-            raise E.ValidationException(response)
-        elif code == 401:
-            raise E.AuthenticationException(response)
-        elif code == 403:
-            raise E.PermissionException(response)
-        elif code == 404:
-            raise E.ResourceNotFoundException(response)
-        elif code == 409:
-            raise E.StateException(response)
-        elif code == 429:
-            raise E.RateLimitingException(response)
-        elif code == 430:
-            raise E.MonthlyLimitExceeded(response)
-        elif code == 460:
-            raise E.GatewayTimeoutException(response)
-        elif code == 500:
-            raise E.ServerException(response)
-        elif code == 501:
-            body = response.json()
-            if body["error"] == "smartcar_not_capable_error":
-                raise E.SmartcarNotCapableException(response)
-            raise E.VehicleNotCapableException(response)
-        elif code == 504:
-            raise E.GatewayTimeoutException(response)
         else:
-            response.raise_for_status()
+            sce.exception_factory(code, headers, body)
 
     except Exception as e:
-        if isinstance(e, E.SmartcarException):
+        import ipdb
+        ipdb.set_trace()
+        if isinstance(e, sce.SmartcarException):
             raise e
         else:
-            raise E.SmartcarException("Unexpected error") from e
+            raise sce.SmartcarException(message="SDK_ERROR") from e
