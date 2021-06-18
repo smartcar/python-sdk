@@ -13,7 +13,7 @@ class AuthClient(object):
         client_id,
         client_secret,
         redirect_uri,
-        test_mode=None,
+        test_mode=False,
     ):
         """
         A client for accessing the Smartcar API
@@ -32,7 +32,7 @@ class AuthClient(object):
         self.client_secret = client_secret
         self.auth = (client_id, client_secret)
         self.redirect_uri = redirect_uri
-        self.test_mode = test_mode if test_mode else False
+        self.test_mode = test_mode
 
     def get_auth_url(self, scope: List[str], options: dict = None):
         """

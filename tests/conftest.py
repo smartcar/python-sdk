@@ -1,6 +1,7 @@
 import pytest
 
 import smartcar as sc
+import smartcar.api as api
 import tests.auth_helpers as ah
 
 
@@ -77,3 +78,18 @@ def vw_egolf(access_object):
     vehicle_ids = sc.get_vehicles(access_token)
     egolf_id = vehicle_ids.vehicles[0]
     return sc.Vehicle(egolf_id, access_token)
+
+
+# # API Fixture
+@pytest.fixture(scope="module")
+def api_instance(access_object, chevy_volt):
+    """
+    Using the token from the access_object, instantiate a api.Smartcar
+    object to play around with. Keep in mind that this class
+    is meant to be used frequently.
+
+    Yields: Instance of api.Smartcar
+    """
+    access_token = access_object.get("access_token")
+    test_api = api.Smartcar(access_token, vehicle_id=chevy_volt.vehicle_id)
+    yield test_api

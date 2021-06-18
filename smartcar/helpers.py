@@ -42,6 +42,6 @@ def format_flag_query(flags: dict) -> str:
     flags_str = ""
 
     for flag in flags.keys():
-        flags += f"{flag}:{flags[flag]} "
+        flags_str += f"{flag}:{flags[flag]} "
 
     return flags_str.strip()
