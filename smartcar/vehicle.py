@@ -1,5 +1,7 @@
 from typing import List
 
+import smartcar.constants as constants
+import smartcar.static as static
 import smartcar.types as ty
 from smartcar.api import Smartcar
 
@@ -15,14 +17,21 @@ class Vehicle(object):
             options (dict, optional): Can contain the following keys:
                 unit_system (str, optional): the unit system to use for vehicle data.
                     Defaults to metric.
+                version(str, optional): Version of Smartcar API an instance of vehicle
+                    will send requests to. This will override the instance's base url attribute.
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
-        self.api = Smartcar(access_token, vehicle_id=vehicle_id)
+        self.api = self.api = Smartcar(access_token, vehicle_id=vehicle_id)
 
         if options:
             if options.get("unit_system"):
                 self.set_unit_system(options["unit_system"])
+
+            if options.get("version"):
+                version = options["version"]
+                if version != static.API_VERSION:
+                    self.api.base_url = f"{constants.API_URL}/v{version}"
 
     def set_unit_system(self, unit_system):
         """

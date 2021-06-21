@@ -7,7 +7,7 @@ import smartcar.static as static
 
 
 class Smartcar(object):
-    def __init__(self, access_token, vehicle_id=None):
+    def __init__(self, access_token: str, vehicle_id: str = None):
         """
         Initialize a new Api object to directly make requests to Smartcar.
 
