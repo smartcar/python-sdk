@@ -19,7 +19,8 @@ def validate_env(test_mode: bool = False) -> None:
         or not f"{prefix}_CLIENT_SECRET" in os.environ
     ):
         raise Exception(
-            f'"{prefix}_CLIENT_ID" and "{prefix}_CLIENT_SECRET" environment variables must be set'
+            f'"{prefix}_CLIENT_ID", "{prefix}_CLIENT_SECRET", and '
+            f'"{prefix}_CLIENT_REDIRECT_URI environment variables must be set'
         )
 
 

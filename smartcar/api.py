@@ -23,7 +23,7 @@ class Smartcar(object):
         self.client_id = None
         self.client_secret = None
         self.client_redirect_uri = None
-        self.set_env()
+        self._set_env()
 
     # ===========================================
     # Utility Methods
@@ -64,27 +64,6 @@ class Smartcar(object):
                 json[k] = v
 
         return requester.call("POST", url, json=json, headers=headers)
-
-    def set_env(self, testing: bool = False) -> None:
-        """
-        Set self.client_id, self.client_secret, and self.client_redirect_uri
-        based on provided environment variables. If testing, find env variables
-        following this pattern:
-        'E2E_SMARTCAR_<variable>'
-
-        If not, find env variables following this pattern:
-        'SMARTCAR_CLIENT_<variable>'
-
-        Args:
-            testing(optional): boolean - Note that testing is NOT related to
-                using test_mode in Smartcar. It refers to if you are testing this package
-                as a contributor. Read CONTRIBUTING.md for more details
-        """
-        environment = "E2E_SMARTCAR" if testing else "SMARTCAR"
-
-        self.client_id = os.environ.get(f"{environment}_CLIENT_ID")
-        self.client_secret = os.environ.get(f"{environment}_CLIENT_SECRET")
-        self.client_redirect_uri = os.environ.get(f"{environment}_REDIRECT_URI")
 
     def set_env_custom(self, client_id: str = None, client_secret: str = None) -> None:
         """
@@ -210,3 +189,27 @@ class Smartcar(object):
             str: formatted url
         """
         return f"{self.base_url}/vehicles/{self.vehicle_id}/{endpoint}"
+
+    def _set_env(self, testing: bool = False) -> None:
+        """
+        Set self.client_id, self.client_secret, and self.client_redirect_uri
+        based on provided environment variables. If testing, find env variables
+        following this pattern:
+        'E2E_SMARTCAR_<variable>'
+
+        If not, find env variables following this pattern:
+        'SMARTCAR_CLIENT_<variable>'
+
+        This method not to be called by users. Contributing developers should use this
+        method in their testing suite.
+
+        Args:
+            testing(optional): boolean - Note that testing is NOT related to
+                using test_mode in Smartcar. It refers to if you are testing this package
+                as a contributor. Read CONTRIBUTING.md for more details
+        """
+        environment = "E2E_SMARTCAR" if testing else "SMARTCAR"
+
+        self.client_id = os.environ.get(f"{environment}_CLIENT_ID")
+        self.client_secret = os.environ.get(f"{environment}_CLIENT_SECRET")
+        self.client_redirect_uri = os.environ.get(f"{environment}_REDIRECT_URI")

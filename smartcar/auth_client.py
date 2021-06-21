@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlencode
@@ -10,13 +11,21 @@ import smartcar.helpers as helpers
 class AuthClient(object):
     def __init__(
         self,
-        client_id,
-        client_secret,
-        redirect_uri,
+        client_id=None,
+        client_secret=None,
+        redirect_uri=None,
         test_mode=False,
     ):
         """
-        A client for accessing the Smartcar API
+        A client for accessing the Smartcar API.
+
+        NOTE: It is recommended that you set environment variables with your client id, secret, and redirect URI.
+        AuthClient by default will search for environment variables "SMARTCAR_CLIENT_ID",
+        "SMARTCAR_CLIENT_SECRET", and "SMARTCAR_REDIRECT_URL" and set those as attributes.
+        These CAN be passed as arguments as you instantiate AuthClient. Any arguments passed in will override
+        and take precedence over the corresponding environment variable.
+
+        However, if neither an environment variable nor an argument is passed in, an exception will be raised.
 
         Args:
             client_id (str): The application id, provided in the application
@@ -28,10 +37,24 @@ class AuthClient(object):
                 present in the Redirect URIs field in the application dashboard
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
         """
-        self.client_id = client_id
-        self.client_secret = client_secret
+        self.client_id = client_id or os.environ.get("SMARTCAR_CLIENT_ID")
+        self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_ID")
+        self.redirect_uri = redirect_uri or os.environ.get("SMARTCAR_CLIENT_ID")
+
+        if (
+            self.client_id is None
+            or self.client_secret is None
+            or self.redirect_uri is None
+        ):
+            raise Exception(
+                "AuthClient MUST have client_id, client_secret, and redirect_uri attributes."
+                "Either set these as environment variables, OR pass them in as arguments when instantiating "
+                "AuthClient. The recommended course of action is to set up environment variables"
+                "with your client credentials. i.e.: "
+                "'SMARTCAR_CLIENT_ID', 'SMARTCAR_CLIENT_SECRET', and 'SMARTCAR_REDIRECT_URI'"
+            )
+
         self.auth = (client_id, client_secret)
-        self.redirect_uri = redirect_uri
         self.test_mode = test_mode
 
     def get_auth_url(self, scope: List[str], options: dict = None):

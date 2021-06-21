@@ -12,7 +12,7 @@ def test_correct_attributes(api_instance, access_object, chevy_volt):
 
 
 def test_env_setting(api_instance):
-    api_instance.set_env(testing=True)
+    api_instance._set_env(testing=True)
 
     assert api_instance.client_id == ah.CLIENT_ID
     assert api_instance.client_secret == ah.CLIENT_SECRET
