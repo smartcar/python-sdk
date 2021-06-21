@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import List
 
 import smartcar.api as api
@@ -119,3 +120,19 @@ def get_compatibility(
         vin=vin, scope=scope_param, country=country, flags=flags_str
     )
     return ty.select_named_tuple("compatibility", response)
+
+
+def is_expired(expiration: datetime) -> bool:
+    """
+    Check if an expiration is expired.
+    This helper method can be used on the 'expiration' or 'refresh_expiration'
+    values from the 'access object' received after going through Smartcar
+    Connect Auth flow.
+
+    Args:
+        expiration (datetime): expiration datetime
+
+    Returns:
+        bool: true if expired
+    """
+    return datetime.utcnow() > expiration
