@@ -1,25 +1,36 @@
 # Smartcar Python Backend SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
 
-## Overview
+# Overview
 
-The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (location, odometer) and send commands to vehicles (lock, unlock) to connected vehicles using HTTP requests.
+The [Smartcar API](https://smartcar.com/docs) lets you read vehicle data (e.g. location, odometer) and send commands to vehicles (e.g. lock, unlock) to connected vehicles using HTTP requests.
 
 To make requests to a vehicle a web or mobile application, the end user must connect their vehicle using [Smartcar Connect](https://smartcar.com/docs/api#authorization).
 
 Before integrating with Python SDK, you'll need to register an application in the [Smartcar Developer portal](https://dashboard.smartcar.com). Once you have registered an application, you will have a Client ID and Client Secret, which will allow you to authorize users.
 
-## Installation
+# Supported Versions
+Python 3.7, 3.8, or 3.9
+
+# Installation
 
 ```
 pip install smartcar
 ```
 
-## Overall Usage
+# Overall Usage
 
 Now that you have your id, secret and redirect URI, here's a simple overall idea of how to use the SDK to authenticate and make requests with the Smartcar API.
 
+- In your terminal, export your client id, client secret, and redirect uri as environment variables.
+
+```
+export SMARTCAR_CLIENT_ID='<your client id>'
+export SMARTCAR_CLIENT_ID='<your client secret>'
+export SMARTCAR_CLIENT_ID='<your redirect URI>'
+```
+
 - Import the sdk `import smartcar`
-- Create a new smartcar `client` with `smartcar.AuthClient(client_id, client_secret, redirect_uri, scope, test_mode)`
+- Create a new smartcar `client` with `smartcar.AuthClient()`
 - Redirect the user to an OEM login page using the URL from `client.get_auth_url()`
 - The user will login, and then accept or deny the permissions in your `scope`
 
@@ -75,56 +86,47 @@ fresh_access_token = get_fresh_access()['access_token']
 
 ```python
 vehicle = smartcar.Vehicle(vehicle_id, access_token)
-odometer = vehicle.odometer()['data']['distance']
+odometer = vehicle.odometer().distance
 ```
 
 - For a lot more examples on everything you can do with a car, see the [smartcar developer docs](https://smartcar.com/docs)
 
-## Handling Exceptions
+# Handling Exceptions
 
-- Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with some exception handling code.
+Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with some exception handling code.
 
-- For more detailed errors, use the `v2.0` api by using `smartcar.set_api_version("2.0")`.
-
-### API Version 1.0
-Whenever a request through the SDK returns a non 200 status code, the SDK will throw a nicely named exception for you to handle.
-
-| status code | exception name                       |
-| :---------: | ------------------------------------ |
-|     400     | smartcar.ValidationException         |
-|     401     | smartcar.AuthenticationException     |
-|     403     | smartcar.PermissionException         |
-|     404     | smartcar.ResourceNotFoundException   |
-|     409     | smartcar.StateException              |
-|     429     | smartcar.RateLimitingException       |
-|     430     | smartcar.MonthlyLimitExceeded        |
-|     500     | smartcar.ServerException             |
-|     501     | smartcar.VehicleNotCapableException  |
-|     501     | smartcar.SmartcarNotCapableException |
-|     504     | smartcar.GatewayTimeoutException     |
-
-### API Version 2.0
-
-All exceptions will be of type `smartcar.SmartcarExceptionV2`
+All exceptions will be of type `smartcar.SmartcarException` with the... exception (sorry, not sorry) of missing client credentials. Navigate below to `AuthClient` for more details.
 
 Check out our [API Reference](https://smartcar.com/docs/api/?version=v2.0#errors) and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn more.
 
+# AuthClient
 
-## AuthClient
-
-### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, scope=None, test_mode=False)`
+### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, test_mode=False)`
 
 A client for accessing the Smartcar API
 
 #### Arguments:
 
-| Parameter       | Type     | Required     | Description                                                                                                                                                                                            |
-| :-------------- | :------- | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `client_id`     | String   | **Required** | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                                                                        |
-| `client_secret` | String   | **Required** | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                                                                    |
-| `redirect_uri`  | String   | **Required** | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings.                                                                      |
-| `scope`         | String[] | **Optional** | List of permissions your application requires. This will default to requiring all scopes. The valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
-| `test_mode`     | Boolean  | **Optional** | Launch the Smartcar Connect in test mode.                                                                                                                                                              |
+| Parameter       | Type    | Required       | Description                                                                                                                       |
+| :-------------- | :------ | :------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| `client_id`     | String  | **Optional\*** | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                   |
+| `client_secret` | String  | **Optional\*** | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                               |
+| `redirect_uri`  | String  | **Optional\*** | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
+| `test_mode`     | Boolean | **Optional**   | Launch the Smartcar Connect in test mode.                                                                                         |
+
+##### \***Environment Variables VS Passing Arguments:**
+
+You must EITHER have your client id, secret, and redirect URI exported as environment variables OR passed in as arguments when instantiating `AuthClient`. It is recommended that you use **environment variables**. These variables must use the prefix `SMARTCAR_`, in capital snake-case format, like so:
+
+```
+export SMARTCAR_CLIENT_ID='<your client id>'
+export SMARTCAR_CLIENT_SECRET='<your client secret>'
+export SMARTCAR_REDIRECT_URI='<your redirect uri>'
+```
+
+AuthClient will use these environment variables by default. However, if you choose to pass in your client credientials as arguments, they will take precedence over environment variables.
+
+However, if neither environment variables NOR an argument is passed, an `Exception` will be raised. And the instantiation of AuthClient will fail.
 
 ### `get_auth_url(self, force=False, state=None, vehicle_info=None, flags=None)`
 
@@ -132,14 +134,15 @@ Generate the Connect URL
 
 #### Arguments
 
-| Parameter              | Type                  | Required     | Description                                                                                                                                                                                                                                                                                                                                                                                        |
-| :--------------------- | :-------------------- | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `force`                | Boolean               | **Optional** | Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions.                                                                                                                                                                                                            |
-| `state`                | String                | **Optional** | OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request.                                                                                                                                                                                                                                                                    |
-| `vehicle_info['make']` | String                | **Optional** | Including the dict `vehicle_info` with a `make` property allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive.                                                                                                                     |
-| `single_select`        | Boolean or Dictionary | **Optional** | An optional value that sets the behavior of the grant dialog displayed to the user. If set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information.                                                                                                                          |
-| `single_select.vin`    | String                | **Optional** | The VIN (Vehicle Identifier Number) of a vehicle. By passing in `single_select` as a dict with a `vin` property, the single select behavior will be turned on and Smartcar will authorize only the vehicle with the specified VIN. The `single_select_vin` takes precedence over the `make` parameter. Please refer to the [Single Select guide](https://smartcar.com/docs/guides/single-select/). |
-| `flags`                | String[]              | **Optional** | List of feature flags that your application has early access to.                                                                                                                                                                                                                                                                                                                                   |
+| Parameter               | Type       | Required     | Description                                                                                                                                                                                                                                                                                                     |
+| :---------------------- | :--------- | :----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`                 | String[]   | **Required** | A space-separated list of permissions that your application is requesting access to. Check out [API Reference](https://smartcar.com/docs/api?version=v1.0&language=cURL#permissions) to see available permissions.                                                                                              |
+| `options`               | Dictionary | **Optional** | A dictionary where you can pass in additional options as query parameters.                                                                                                                                                                                                                                      |
+| `options.force_prompt`  | Boolean    | **Optional** | Setting `forcePrompt` to `true` will show the permissions approval screen on every authentication attempt, even if the user has previously consented to the exact scope of permissions.                                                                                                                         |
+| `options.state`         | String     | **Optional** | OAuth state parameter passed to the redirectUri. This parameter may be used for identifying the user who initiated the request.                                                                                                                                                                                 |
+| `options.make_bypass`   | String     | **Optional** | Allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive.                                                                                           |
+| `options.single_select` | Dictionary | **Optional** | Keys of `enabled` (bool) and/or `vin` (string). Sets the behavior of the grant dialog displayed to the user. If `enabled` is set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information. |
+| `options.flags`         | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.                                                                                                                                                                                                                                          |
 
 #### Return
 
@@ -157,15 +160,16 @@ Generate the Connect URL
 'https://connect.smartcar.com/oauth/authorize?response_type=token...'
 ```
 
-### `exchange_code(code)`
+### `exchange_code(code, flags=None)`
 
 Exchange an authorization code for an access dictionary
 
 #### Arguments
 
-| Parameter | Type   | Description                                                         |
-| :-------- | :----- | :------------------------------------------------------------------ |
-| `code`    | String | Authorization code to exchange with Smartcar for an `access_token`. |
+| Parameter | Type       | Required     | Description                                                            |
+| :-------- | :--------- | :----------- | ---------------------------------------------------------------------- |
+| `code`    | String     | **Required** | Authorization code to exchange with Smartcar for an `access_token`.    |
+| `flags`   | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to. |
 
 #### Return
 
@@ -182,15 +186,16 @@ Exchange an authorization code for an access dictionary
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `exchange_refresh_token(token)`
+### `exchange_refresh_token(token, flags=None)`
 
 Exchange a refresh token for a new access dictionary
 
 #### Arguments
 
-| Parameter | Type   | Description                                                    |
-| :-------- | :----- | :------------------------------------------------------------- |
-| `token`   | String | Refresh token to exchange with Smartcar for an `access_token`. |
+| Parameter | Type       | Required     | Description                                                            |
+| :-------- | :--------- | :----------- | ---------------------------------------------------------------------- |
+| `token`   | String     | **Required** | Refresh token to exchange with Smartcar for an `access_token`.         |
+| `flags`   | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to. |
 
 #### Return
 
@@ -207,54 +212,24 @@ Exchange a refresh token for a new access dictionary
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `is_compatible(vin, scope, country='US')`
-
-Determine vehicle compatibility with Smartcar.
-
-A compatible vehicle is a vehicle that:
-
-1. has the hardware required for internet connectivity,
-2. belongs to the makes and models Smartcar supports, and
-3. supports the permissions.
-
-_To use this function, please contact us!_
-
-#### Arguments
-
-| Parameter | Type     | Required     | Description                                                                                                                                                  |
-| :-------- | :------- | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `vin`     | String   | **Required** | The VIN of the vehicle.                                                                                                                                      |
-| `scope`   | String[] | **Required** | The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
-| `country` | String   | **Optional** | For details on how to specify country code strings refer to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).                          |
-
-#### Return
-
-| Type    | Description                                                                               |
-| :------ | :---------------------------------------------------------------------------------------- |
-| Boolean | `False` if the vehicle is NOT compatible. `True` if the vehicle is _likely_ compatible.\* |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-**\*Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
-
-## Vehicle
+# Vehicle
 
 After receiving an `access_token` from the Smartcar Connect, your application may make
 requests to the vehicle using the `access_token` and the `Vehicle` class.
 
-### `smartcar.Vehicle(self, vehicle_id, access_token, unit_system='metric')`
+### `smartcar.Vehicle(self, vehicle_id, access_token, options=None)`
 
 Initializes a new Vehicle to use for making requests to the Smartcar API.
 
 #### Arguments
 
-| Parameter      | Type   | Required     | Description                                                  |
-| :------------- | :----- | :----------- | :----------------------------------------------------------- |
-| `vehicle_id`   | String | **Required** | the vehicle's unique identifier                              |
-| `access_token` | String | **Required** | a valid access token                                         |
-| `unit_system`  | String | **Optional** | the unit system to use for vehicle data. Defaults to metric. |
+| Parameter             | Type       | Required     | Description                                                                                              |
+| :-------------------- | :--------- | :----------- | :------------------------------------------------------------------------------------------------------- |
+| `vehicle_id`          | String     | **Required** | the vehicle's unique identifier                                                                          |
+| `access_token`        | String     | **Required** | a valid access token                                                                                     |
+| `options`             | Dictionary | **Optional** | a dictionary of optional parameters for vehicle instances                                                |
+| `options.unit_system` | String     | **Optional** | the unit system to use for vehicle data. Defaults to metric.                                             |
+| `options.version`     | String     | **Optional** | the version of Smartcar API that the instance of the vehicle will send requests to (e.g. '1.0' or '2.0') |
 
 ### `set_unit_system(self, unit_system)`
 
@@ -266,53 +241,28 @@ Update the unit system to use in requests to the Smartcar API.
 | :------------ | :----- | :--------------------------------------- |
 | `unit_system` | String | the unit system to use (metric/imperial) |
 
-### `permissions(self)`
+### Smartcar Vehicle Endpoints
 
-Returns a paged list of all permissions currently associated with this vehicle.
+These methods act as wrappers for calls to vehicle-related endpoints to Smartcar API. These methods return explicitly defined `NamedTuples` from Python's [typing](https://docs.python.org/3/library/typing.html) library. Returned NamedTuples contain data retrieved upon calling Smartcar API. NamedTuples allow for a rigid return of data with type hints and dot notation.
 
-#### Return
+```python
+# using an instance of Vehicle called "my_model_3"
+location = my_model_3.location()
+print location.latitude
+print location.longitude
+```
 
-| Type     | Description              |
-| :------- | :----------------------- |
-| String[] | An array of permissions. |
+### Meta
 
-### `has_permissions(self, permissions)`
+All NamedTuples returned as a result from using a `Vehicle` method includes a `meta` attribute. The `Meta` class generates an object with attribute names and values matching the keys and values of a dictionary. `Meta` can contain a variable amount of attributes. Each attribute in any `Meta` object represents a response header and various information about the request in lowercase, snake-case format.
 
-Returns whether the vehicle contains specified permission(s).
+e.g. If a call to Smartcar API resulted with a response header of `"SC-unit-type" : "metric"`, the `Meta` object will contain an attribute of `sc_unit_type`.
 
-#### Arguments
-
-| Parameter     | Type               | Description                 |
-| :------------ | :----------------- | :-------------------------- |
-| `permissions` | String[] or String | The permission(s) to check. |
-
-#### Return
-
-| Type    | Description                                          |
-| :------ | :--------------------------------------------------- |
-| Boolean | Whether the vehicle has the specified permission(s). |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-### `info(self)`
-
-Returns a single vehicle object, containing identifying information.
-
-#### Return
-
-| Type               | Description                      |
-| :----------------- | :------------------------------- |
-| Dictionary         | vehicle's info                   |
-| Dictionary.`id`    | A vehicle ID (UUID v4).          |
-| Dictionary.`make`  | The manufacturer of the vehicle. |
-| Dictionary.`model` | The model of the vehicle.        |
-| Dictionary.`year`  | The model year.                  |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+```python
+# Using the above example:
+print location.meta
+print location.meta.request_id
+```
 
 ### `vin(self)`
 
@@ -320,62 +270,28 @@ Returns the vehicle's manufacturer identifier.
 
 #### Return
 
-| Type   | Description                         |
-| :----- | :---------------------------------- |
-| String | The manufacturer unique identifier. |
+| Value      | Type       | Description                                                              |
+| :--------- | :--------- | :----------------------------------------------------------------------- |
+| `Vin`      | NamedTuple | The returned object with vin-related data                                |
+| `Vin.vin`  | String     | The manufacturer unique identifier.                                      |
+| `Vin.meta` | Meta       | Response headers and other information about the response of the request |
 
 #### Raises
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `location(self)`
+### `charge(self)`
 
-Returns the location of the vehicle in geographic coordinates.
-
-#### Return
-
-| Type                          | Description                        |
-| :---------------------------- | :--------------------------------- |
-| Dictionary                    | vehicle's location                 |
-| Dictionary.`data`.`latitude`  | The latitude (in degrees).         |
-| Dictionary.`data`.`longitude` | The longitude (in degrees).        |
-| Dictionary.`age`              | A datetime for the age of the data |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-### `odometer(self)`
-
-Returns the vehicle's current odometer reading.
+Returns the vehicle's charging status of an electric vehicle.
 
 #### Return
 
-| Type                         | Description                                                                                                                                     |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dictionary                   | vehicle's odometer (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| Dictionary.`data`.`distance` | The current odometer of the vehicle                                                                                                             |
-| Dictionary.`unit_system`     | the unit system of the odometer data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).      |
-| Dictionary.`age`             | A datetime for the age of the data                                                                                                              |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-### `fuel(self)`
-
-Returns the vehicle's fuel status.
-
-#### Return
-
-| Type                               | Description                                                                                                                                                                      |
-| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dictionary                         | vehicle's fuel status                                                                                                                                                            |
-| Dictionary.`data.range`            | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| Dictionary.`data.percentRemaining` | The remaining level of fuel in the tank (in percent)                                                                                                                             |
-| Dictionary.`data.amountRemaining`  | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).            |
-| Dictionary.`unit_system`           | the unit system of the fuel data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).                                           |
-| Dictionary.`age`                   | A datetime for the age of the data                                                                                                                                               |
+| Value                  | Type       | Description                                                                                             |
+| :--------------------- | :--------- | :------------------------------------------------------------------------------------------------------ |
+| `Charge`               | NamedTuple | The returned object with charging status data                                                           |
+| `Charge.is_plugged_in` | Boolean    | State of whether car is plugged in                                                                      |
+| `Charge.status`        | String     | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
+| `Charge.meta`          | Meta       | Response headers and other information about the response of the request                                |
 
 #### Raises
 
@@ -387,13 +303,12 @@ Returns the vehicle's battery status.
 
 #### Return
 
-| Type                               | Description                                                                                                                                                                      |
-| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dictionary                         | vehicle's battery status                                                                                                                                                         |
-| Dictionary.`data.range`            | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| Dictionary.`data.percentRemaining` | The remaining level of charge in the battery (in percent)                                                                                                                        |
-| Dictionary.`unit_system`           | the unit system of the battery data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).                                        |
-| Dictionary.`age`                   | A datetime for the age of the data                                                                                                                                               |
+| Value                       | Type       | Description                                                                                                                                                                      |
+| :-------------------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Battery`                   | NamedTuple | The returned object with battery status data                                                                                                                                     |
+| `Battery.percent_remaining` | Float      | The remaining level of charge in the battery (in percent)                                                                                                                        |
+| `Battery.range`             | Float      | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Battery.meta`              | Meta       | Response headers and other information about the response of the request                                                                                                         |
 
 #### Raises
 
@@ -405,44 +320,29 @@ Returns the total capacity of an electric vehicle's battery. Please [contact us]
 
 #### Return
 
-| Type                               | Description                                                                                                                                                                      |
-| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dictionary                         | vehicle's battery capacity |
-| Dictionary.`data.capacity`            | vehicle's battery capacity in kWh |
-| Dictionary.`age`                   | A datetime for the age of the data                                                                                                                                               |
+| Value                      | Type       | Description                                                              |
+| :------------------------- | :--------- | :----------------------------------------------------------------------- |
+| `BatteryCapacity`          | NamedTuple | The returned object data regarding total capacity of an EV's battery     |
+| `BatteryCapacity.capacity` | Float      | vehicle's battery capacity in kWh                                        |
+| `BatteryCapacity.meta`     | Meta       | Response headers and other information about the response of the request |
 
 #### Raises
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `charge(self)`
+### `fuel(self)`
 
-Returns the vehicle's charge status.
-
-#### Return
-
-| Type                          | Description                                                                                             |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------ |
-| Dictionary                    | vehicle's charge status                                                                                 |
-| Dictionary.`data.isPluggedIn` | Indicates whether charging cable is plugged in                                                          |
-| Dictionary.`data.state`       | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
-| Dictionary.`age`              | A datetime for the age of the data                                                                      |
-
-#### Raises
-
-<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-### `oil(self)`
-
-Returns the vehicle's oil status.
+Returns the vehicle's fuel status.
 
 #### Return
 
-| Type                            | Description                                                                                                  |
-| :------------------------------ | :----------------------------------------------------------------------------------------------------------- |
-| Dictionary                      | vehicle's oil status                                                                                         |
-| Dictionary.`data.lifeRemaining` | The engine oil's remaining life span (as a percentage). Oil life is based on the current quality of the oil. |
-| Dictionary.`age`                | A datetime for the age of the data                                                                           |
+| Value                    | Type       | Description                                                                                                                                                                      |
+| :----------------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Fuel`                   | NamedTuple | The returned object with vehicle's fuel status                                                                                                                                   |
+| `Fuel.range`             | Float      | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Fuel.percent_remaining` | Float      | The remaining level of fuel in the tank (in percent)                                                                                                                             |
+| `Fuel.amount_remaining`  | Float      | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).            |
+| `Fuel.meta`              | Meta       | Response headers and other information about the response of the request                                                                                                         |
 
 #### Raises
 
@@ -454,46 +354,86 @@ Returns the vehicle's tire pressure status.
 
 #### Return
 
-| Type                              | Description                                                                                                                                                                 |
-| :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dictionary                        | vehicle's tire pressure status                                                                                                                                              |
-| Dictionary.`data.tires`           | Information about the pressure of each tire.                                                                                                                                |
-| Dictionary.`data.tires.frontLeft` | The current air pressure of the front left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
-| Dictionary.`data.tires.fronRight` | The current air pressure of the front right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| Dictionary.`data.tires.backLeft`  | The current air pressure of the back left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).   |
-| Dictionary.`data.tires.backRight` | The current air pressure of the back right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
-| Dictionary.`unit_system`          | the unit system of the fuel data. To set, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).                                      |
-| Dictionary.`age`                  | A datetime for the age of the data                                                                                                                                          |
+| Value                      | Type       | Description                                                                                                                                                                 |
+| :------------------------- | :--------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TirePressure`             | NamedTuple | The returned object with vehicle's tire pressure status                                                                                                                     |
+| `TirePressure.front_left`  | Float      | The current air pressure of the front left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
+| `TirePressure.front_right` | Float      | The current air pressure of the front right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `TirePressure.back_left`   | Float      | The current air pressure of the back left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).   |
+| `TirePressure.back_right`  | Float      | The current air pressure of the back right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
+| `TirePressure.meta`        | Meta       | Response headers and other information about the response of the request                                                                                                    |
 
 #### Raises
 
 <code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-### `disconnect(self)`
+### `oil(self)`
 
-Disconnect this vehicle from the connected application.
-
-#### Raises
-
-<code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
-
-Note: Calling this method will invalidate your access token and you will
-have to have the user reauthorize the vehicle to your application if you
-wish to make requests to it
-
-### `unlock(self)`
-
-Unlock the vehicle.
+Returns the vehicle's oil status.
 
 #### Return
 
-| Type                | Description                           |
-| :------------------ | :------------------------------------ |
-| Dictionary.`status` | Set to success on successful request. |
+| Value                | Type       | Description                                                                                                  |
+| :------------------- | :--------- | :----------------------------------------------------------------------------------------------------------- |
+| `Oil`                | NamedTuple | The returned object with vehicle's oil status                                                                |
+| `Oil.life_remaining` | Float      | The engine oil's remaining life span (as a percentage). Oil life is based on the current quality of the oil. |
+| `Oil.meta`           | Meta       | Response headers and other information about the response of the request                                     |
 
 #### Raises
 
-<code>SmartcarException</code> on unsuccessful request
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `odometer(self)`
+
+Returns the vehicle's current odometer reading.
+
+#### Return
+
+| Value               | Type       | Description                                                                                                                                                              |
+| :------------------ | :--------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Odometer`          | NamedTuple | The returned object with vehicle's odometer (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Odometer.distance` | Float      | The current odometer of the vehicle                                                                                                                                      |
+| `Odometer.meta`     | Meta       | Response headers and other information about the response of the request                                                                                                 |
+
+#### Raises
+
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `location(self)`
+
+Returns the location of the vehicle in geographic coordinates.
+
+#### Return
+
+| Value                | Type       | Description                                                              |
+| :------------------- | :--------- | :----------------------------------------------------------------------- |
+| `Location`           | NamedTuple | The returned object with vehicle's location/coordinates                  |
+| `Location.latitude`  | Float      | The latitude (in degrees).                                               |
+| `Location.longitude` | Float      | The longitude (in degrees).                                              |
+| `Location.meta`      | Meta       | Response headers and other information about the response of the request |
+
+#### Raises
+
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `info(self)`
+
+Returns a single vehicle object, containing identifying information.
+
+#### Return
+
+| Value        | Type       | Description                                                              |
+| :----------- | :--------- | :----------------------------------------------------------------------- |
+| `Info`       | NamedTuple | The returned object with vehicle's info                                  |
+| `Info.id`    | String     | A vehicle ID (UUID v4).                                                  |
+| `Info.make`  | String     | The manufacturer of the vehicle.                                         |
+| `Info.model` | String     | The model of the vehicle.                                                |
+| `Info.year`  | String     | The model year.                                                          |
+| `Info.meta`  | Meta       | Response headers and other information about the response of the request |
+
+#### Raises
+
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 ### `lock(self)`
 
@@ -501,13 +441,75 @@ Lock the vehicle.
 
 #### Return
 
-| Type                | Description                           |
-| :------------------ | :------------------------------------ |
-| Dictionary.`status` | Set to success on successful request. |
+| Value           | Type       | Description                                                                           |
+| :-------------- | :--------- | :------------------------------------------------------------------------------------ |
+| `Status`        | NamedTuple | The returned object with vehicle's "status" after sending a request to lock the doors |
+| `Status.status` | String     | Set to "success" on successful request.                                               |
+| `Status.meta`   | Meta       | Response headers and other information about the response of the request              |
 
 #### Raises
 
 <code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+### `unlock(self)`
+
+Unlock the vehicle.
+
+#### Return
+
+| Value           | Type       | Description                                                                             |
+| :-------------- | :--------- | :-------------------------------------------------------------------------------------- |
+| `Status`        | NamedTuple | The returned object with vehicle's "status" after sending a request to unlock the doors |
+| `Status.status` | String     | Set to "success" on successful request.                                                 |
+| `Status.meta`   | Meta       | Response headers and other information about the response of the request                |
+
+#### Raises
+
+<code>SmartcarException</code> on unsuccessful request
+
+### `start_charge(self)`
+
+Start charging the vehicle.
+
+#### Return
+
+| Value           | Type       | Description                                                                                  |
+| :-------------- | :--------- | :------------------------------------------------------------------------------------------- |
+| `Status`        | NamedTuple | The returned object with vehicle's "status" after sending a request to start charging the EV |
+| `Status.status` | String     | Set to "success" on successful request.                                                      |
+| `Status.meta`   | Meta       | Response headers and other information about the response of the request                     |
+
+#### Raises
+
+<code>SmartcarException</code> on unsuccessful request
+
+### `stop_charge(self)`
+
+Stop charging the vehicle.
+
+#### Return
+
+| Value           | Type       | Description                                                                                 |
+| :-------------- | :--------- | :------------------------------------------------------------------------------------------ |
+| `Status`        | NamedTuple | The returned object with vehicle's "status" after sending a request to stop charging the EV |
+| `Status.status` | String     | Set to "success" on successful request.                                                     |
+| `Status.meta`   | Meta       | Response headers and other information about the response of the request                    |
+
+#### Raises
+
+<code>SmartcarException</code> on unsuccessful request
+
+### `permissions(self)`
+
+Returns the `Permissions` NamedTuple, paged list of all permissions currently associated with this vehicle.
+
+#### Return
+
+| Value                     | Type       | Description                                                              |
+| :------------------------ | :--------- | :----------------------------------------------------------------------- |
+| `Permissions`             | NamedTuple | The returned object with the vehicle's permissions                       |
+| `Permissions.unit_system` | String[]   | An array of permission                                                   |
+| `Permissions.meta`        | Meta       | Response headers and other information about the response of the request |
 
 ### `batch(self, paths)`
 
@@ -521,57 +523,49 @@ Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smar
 
 #### Return
 
-| Type                                              | Description                                                                      |
-| :------------------------------------------------ | :------------------------------------------------------------------------------- |
-| Dictionary                                        | An object containing the responses. The keys to this object are requested paths. |
-| Dictionary.`/`                                    | The response from the Vehicle Info endpoint.                                     |
-| Dictionary.`/vin`                                 | The response from the VIN endpoint.                                              |
-| Dictionary.`/odometer`                            | The response from the Odometer endpoint.                                         |
-| Dictionary.`/fuel`                                | The response from the Fuel tank endpoint.                                        |
-| Dictionary.`/engine/oil`                          | The response from the Engine oil life endpoint.                                  |
-| Dictionary.`/tires/pressure`                      | The response from the Tire pressure endpoint.                                    |
-| Dictionary.`/battery`                             | The response from the EV battery endpoint.                                       |
-| Dictionary.`/battery/capacity`                    | The response from the EV battery capacity endpoint.                              |
-| Dictionary.`/charge`                              | The response from the EV charge endpoint.                                        |
-| Dictionary.`/location`                            | The response from the Location endpoint.                                         |
-| Dictionary.`/ENDPOINT`.`code`                     | The HTTP response code from the response.                                        |
-| Dictionary.`/ENDPOINT`.`body`                     | The response body.                                                               |
-| Dictionary.`/ENDPOINT`.`headers`                  | The response headers.                                                            |
-| Dictionary.`/ENDPOINT`.`headers`.`sc-data-age`    | The timestamp of when the data was last updated.                                 |
-| Dictionary.`/ENDPOINT`.`headers`.`sc-unit-system` | The unit system for this response (metric/imperial).                             |
+| Value             | Type       | Description                                                                                                |
+| :---------------- | :--------- | :--------------------------------------------------------------------------------------------------------- |
+| `Batch`           | Batch      | The returned object with the results of the requests. Each request results in the corresponding NamedTuple |
+| `Batch.<request>` | NamedTuple | The appropriate NamedTuple for the request. e.g. `Batch.odometer` -> <Odometer>                            |
+| `Batch.meta`      | Meta       | Response headers and other information about the response of the request                                   |
 
 #### Example Response
 
-```json
-{
-  "/odometer": {
-    "body": {
-      "distance": 37829
-    },
-    "code": 200,
-    "headers": {
-      "sc-data-age": "2019-10-24T00:43:46.000Z",
-      "sc-unit-system": "metric"
-    }
-  },
-  "/location": {
-    "body": {
-      "latitude": 37.4292,
-      "longitude": 122.1381
-    },
-    "code": 200,
-    "headers": {
-      "sc-data-age": "2019-10-24T00:43:46.000Z"
-    }
-  }
-}
+```Python
+# Upon sending a batch request to '/odometer' and '/location' for an instantiated Vehicle "my_tesla_3"
+
+batch = my_tesla_3.batch(['/odometer', '/location'])
+
+print batch.odometer.distance
+print batch.location.longitude
+print batch.meta
 ```
 
 #### Raises
 
 <code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
-## Static Methods
+### `disconnect(self)`
+
+Disconnect this vehicle from the connected application.
+
+#### Returns
+
+| Value           | Type       | Description                                                                       |
+| :-------------- | :--------- | :-------------------------------------------------------------------------------- |
+| `Status`        | NamedTuple | The returned object with vehicle's "status" after sending a request to disconnect |
+| `Status.status` | String     | Set to "success" on successful request.                                           |
+| `Status.meta`   | Meta       | Response headers and other information about the response of the request          |
+
+#### Raises
+
+<code>SmartcarException</code> - on unsuccessful request. See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+Note: Calling this method will invalidate your access token and you will
+have to have the user reauthorize the vehicle to your application if you
+wish to make requests to it
+
+# Static Methods
 
 ### `smartcar.set_api_version(version)`
 
@@ -579,14 +573,14 @@ Sets the version of Smartcar API to use
 
 #### Arguments
 
-| Parameter    | Type     | Description         |
-| :----------- | :------- | :------------------ |
+| Parameter | Type   | Description                     |
+| :-------- | :----- | :------------------------------ |
 | `version` | String | version number (example: "2.0") |
 
 #### Returns
 
-| Type    |
-| :------ |
+| Type |
+| :--- |
 | None |
 
 ### `smartcar.is_expired(expiration)`
@@ -611,20 +605,23 @@ Get a list of the user's vehicle ids
 
 #### Arguments
 
-| Parameter      | Type    | Required     | Description                                                    |
-| :------------- | :------ | :----------- | :------------------------------------------------------------- |
-| `access_token` | String  | **Required** | A valid access token from a previously retrieved access object |
-| `limit`        | Integer | **Optional** | The number of vehicle ids to return                            |
-| `offset`       | Integer | **Optional** | The index to start the vehicle list at                         |
+| Parameter       | Type       | Required     | Description                                                      |
+| :-------------- | :--------- | :----------- | :--------------------------------------------------------------- |
+| `access_token`  | String     | **Required** | A valid access token from a previously retrieved access object   |
+| `paging`        | Dictionary | **Optional** | An optional dictionary to implement paging for returned vehicles |
+| `paging.limit`  | Integer    | **Optional** | The number of vehicle ids to return                              |
+| `paging.offset` | Integer    | **Optional** | The index to start the vehicle list at                           |
 
 #### Returns
 
-| Type                         | Description                                                                  |
-| :--------------------------- | :--------------------------------------------------------------------------- |
-| Dictionary                   | response containing the list of vehicle ids and paging information           |
-| Dictionary.`vehicles`        | An array of vehicle IDs.                                                     |
-| Dictionary.`paging`.`count`  | The total number of elements for the entire query (not just the given page). |
-| Dictionary.`paging`.`offset` | The current start index of the returned list of elements.                    |
+| Value                    | Type       | Description                                                              |
+| :----------------------- | :--------- | :----------------------------------------------------------------------- |
+| `Vehicles`               | NamedTuple | The returned object with the list of vehicle ids and paging information  |
+| `Vehicles.vehicles`      | String     | Set to "success" on successful request.                                  |
+| `Vehicles.paging`        | NamedTuple | Contains paging information of returned data                             |
+| `Vehicles.paging.limit`  | Integer    | The number of vehicle ids to return                                      |
+| `Vehicles.paging.offset` | Integer    | The index to start the vehicle list at                                   |
+| `Vehicles.meta`          | Meta       | Response headers and other information about the response of the request |
 
 #### Raises
 
@@ -642,9 +639,11 @@ Retrieve the userId associated with the access_token
 
 #### Returns
 
-| Type   | Description |
-| :----- | :---------- |
-| String | the user id |
+| Value       | Type       | Description                                                              |
+| :---------- | :--------- | :----------------------------------------------------------------------- |
+| `User`      | NamedTuple | The returned object with User id                                         |
+| `User.id`   | String     | The user id                                                              |
+| `User.meta` | Meta       | Response headers and other information about the response of the request |
 
 #### Raises
 
@@ -654,3 +653,41 @@ Retrieve the userId associated with the access_token
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
 [pypi-url]: https://badge.fury.io/py/smartcar
 [pypi-image]: https://badge.fury.io/py/smartcar.svg
+
+### `get_compatibility(vin, scope, country='US', options=None)`
+
+Determine vehicle compatibility with Smartcar.
+
+A compatible vehicle is a vehicle that:
+
+1. has the hardware required for internet connectivity,
+2. belongs to the makes and models Smartcar supports, and
+3. supports the permissions.
+
+_To use this function, please contact us!_
+
+#### Arguments
+
+| Parameter               | Type       | Required     | Description                                                                                                                                                  |
+| :---------------------- | :--------- | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vin`                   | String     | **Required** | The VIN of the vehicle.                                                                                                                                      |
+| `scope`                 | String[]   | **Required** | The list of permissions to check compatibility for. Valid permission names are found in the [API Reference](https://smartcar.com/docs/api#get-all-vehicles). |
+| `country`               | String     | **Optional** | For details on how to specify country code strings refer to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).                          |
+| `options`               | Dictionary | **Optional** | A dictionary where you can pass in additional options as query parameters.                                                                                   |
+| `options.client_id`     | String     | **Optional** | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                              |
+| `options.client_secret` | String     | **Optional** | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                          |
+| `options.flags`         | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.                                                                                       |
+
+#### Return
+
+| Value                      | Type       | Description                                                                           |
+| :------------------------- | :--------- | :------------------------------------------------------------------------------------ |
+| `Compatibility`            | NamedTuple | The returned object with vehicle's compatibility with the permissions (scope) checked |
+| `Compatibility.compatible` | Boolean    | Whether the vehicle is compatibile with the permissions (or not)                      |
+| `Compatibility.meta`       | Meta       | Response headers and other information about the response of the request              |
+
+#### Raises
+
+<code>SmartcarException</code> - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+**\*Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
