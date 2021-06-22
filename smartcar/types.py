@@ -1,3 +1,4 @@
+from collections import namedtuple
 from typing import List, NamedTuple
 
 
@@ -8,106 +9,75 @@ from typing import List, NamedTuple
 # type hints and dot notation, # and will help return data following
 # python conventions (i.e. snake-cased attributes).
 #
-# However, classes 'Meta' and 'Batch' are used to generate objects from
-# dictionaries with variable amounts of keys. This allows for flexibility.
-# Although it's possible to use these classes as general return types,
-# please try to use one of the pre-defined NamedTuples or create/define a new one.
-# This will allow for better type hints and performance. NamedTuples
-# use __slots__ for attributes instead of a dictionary.
+# 'generate_named_tuple' is used to generate an un-typed namedtuple from
+# a dictionary. It will return a namedtuple that has attributes matching
+# the dictionary's keys. Use this function as a catch all, or for data
+# that does not have an explicit length (e.g. response headers, batch requests)
+#
+# Otherwise, use the explicitly defined NamedTuples for better type hints!
+
 
 # ===========================================
 # General
 # ===========================================
 
-
-class Meta:
+def generate_named_tuple(dictionary: dict, name: str = "namedtuple") -> namedtuple:
     """
-    Class for transforming a dictionary (with a variable number
-    of keys) into an object with attributes. Attribute names represent
-    a lower-cased response header that had its hyphens replaced with
-    underscores. Each attribute represents the actual,
-    unadulterated response header.
-    """
+    Take a dictionary and map its keys to the attributes of a named tuple.
 
-    def __init__(self, **kwargs):
-        for key in kwargs.keys():
-            formatted = key.replace("-", "_").lower()
-            self.__dict__[formatted] = kwargs[key]
+    Args:
+        dictionary (dict): Any dictionary
+        name (str): The desired name of the returned namedtuple
 
-    def __repr__(self):
-        rep = "\n\nResponse Headers: {"
-        last_idx = len(self.__dict__.keys()) - 1
-
-        for i, key in enumerate(self.__dict__.keys()):
-            if i < last_idx:
-                rep += f"\n\t{key}: {self.__dict__[key]},"
-            else:
-                rep += f"\n\t{key}: {self.__dict__[key]}"
-
-        rep += "\n}\n"
-        return rep
-
-
-class Batch:
-    """
-    Class for transforming a dictionary (with a variable number
-    of keys) into an object with attributes. Attribute names represent
-    the paths that the user requested in a Smartcar Batch requests.
-    Attributes contain the appropriate NamedTuple for the request.
-
-    e.g. <vehicle>.batch(['/odometer', '/location']) ->
-    Batch <Odometer> <Location>
-
-    Response headers (i.e. a Meta object) can be attached to Batch
-    afterward.
+    Returns:
+        namedtuple: With attributes matching the keys of the inputted dictionary
     """
 
-    def __init__(self, **kwargs):
-        for key in kwargs.keys():
-            self.__dict__[key] = kwargs[key]
+    # Instantiate keys list, which will keep order consistent
+    keys = dictionary.keys()
+    if len(keys) == 0:
+        return None
 
-    def __repr__(self):
-        rep = "\nBatch: "
-        last_idx = len(self.__dict__.keys()) - 1
+    attributes = ""
 
-        for i, key in enumerate(self.__dict__.keys()):
-            if i < last_idx:
-                rep += f"<{key}>, "
-            else:
-                rep += f"<{key}>"
+    for key in keys:
+        formatted = key.replace("-", "_").lower()
+        attributes += f" {formatted}"
 
-        return rep
+    gen = namedtuple(name, attributes.strip())
 
+    return gen._make([dictionary[k] for k in keys])
 
-Paging = NamedTuple("Paging", [("count", int), ("offset", int)])
 
 # ===========================================
 # static.py
 # ===========================================
 
-User = NamedTuple("User", [("id", str), ("meta", Meta)])
+Paging = NamedTuple("Paging", [("count", int), ("offset", int)])
+
+User = NamedTuple("User", [("id", str), ("meta", namedtuple)])
 
 Vehicles = NamedTuple(
-    "Vehicles", [("vehicles", List[str]), ("paging", Paging), ("meta", Meta)]
+    "Vehicles", [("vehicles", List[str]), ("paging", Paging), ("meta", namedtuple)]
 )
 
-Compatibility = NamedTuple("Compatibility", [("compatible", bool), ("meta", Meta)])
+Compatibility = NamedTuple("Compatibility", [("compatible", bool), ("meta", namedtuple)])
 
 # ===========================================
 # vehicle.py
 # ===========================================
 
-Vin = NamedTuple("Vin", [("vin", str), ("meta", Meta)])
+Vin = NamedTuple("Vin", [("vin", str), ("meta", namedtuple)])
 
 Charge = NamedTuple(
-    "Charge", [("is_plugged_in", bool), ("status", str), ("meta", Meta)]
+    "Charge", [("is_plugged_in", bool), ("status", str), ("meta", namedtuple)]
 )
 
 Battery = NamedTuple(
-    "Battery", [("percent_remaining", float), ("range", float), ("meta", Meta)]
+    "Battery", [("percent_remaining", float), ("range", float), ("meta", namedtuple)]
 )
 
-BatteryCapacity = NamedTuple("BatteryCapacity", [("capacity", float), ("meta", Meta)])
+BatteryCapacity = NamedTuple("BatteryCapacity", [("capacity", float), ("meta", namedtuple)])
 
 Fuel = NamedTuple(
     "Fuel",
@@ -115,7 +85,7 @@ Fuel = NamedTuple(
         ("range", float),
         ("percent_remaining", float),
         ("amount_remaining", float),
-        ("meta", Meta),
+        ("meta", namedtuple),
     ],
 )
 
@@ -126,25 +96,25 @@ TirePressure = NamedTuple(
         ("front_right", int),
         ("back_left", int),
         ("back_right", int),
-        ("meta", Meta),
+        ("meta", namedtuple),
     ],
 )
 
-Oil = NamedTuple("Oil", [("life_remaining", float), ("meta", Meta)])
+Oil = NamedTuple("Oil", [("life_remaining", float), ("meta", namedtuple)])
 
-Odometer = NamedTuple("Odometer", [("distance", float), ("meta", Meta)])
+Odometer = NamedTuple("Odometer", [("distance", float), ("meta", namedtuple)])
 
 Location = NamedTuple(
-    "Location", [("latitude", float), ("longitude", float), ("meta", Meta)]
+    "Location", [("latitude", float), ("longitude", float), ("meta", namedtuple)]
 )
 
 Info = NamedTuple(
-    "Info", [("id", str), ("make", str), ("model", str), ("year", str), ("meta", Meta)]
+    "Info", [("id", str), ("make", str), ("model", str), ("year", str), ("meta", namedtuple)]
 )
 
-Status = NamedTuple("Status", [("status", str), ("meta", Meta)])
+Status = NamedTuple("Status", [("status", str), ("meta", namedtuple)])
 
-Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", Meta)])
+Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", namedtuple)])
 
 
 # This version of Permissions will be implemented when "paging" is verified to be returned from Smartcar API:
@@ -154,7 +124,6 @@ Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", Meta)])
 # ===========================================
 # Named Tuple Selector Function
 # ===========================================
-
 
 def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
     """
@@ -195,37 +164,37 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     # static.py
     if path == "user":
-        return User(data["id"], Meta(**headers))
+        return User(data["id"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "vehicles":
         return Vehicles(
             data["vehicles"],
             Paging(data["paging"]["count"], data["paging"]["offset"]),
-            Meta(**headers),
+            generate_named_tuple(headers, name="Meta"),
         )
 
     elif path == "compatibility":
-        return Compatibility(data["compatible"], Meta(**headers))
+        return Compatibility(data["compatible"], generate_named_tuple(headers, name="Meta"))
 
     # vehicle.py
     elif path == "vin":
-        return Vin(data["vin"], Meta(**headers))
+        return Vin(data["vin"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "charge":
-        return Charge(data["isPluggedIn"], data["state"], Meta(**headers))
+        return Charge(data["isPluggedIn"], data["state"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "battery":
-        return Battery(data["percentRemaining"], data["range"], Meta(**headers))
+        return Battery(data["percentRemaining"], data["range"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "battery/capacity":
-        return BatteryCapacity(data["capacity"], Meta(**headers))
+        return BatteryCapacity(data["capacity"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "fuel":
         return Fuel(
             data["range"],
             data["percentRemaining"],
             data["amountRemaining"],
-            Meta(**headers),
+            generate_named_tuple(headers, name="Meta"),
         )
 
     elif path == "tires/pressure":
@@ -234,29 +203,29 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
             data["frontRight"],
             data["backLeft"],
             data["backRight"],
-            Meta(**headers),
+            generate_named_tuple(headers, name="Meta"),
         )
 
     elif path == "engine/oil":
-        return Oil(data["lifeRemaining"], Meta(**headers))
+        return Oil(data["lifeRemaining"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "odometer":
-        return Odometer(data["distance"], Meta(**headers))
+        return Odometer(data["distance"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "location":
-        return Location(data["latitude"], data["longitude"], Meta(**headers))
+        return Location(data["latitude"], data["longitude"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "permissions":
-        return Permissions(data["permissions"], Meta(**headers))
+        return Permissions(data["permissions"], generate_named_tuple(headers, name="Meta"))
 
     elif (
-        path == "lock"
-        or path == "unlock"
-        or path == "start_charge"
-        or path == "stop_charge"
-        or path == "disconnect"
+            path == "lock"
+            or path == "unlock"
+            or path == "start_charge"
+            or path == "stop_charge"
+            or path == "disconnect"
     ):
-        return Status(data["status"], Meta(**headers))
+        return Status(data["status"], generate_named_tuple(headers, name="Meta"))
 
     elif path == "":
         return Info(
@@ -264,8 +233,11 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
             data["make"],
             data["model"],
             data["year"],
-            Meta(**headers),
+            generate_named_tuple(headers, name="Meta"),
         )
+
+    elif type(data) == dict:
+        return generate_named_tuple(data, "Data")
 
     else:
         return data

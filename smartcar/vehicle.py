@@ -256,7 +256,7 @@ class Vehicle(object):
         response = self.api.action("charge", "STOP")
         return ty.select_named_tuple("stop_charge", response)
 
-    def batch(self, paths: List[str]) -> ty.Batch:
+    def batch(self, paths: List[str]):
         """
         POST Vehicle.batch
 
@@ -282,8 +282,9 @@ class Vehicle(object):
             path = res["path"][1:] if res["path"][0] == "/" else res["path"]
             batch_dict[path] = ty.select_named_tuple(path, res)
 
-        batch = ty.Batch(**batch_dict)
-        batch.meta = ty.Meta(**response.headers)
+        meta = ty.generate_named_tuple(response.headers, "meta")
+        batch_dict['meta'] = meta
+        batch = ty.generate_named_tuple(batch_dict, 'batch')
 
         return batch
 
