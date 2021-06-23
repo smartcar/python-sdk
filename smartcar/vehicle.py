@@ -128,12 +128,12 @@ class Vehicle(object):
         response = self.api.get("tires/pressure")
         return ty.select_named_tuple("tires/pressure", response)
 
-    def oil(self) -> ty.Oil:
+    def engine_oil(self) -> ty.EngineOil:
         """
-        GET Vehicle.oil
+        GET Vehicle.engine_oil
 
         Returns:
-            Oil: NamedTuple("Oil", [("life_remaining", float), ("meta", CaseInsensitiveDict)])
+            EngineOil: NamedTuple("EngineOil", [("life_remaining", float), ("meta", CaseInsensitiveDict)])
 
         Raises:
             SmartcarException

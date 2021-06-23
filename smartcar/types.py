@@ -108,7 +108,9 @@ TirePressure = NamedTuple(
     ],
 )
 
-Oil = NamedTuple("Oil", [("life_remaining", float), ("meta", rs.CaseInsensitiveDict)])
+EngineOil = NamedTuple(
+    "EngineOil", [("life_remaining", float), ("meta", rs.CaseInsensitiveDict)]
+)
 
 Odometer = NamedTuple(
     "Odometer", [("distance", float), ("meta", rs.CaseInsensitiveDict)]
@@ -233,7 +235,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         )
 
     elif path == "engine/oil":
-        return Oil(data["lifeRemaining"], headers)
+        return EngineOil(data["lifeRemaining"], headers)
 
     elif path == "odometer":
         return Odometer(data["distance"], headers)

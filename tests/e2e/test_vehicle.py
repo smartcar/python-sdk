@@ -33,8 +33,8 @@ def test_tire_pressure(chevy_volt):
     assert tire_pressure is not None
 
 
-def test_oil(chevy_volt):
-    oil = chevy_volt.oil()
+def test_engine_oil(chevy_volt):
+    oil = chevy_volt.engine_oil()
     assert oil is not None
 
 
