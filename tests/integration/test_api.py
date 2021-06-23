@@ -1,6 +1,7 @@
+import smartcar.api
+import smartcar.auth_client
 import tests.auth_helpers as ah
 import smartcar.constants as constants
-import smartcar.static as static
 
 
 def test_correct_attributes(api_instance, access_object, chevy_volt):
@@ -32,9 +33,7 @@ def test_format_vehicle_endpoint(api_instance, chevy_volt):
 
     test_formatted = api_instance._format_vehicle_endpoint(test_endpoint)
     expected = f"{api_instance.base_url}/vehicles/{chevy_id}/{test_endpoint}"
-    expected_manual = (
-        f"{constants.API_URL}/v{static.API_VERSION}/vehicles/{chevy_id}/{test_endpoint}"
-    )
+    expected_manual = f"{constants.API_URL}/v{smartcar.api.API_VERSION}/vehicles/{chevy_id}/{test_endpoint}"
 
     assert test_formatted == expected
     assert test_formatted == expected_manual

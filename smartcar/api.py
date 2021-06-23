@@ -1,9 +1,11 @@
 import base64
 import os
+import re
 
 import smartcar.constants as constants
 import smartcar.requester as requester
-import smartcar.static as static
+
+API_VERSION = "2.0"
 
 
 class Smartcar(object):
@@ -19,7 +21,7 @@ class Smartcar(object):
         self.vehicle_id = vehicle_id
         self.auth = {"Authorization": f"Bearer {access_token}"}
         self.unit_system = "metric"
-        self.base_url = f"{constants.API_URL}/v{static.API_VERSION}"
+        self.base_url = f"{constants.API_URL}/v{API_VERSION}"
         self.client_id = None
         self.client_secret = None
         self.client_redirect_uri = None
@@ -168,7 +170,7 @@ class Smartcar(object):
         return requester.call("GET", url, headers=self.auth, params=params)
 
     def compatibility(self, **params):
-        url = f"{constants.API_URL}/v{static.API_VERSION}/compatibility"
+        url = f"{constants.API_URL}/v{API_VERSION}/compatibility"
         id_secret = f"{self.client_id}:{self.client_secret}"
         encoded_id_secret = id_secret.encode("ascii")
         base64_bytes = base64.b64encode(encoded_id_secret)
@@ -220,3 +222,19 @@ class Smartcar(object):
         self.client_id = os.environ.get(f"{environment}_CLIENT_ID")
         self.client_secret = os.environ.get(f"{environment}_CLIENT_SECRET")
         self.client_redirect_uri = os.environ.get(f"{environment}_REDIRECT_URI")
+
+
+def set_api_version(version: str) -> None:
+    """
+    Update the version of Smartcar API you are using
+
+    Args:
+        version (str): the version of the api you want to use
+    """
+    if re.match(r"\d+\.\d+", version):
+        global API_VERSION
+        API_VERSION = version
+    else:
+        raise ValueError(
+            fr"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+        )

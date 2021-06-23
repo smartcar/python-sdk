@@ -1,5 +1,5 @@
-from smartcar import get_user, get_vehicles, get_compatibility, set_api_version
-from smartcar.api import Smartcar
+from smartcar import get_user, get_vehicles, get_compatibility
+from smartcar.api import Smartcar, set_api_version
 from smartcar.constants import API_URL
 import tests.auth_helpers as ah
 

@@ -1,6 +1,8 @@
 from typing import List
 import requests.structures as rs
 
+import smartcar.api
+import smartcar.auth_client
 import smartcar.constants as constants
 import smartcar.static as static
 import smartcar.types as ty
@@ -31,7 +33,7 @@ class Vehicle(object):
 
             if options.get("version"):
                 version = options["version"]
-                if version != static.API_VERSION:
+                if version != smartcar.api.API_VERSION:
                     self.api.base_url = f"{constants.API_URL}/v{version}"
 
     def set_unit_system(self, unit_system):

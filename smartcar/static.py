@@ -9,24 +9,6 @@ import smartcar.api as api
 import smartcar.helpers as helpers
 import smartcar.types as ty
 
-API_VERSION = "2.0"
-
-
-def set_api_version(version: str) -> None:
-    """
-    Update the version of Smartcar API you are using
-
-    Args:
-        version (str): the version of the api you want to use
-    """
-    if re.match(r"\d+\.\d+", version):
-        global API_VERSION
-        API_VERSION = version
-    else:
-        raise ValueError(
-            fr"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
-        )
-
 
 def get_user(access_token: str) -> ty.User:
     """
