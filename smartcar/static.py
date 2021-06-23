@@ -1,4 +1,7 @@
 import re
+import hmac
+import hashlib
+import binascii
 from datetime import datetime
 from typing import List
 
@@ -71,7 +74,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
 
 
 def get_compatibility(
-    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
+        access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
 ) -> ty.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
@@ -136,3 +139,40 @@ def is_expired(expiration: datetime) -> bool:
         bool: true if expired
     """
     return datetime.utcnow() > expiration
+
+
+# ===========================================
+# Webhook functions
+# ===========================================
+
+def hash_challenge(amt: str, challenge: str) -> str:
+    """
+    Take in a randomly generated challenge string, and use an
+    Application Management Token as a key to be hashed.
+
+    Args:
+        amt (str): Application Management Token from Smartcar Dashboard
+        challenge: Randomly generated string from smartcar after requesting
+            a challenge.
+
+    Returns:
+        hex-encoding of resulting hash
+    """
+    amt_bytes = binascii.unhexlify(amt)
+    h = hmac.new(amt_bytes, challenge.encode(), hashlib.sha256)
+    return h.hexdigest()
+
+
+def verify_payload(amt: str, signature: str, body: str) -> bool:
+    """
+    Verify webhook payload against AMT and signature
+
+    Args:
+        amt (str): Application Management Token from Smartcar Dashboard
+        signature: sc-signature header value
+        body: Stringified JSON of the webhook response body
+
+    Returns:
+        Boolean
+    """
+    return hash_challenge(amt, body) == signature
