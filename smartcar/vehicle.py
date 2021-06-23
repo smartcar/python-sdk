@@ -1,4 +1,5 @@
 from typing import List
+import requests.structures as rs
 
 import smartcar.constants as constants
 import smartcar.static as static
@@ -22,7 +23,7 @@ class Vehicle(object):
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
-        self.api = self.api = Smartcar(access_token, vehicle_id=vehicle_id)
+        self.api = Smartcar(access_token, vehicle_id=vehicle_id)
 
         if options:
             if options.get("unit_system"):
@@ -179,12 +180,13 @@ class Vehicle(object):
             SmartcarException
         """
         if paging is None:
-            paging = {"limit": 3, "offset": 2}
+            response = self.api.permissions()
 
-        limit = paging.get("limit", 25)
-        offset = paging.get("offset", 0)
+        else:
+            limit = paging.get("limit", 25)
+            offset = paging.get("offset", 0)
+            response = self.api.permissions(limit=limit, offset=offset)
 
-        response = self.api.permissions(limit=limit, offset=offset)
         return ty.select_named_tuple("permissions", response)
 
     def info(self) -> ty.Info:
@@ -272,19 +274,23 @@ class Vehicle(object):
         """
         requests = []
 
+        # Match formatting required of Smartcar api
         for path in paths:
             requests.append({"path": path})
 
         response = self.api.batch(requests)
+
+        # Generate NamedTuple for every path requested. Store in a dictionary
         batch_dict = dict()
 
         for res in response.json()["responses"]:
             path = res["path"][1:] if res["path"][0] == "/" else res["path"]
             batch_dict[path] = ty.select_named_tuple(path, res)
 
-        meta = ty.generate_named_tuple(response.headers, "meta")
-        batch_dict['meta'] = meta
-        batch = ty.generate_named_tuple(batch_dict, 'batch')
+        # Attach response headers to the dictionary, and then transform to a NamedTuple
+        meta = rs.CaseInsensitiveDict(response.headers)
+        batch_dict["meta"] = meta
+        batch = ty.generate_named_tuple(batch_dict, "batch")
 
         return batch
 

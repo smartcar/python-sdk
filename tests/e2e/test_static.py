@@ -19,7 +19,6 @@ def test_set_api_version(access_object):
 def test_get_user(access_object):
     access_token = access_object.get("access_token")
     res = get_user(access_token)
-
     assert res.id is not None
 
 

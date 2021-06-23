@@ -1,7 +1,11 @@
+import requests.structures as rs
+
+
 # Tests
-def test_vin(chevy_volt):
+def test_vin_and_meta(chevy_volt):
     vin = chevy_volt.vin()
     assert vin is not None
+    assert type(vin.meta) == rs.CaseInsensitiveDict
 
 
 def test_charge(chevy_volt):
@@ -73,6 +77,10 @@ def test_batch(chevy_volt):
     batch = chevy_volt.batch(["/odometer", "/location"])
     assert batch is not None
 
+    # assert meta and nested meta types
+    assert type(batch.meta) == rs.CaseInsensitiveDict
+    assert type(batch.odometer.meta) == rs.CaseInsensitiveDict
+
 
 def test_permissions(chevy_volt):
     permissions = chevy_volt.permissions()
@@ -82,7 +90,7 @@ def test_permissions(chevy_volt):
 def test_batch_and_set_unit_system(chevy_volt):
     chevy_volt.set_unit_system("imperial")
     batch = chevy_volt.batch(["/odometer", "/fuel"])
-    assert batch.odometer.meta.sc_unit_system == "imperial"
+    assert batch.odometer.meta.get("sc-unit-system") == "imperial"
 
 
 def test_disconnect(chevy_volt):
