@@ -29,12 +29,13 @@ class Smartcar(object):
     # Utility Methods
     # ===========================================
 
-    def get(self, endpoint):
+    def get(self, endpoint: str, **params):
         """
-        Sends GET requests to Smartcar API
+        Sends GET requests to Smartcar API vehicle endpoints.
 
         Args:
             endpoint (str): the Smartcar endpoint of interest
+            **params: information to send as query parameters
 
         Returns:
             Response: response from the request to the Smartcar API
@@ -42,28 +43,41 @@ class Smartcar(object):
         url = self._format_vehicle_endpoint(endpoint)
         headers = self.auth
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
-        return requester.call("GET", url, headers=headers)
+        return requester.call("GET", url, headers=self.auth, params=params)
 
-    def action(self, endpoint, action, **kwargs):
+    def post(self, endpoint: str, **body):
         """
         Sends POST requests to Smartcar API
 
         Args:
             endpoint (str): the Smartcar endpoint of interest
-            action (str): action to be taken
-            **kwargs: information to put into the body of the request
+            **body: information to put into the body of the request
 
         Returns:
             Response: response from the request to the Smartcar API
         """
         url = self._format_vehicle_endpoint(endpoint)
-        headers = self.auth
-        json = {"action": action}
-        for k, v in kwargs.items():
+        json = dict()
+
+        for k, v in body.items():
             if v:
                 json[k] = v
 
-        return requester.call("POST", url, json=json, headers=headers)
+        return requester.call("POST", url, json=json, headers=self.auth)
+
+    def delete(self, endpoint: str):
+        """
+        Sends DELETE Requests to Smartcar API
+
+        Args:
+            endpoint (str): the Smartcar endpoint of interest
+
+        Returns:
+            Response: response from the request to the Smartcar API
+        """
+
+        url = self._format_vehicle_endpoint(endpoint)
+        return requester.call("DELETE", url, headers=self.auth)
 
     def set_env_custom(self, client_id: str = None, client_secret: str = None) -> None:
         """
@@ -79,7 +93,7 @@ class Smartcar(object):
         if client_secret:
             self.client_secret = client_secret
 
-    def set_unit_system(self, unit_system):
+    def set_unit_system(self, unit_system: str):
         """
         Update the unit system to use in requests to the Smartcar API.
 
@@ -92,15 +106,15 @@ class Smartcar(object):
     # Methods directly related to vehicle.py
     # ===========================================
 
-    def batch(self, requests):
+    def batch(self, requests: list):
         """
         Sends POST requests to Smartcar API
 
         Args:
-            requests (object[]) - an array of objects containing a 'path' key
+            requests (object[]) - a list of objects containing a 'path' key
 
         Returns:
-            Response: response from the request to the Smartcar API
+            Response: response from the Smartcar API
         """
         endpoint = "batch"
         url = self._format_vehicle_endpoint(endpoint)
@@ -110,28 +124,21 @@ class Smartcar(object):
 
         return requester.call("POST", url, json=json, headers=headers)
 
-    def permissions(self, **params):
+    def unsubscribe_from_webhook(self, amt: str, webhook_id: str):
         """
-        Sends a request to /permissions
+        Sends DELETE request to unsubscribe vehicle from webhook.
+        Uses a custom header.
 
         Args:
-            **params: parameters for the request
+            amt(str): Application Management Token, found on Smartcar dashboard.
+            webhook_id(str)
 
         Returns:
-            Response: response from the request to the Smartcar API
+            Response: response from the Smartcar Api
         """
-        url = self._format_vehicle_endpoint("permissions")
-        return requester.call("GET", url, headers=self.auth, params=params)
-
-    def disconnect(self):
-        """
-        Sends a request to /application
-
-        Returns:
-            Response: response from the request to the Smartcar API
-        """
-        url = self._format_vehicle_endpoint("application")
-        return requester.call("DELETE", url, headers=self.auth)
+        url = self._format_vehicle_endpoint(f"webhooks/{webhook_id}")
+        headers = {"Authorization": f"Bearer {amt}"}
+        return requester.call("DELETE", url, headers=headers)
 
     # ===========================================
     # Methods directly related to static.py
@@ -177,7 +184,7 @@ class Smartcar(object):
     # Private Methods
     # ===========================================
 
-    def _format_vehicle_endpoint(self, endpoint):
+    def _format_vehicle_endpoint(self, endpoint: str):
         """
         Generates the formatted URL to <base_url>/vehicles/<vehicle_id>/<endpoint>
         These vehicle-related endpoints are widely used to get vehicle information.

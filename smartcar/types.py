@@ -136,6 +136,11 @@ Permissions = NamedTuple(
     "Permissions", [("permissions", list), ("meta", rs.CaseInsensitiveDict)]
 )
 
+Subscribe = NamedTuple(
+    "Subscribe",
+    [("webhook_id", str), ("vehicle_id", str), ("meta", rs.CaseInsensitiveDict)],
+)
+
 
 # This version of Permissions will be implemented when "paging" is verified to be returned from Smartcar API:
 # Permissions = NamedTuple("Permissions", [("permissions", list), ("paging", dict), ("meta", Meta)])
@@ -238,6 +243,9 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     elif path == "permissions":
         return Permissions(data["permissions"], headers)
+
+    elif path == "subscribe":
+        return Subscribe(data["webhookId"], data["vehicleId"], headers)
 
     elif (
         path == "lock"
