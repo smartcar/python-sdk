@@ -121,8 +121,8 @@ Location = NamedTuple(
     [("latitude", float), ("longitude", float), ("meta", rs.CaseInsensitiveDict)],
 )
 
-Info = NamedTuple(
-    "Info",
+Attributes = NamedTuple(
+    "Attributes",
     [
         ("id", str),
         ("make", str),
@@ -259,7 +259,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         return Status(data["status"], headers)
 
     elif path == "":
-        return Info(
+        return Attributes(
             data["id"],
             data["make"],
             data["model"],

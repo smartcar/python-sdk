@@ -48,9 +48,11 @@ def test_location(chevy_volt):
     assert location is not None
 
 
-def test_info(chevy_volt):
-    info = chevy_volt.info()
-    assert info is not None
+def test_attributes(chevy_volt):
+    attributes = chevy_volt.attributes()
+    assert attributes is not None
+    assert type(attributes) == ty.Attributes
+    assert attributes._fields == ("id", "make", "model", "year", "meta")
 
 
 def test_lock(chevy_volt):

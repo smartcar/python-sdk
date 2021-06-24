@@ -196,12 +196,12 @@ class Vehicle(object):
 
         return ty.select_named_tuple("permissions", response)
 
-    def info(self) -> ty.Info:
+    def attributes(self) -> ty.Attributes:
         """
-        GET Vehicle.info
+        GET Vehicle.attributes
 
         Returns:
-            Info: NamedTuple("Info", [("id", str), ("make", str), ("model", str), ("year", str),
+            Attributes: NamedTuple("Attributes", [("id", str), ("make", str), ("model", str), ("year", str),
             ("meta", CaseInsensitiveDict)])
 
         Raises:
