@@ -405,11 +405,12 @@ Lock the vehicle.
 
 #### Return
 
-| Value           | Type         | Description                                                                           |
-| :-------------- | :----------- | :------------------------------------------------------------------------------------ |
-| `Status`        | NamedTuple   | The returned object with vehicle's "status" after sending a request to lock the doors |
-| `Status.status` | String       | Set to "success" on successful request.                                               |
-| `Status.meta`   | Dictionary\* | Response headers and other information about the response                             |
+| Value            | Type         | Description                                                                         |
+| :--------------- | :----------- | :---------------------------------------------------------------------------------- |
+| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to lock the doors |
+| `Action.status`  | String       | Set to "success" on successful request.                                             |
+| `Action.message` | String       | Message of the response.                                                            |
+| `Action.meta`    | Dictionary\* | Response headers and other information about the response                           |
 
 \*`requests.structures.CaseInsensitiveDict`
 
@@ -426,11 +427,12 @@ Unlock the vehicle.
 
 #### Return
 
-| Value           | Type         | Description                                                                             |
-| :-------------- | :----------- | :-------------------------------------------------------------------------------------- |
-| `Status`        | NamedTuple   | The returned object with vehicle's "status" after sending a request to unlock the doors |
-| `Status.status` | String       | Set to "success" on successful request.                                                 |
-| `Status.meta`   | Dictionary\* | Response headers and other information about the response                               |
+| Value            | Type         | Description                                                                           |
+| :--------------- | :----------- | :------------------------------------------------------------------------------------ |
+| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to unlock the doors |
+| `Action.status`  | String       | Set to "success" on successful request.                                               |
+| `Action.message` | String       | Message of the response.                                                              |
+| `Action.meta`    | Dictionary\* | Response headers and other information about the response                             |
 
 \*`requests.structures.CaseInsensitiveDict`
 
@@ -446,11 +448,12 @@ Start charging the vehicle.
 
 #### Return
 
-| Value           | Type         | Description                                                                                  |
-| :-------------- | :----------- | :------------------------------------------------------------------------------------------- |
-| `Status`        | NamedTuple   | The returned object with vehicle's "status" after sending a request to start charging the EV |
-| `Status.status` | String       | Set to "success" on successful request.                                                      |
-| `Status.meta`   | Dictionary\* | Response headers and other information about the response                                    |
+| Value            | Type         | Description                                                                                |
+| :--------------- | :----------- | :----------------------------------------------------------------------------------------- |
+| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to start charging the EV |
+| `Action.status`  | String       | Set to "success" on successful request.                                                    |
+| `Action.message` | String       | Message of the response.                                                                   |
+| `Action.meta`    | Dictionary\* | Response headers and other information about the response                                  |
 
 \*`requests.structures.CaseInsensitiveDict`
 
@@ -466,11 +469,12 @@ Stop charging the vehicle.
 
 #### Return
 
-| Value           | Type         | Description                                                                                 |
-| :-------------- | :----------- | :------------------------------------------------------------------------------------------ |
-| `Status`        | NamedTuple   | The returned object with vehicle's "status" after sending a request to stop charging the EV |
-| `Status.status` | String       | Set to "success" on successful request.                                                     |
-| `Status.meta`   | Dictionary\* | Response headers and other information about the response                                   |
+| Value            | Type         | Description                                                                               |
+| :--------------- | :----------- | :---------------------------------------------------------------------------------------- |
+| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to stop charging the EV |
+| `Action.status`  | String       | Set to "success" on successful request.                                                   |
+| `Action.message` | String       | Message of the response.                                                                  |
+| `Action.meta`    | Dictionary\* | Response headers and other information about the response                                 |
 
 \*`requests.structures.CaseInsensitiveDict`
 
@@ -590,7 +594,7 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 
 ### `unsubscribe(self, amt, webhook_id)`
 
-Unubscribe vehicle from a Smartcar webhook.
+Unsbscribe vehicle from a Smartcar webhook.
 
 #### Arguments
 
