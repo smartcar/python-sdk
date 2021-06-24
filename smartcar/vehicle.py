@@ -66,7 +66,7 @@ class Vehicle(object):
         GET Vehicle.charge
 
         Returns:
-            Charge: NamedTuple("Charge", [("is_plugged_in", bool), ("status", str), ("meta", CaseInsensitiveDict)])
+            Charge: NamedTuple("Charge", [("is_plugged_in", bool), ("state", str), ("meta", CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -219,7 +219,7 @@ class Vehicle(object):
         POST Vehicle.lock
 
         Returns:
-            Status: NamedTuple("Status", [("status", str), ("meta", CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -232,7 +232,7 @@ class Vehicle(object):
         POST Vehicle.unlock
 
         Returns:
-            Status: NamedTuple("Status", [("status", str), ("meta", CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -245,7 +245,7 @@ class Vehicle(object):
         POST Vehicle.start_charge
 
         Returns:
-            Status: NamedTuple("Status", [("status", str), ("meta", CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -258,7 +258,7 @@ class Vehicle(object):
         POST Vehicle.stop_charge
 
         Returns:
-            Status: NamedTuple("Status", [("status", str), ("meta", CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
 
         Raises:
             SmartcarException

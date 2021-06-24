@@ -15,7 +15,7 @@ def test_charge(chevy_volt):
     charge = chevy_volt.charge()
     assert charge is not None
     assert type(charge) == ty.Charge
-    assert charge._fields == ("is_plugged_in", "status", "meta")
+    assert charge._fields == ("is_plugged_in", "state", "meta")
     assert charge.is_plugged_in is not None
 
 
@@ -82,31 +82,31 @@ def test_attributes(chevy_volt):
 
 
 def test_lock(chevy_volt):
-    lock = chevy_volt.lock()
-    assert lock.status == "success"
-    assert type(lock) == ty.Status
-    assert lock._fields == ("status", "meta")
+    response = chevy_volt.lock()
+    assert response.status == "success"
+    assert type(response) == ty.Action
+    assert response._fields == ("status", "message", "meta")
 
 
 def test_unlock(chevy_volt):
-    unlock = chevy_volt.unlock()
-    assert unlock.status == "success"
-    assert type(unlock) == ty.Status
-    assert unlock._fields == ("status", "meta")
+    response = chevy_volt.unlock()
+    assert response.status == "success"
+    assert type(response) == ty.Action
+    assert response._fields == ("status", "message", "meta")
 
 
 def test_start_charge(vw_egolf):
     response = vw_egolf.start_charge()
     assert response.status == "success"
-    assert type(response) == ty.Status
-    assert response._fields == ("status", "meta")
+    assert type(response) == ty.Action
+    assert response._fields == ("status", "message", "meta")
 
 
 def test_stop_charge(vw_egolf):
     response = vw_egolf.stop_charge()
     assert response.status == "success"
-    assert type(response) == ty.Status
-    assert response._fields == ("status", "meta")
+    assert type(response) == ty.Action
+    assert response._fields == ("status", "message", "meta")
 
 
 def test_batch(chevy_volt):

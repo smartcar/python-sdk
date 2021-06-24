@@ -75,7 +75,7 @@ Vin = NamedTuple("Vin", [("vin", str), ("meta", rs.CaseInsensitiveDict)])
 
 Charge = NamedTuple(
     "Charge",
-    [("is_plugged_in", bool), ("status", str), ("meta", rs.CaseInsensitiveDict)],
+    [("is_plugged_in", bool), ("state", str), ("meta", rs.CaseInsensitiveDict)],
 )
 
 Battery = NamedTuple(
@@ -130,6 +130,10 @@ Attributes = NamedTuple(
         ("year", str),
         ("meta", rs.CaseInsensitiveDict),
     ],
+)
+
+Action = NamedTuple(
+    "Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)]
 )
 
 Status = NamedTuple("Status", [("status", str), ("meta", rs.CaseInsensitiveDict)])
@@ -254,8 +258,10 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         or path == "unlock"
         or path == "start_charge"
         or path == "stop_charge"
-        or path == "disconnect"
     ):
+        return Action(data["status"], data["message"], headers)
+
+    elif path == "disconnect":
         return Status(data["status"], headers)
 
     elif path == "":
