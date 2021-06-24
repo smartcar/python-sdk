@@ -56,7 +56,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
 
 
 def get_compatibility(
-        access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
+    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
 ) -> ty.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
