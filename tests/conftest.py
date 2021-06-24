@@ -8,7 +8,7 @@ import tests.auth_helpers as ah
 # Fixtures that can be used throughout the testing suite:
 
 # # Auth Fixtures:
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def client():
     """
     Set up a Smartcar Auth Client with test parameters.
@@ -24,7 +24,7 @@ def client():
     yield client
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def access_object(client):
     """
     Using the client fixture, go through Smartcar connect auth
@@ -42,7 +42,7 @@ def access_object(client):
 
 
 # # Vehicle Fixtures:
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def chevy_volt(access_object):
     """
     Using default access token that has the default scope
@@ -59,7 +59,7 @@ def chevy_volt(access_object):
     return sc.Vehicle(volt_id, access_token)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def vw_egolf(access_object):
     """
     Using a separate instance of smartcar.AuthClient,
@@ -81,7 +81,7 @@ def vw_egolf(access_object):
 
 
 # # API Fixture
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def api_instance(access_object, chevy_volt):
     """
     Using the token from the access_object, instantiate a api.Smartcar
