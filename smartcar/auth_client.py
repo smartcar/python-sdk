@@ -57,7 +57,7 @@ class AuthClient(object):
         self.auth = (client_id, client_secret)
         self.test_mode = test_mode
 
-    def get_auth_url(self, scope: List[str], options: dict = None):
+    def get_auth_url(self, scope: List[str], options: dict = None) -> str:
         """
         Generate the Connect URL
 
@@ -197,7 +197,7 @@ class AuthClient(object):
 # Static helpers for AuthClient
 
 
-def _set_expiration(access):
+def _set_expiration(access: dict) -> dict:
     expire_date = datetime.utcnow() + timedelta(seconds=access["expires_in"])
     refresh_expire_date = datetime.utcnow() + timedelta(days=60)
     access["expiration"] = expire_date

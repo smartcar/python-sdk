@@ -98,7 +98,7 @@ Fuel = NamedTuple(
 )
 
 TirePressure = NamedTuple(
-    "tirePressure",
+    "TirePressure",
     [
         ("front_left", int),
         ("front_right", int),

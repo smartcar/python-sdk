@@ -59,7 +59,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
             type=response.get("type"),
             description=response.get("description"),
             code=response.get("code"),
-            doc_url=response.get("docUrl"),
+            doc_url=response.get("docURL"),
             resolution=response.get("resolution"),
             detail=response.get("detail"),
         )

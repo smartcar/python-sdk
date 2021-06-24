@@ -1,4 +1,3 @@
-import re
 import hmac
 import hashlib
 import binascii

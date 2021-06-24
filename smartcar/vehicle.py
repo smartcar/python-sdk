@@ -1,10 +1,10 @@
+from collections import namedtuple
 from typing import List
 import requests.structures as rs
 
 import smartcar.api
 import smartcar.auth_client
 import smartcar.constants as constants
-import smartcar.static as static
 import smartcar.types as ty
 from smartcar.api import Smartcar
 
@@ -36,12 +36,12 @@ class Vehicle(object):
                 if version != smartcar.api.API_VERSION:
                     self.api.base_url = f"{constants.API_URL}/v{version}"
 
-    def set_unit_system(self, unit_system):
+    def set_unit_system(self, unit_system: str) -> None:
         """
         Update the unit system to use in requests to the Smartcar API.
 
         Args:
-            unit_system (str): the unit system to use (metric/imperial)
+            unit_system (str): the unit system to use ("metric" or "imperial")
         """
         if unit_system not in ("metric", "imperial"):
             raise ValueError("unit must be either metric or imperial")
@@ -81,8 +81,7 @@ class Vehicle(object):
         Returns:
             Battery: NamedTuple("Battery", [("percent_remaining", float),
                 ("range", float),
-                ("meta", CaseInsensitiveDict)]
-                )
+                ("meta", CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -109,7 +108,7 @@ class Vehicle(object):
 
         Returns:
             Fuel: NamedTuple("Fuel", [("range", float),
-                ("percentRemaining", float), ("amountRemaining", float), ("meta", CaseInsensitiveDict)])
+                ("percent_remaining", float), ("amount_remaining", float), ("meta", CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -117,12 +116,15 @@ class Vehicle(object):
         response = self.api.get("fuel")
         return ty.select_named_tuple("fuel", response)
 
-    def tire_pressure(self):
+    def tire_pressure(self) -> ty.TirePressure:
         """
         GET Vehicle.tire_pressure
 
         Returns:
-            dict: vehicle's tire pressure status
+            TirePressure: NamedTuple("tirePressure", [
+                ("front_left", int), ("front_right", int), ("back_left", int), ("back_right", int),
+                ("meta", rs.CaseInsensitiveDict)
+                ])
 
         Raises:
             SmartcarException
@@ -199,7 +201,8 @@ class Vehicle(object):
         GET Vehicle.info
 
         Returns:
-            Info: NamedTuple("Info", [("id", str), ("make", str), ("model", str), ("year", str), ("meta", CaseInsensitiveDict)])
+            Info: NamedTuple("Info", [("id", str), ("make", str), ("model", str), ("year", str),
+            ("meta", CaseInsensitiveDict)])
 
         Raises:
             SmartcarException
@@ -263,7 +266,7 @@ class Vehicle(object):
         response = self.api.post("charge", action="STOP")
         return ty.select_named_tuple("stop_charge", response)
 
-    def batch(self, paths: List[str]):
+    def batch(self, paths: List[str]) -> namedtuple:
         """
         POST Vehicle.batch
 
@@ -272,7 +275,8 @@ class Vehicle(object):
             the batch request to
 
         Returns:
-            dict: the HTTP responses, keyed by path
+            namedtuple: the responses from Smartcar API, each attribute is the appropriate
+                NamedTuple for the requested path.
 
         Raises:
             SmartcarException
@@ -346,7 +350,7 @@ class Vehicle(object):
             webhook_id (str)
 
         Returns:
-            Subscribe: NamedTuple("Subscribe", [("webhook_id", str"), ("vehicle_id", str), ("meta", CaseInsensitiveDict)
+            CaseInsensitiveDict: The response headers (i.e. meta) of the request
         """
         response = self.api.unsubscribe_from_webhook(amt, webhook_id)
         return rs.CaseInsensitiveDict(response.headers)

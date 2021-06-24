@@ -1,6 +1,7 @@
 import base64
 import os
 import re
+import requests
 
 import smartcar.constants as constants
 import smartcar.requester as requester
@@ -31,7 +32,7 @@ class Smartcar(object):
     # Utility Methods
     # ===========================================
 
-    def get(self, endpoint: str, **params):
+    def get(self, endpoint: str, **params) -> requests.models.Response:
         """
         Sends GET requests to Smartcar API vehicle endpoints.
 
@@ -47,7 +48,7 @@ class Smartcar(object):
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
         return requester.call("GET", url, headers=self.auth, params=params)
 
-    def post(self, endpoint: str, **body):
+    def post(self, endpoint: str, **body) -> requests.models.Response:
         """
         Sends POST requests to Smartcar API
 
@@ -67,7 +68,7 @@ class Smartcar(object):
 
         return requester.call("POST", url, json=json, headers=self.auth)
 
-    def delete(self, endpoint: str):
+    def delete(self, endpoint: str) -> requests.models.Response:
         """
         Sends DELETE Requests to Smartcar API
 
@@ -108,25 +109,27 @@ class Smartcar(object):
     # Methods directly related to vehicle.py
     # ===========================================
 
-    def batch(self, requests: list):
+    def batch(self, request_list: list) -> requests.models.Response:
         """
         Sends POST requests to Smartcar API
 
         Args:
-            requests (object[]) - a list of objects containing a 'path' key
+            request_list (object[]) - a list of objects containing a 'path' key
 
         Returns:
             Response: response from the Smartcar API
         """
         endpoint = "batch"
         url = self._format_vehicle_endpoint(endpoint)
-        json = {"requests": requests}
+        json = {"requests": request_list}
         headers = self.auth
         headers[constants.UNIT_SYSTEM_HEADER] = self.unit_system
 
         return requester.call("POST", url, json=json, headers=headers)
 
-    def unsubscribe_from_webhook(self, amt: str, webhook_id: str):
+    def unsubscribe_from_webhook(
+        self, amt: str, webhook_id: str
+    ) -> requests.models.Response:
         """
         Sends DELETE request to unsubscribe vehicle from webhook.
         Uses a custom header.
@@ -146,7 +149,7 @@ class Smartcar(object):
     # Methods directly related to static.py
     # ===========================================
 
-    def user(self):
+    def user(self) -> requests.models.Response:
         """
         Sends a request to /user
 
@@ -156,7 +159,7 @@ class Smartcar(object):
         url = f"{self.base_url}/user"
         return requester.call("GET", url, headers=self.auth)
 
-    def vehicles(self, **params):
+    def vehicles(self, **params) -> requests.models.Response:
         """
         Sends a request to /vehicles
 
@@ -169,7 +172,7 @@ class Smartcar(object):
         url = f"{self.base_url}/vehicles"
         return requester.call("GET", url, headers=self.auth, params=params)
 
-    def compatibility(self, **params):
+    def compatibility(self, **params) -> requests.models.Response:
         url = f"{constants.API_URL}/v{API_VERSION}/compatibility"
         id_secret = f"{self.client_id}:{self.client_secret}"
         encoded_id_secret = id_secret.encode("ascii")
@@ -186,7 +189,7 @@ class Smartcar(object):
     # Private Methods
     # ===========================================
 
-    def _format_vehicle_endpoint(self, endpoint: str):
+    def _format_vehicle_endpoint(self, endpoint: str) -> str:
         """
         Generates the formatted URL to <base_url>/vehicles/<vehicle_id>/<endpoint>
         These vehicle-related endpoints are widely used to get vehicle information.
@@ -222,6 +225,9 @@ class Smartcar(object):
         self.client_id = os.environ.get(f"{environment}_CLIENT_ID")
         self.client_secret = os.environ.get(f"{environment}_CLIENT_SECRET")
         self.client_redirect_uri = os.environ.get(f"{environment}_REDIRECT_URI")
+
+
+# API-related static methods
 
 
 def set_api_version(version: str) -> None:
