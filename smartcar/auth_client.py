@@ -115,7 +115,7 @@ class AuthClient(object):
                 single_select = options["single_select"]
 
                 if single_select.get("vin"):
-                    query['single_select"vin'] = single_select["vin"]
+                    query["single_select_vin"] = single_select["vin"]
                     query["single_select"] = True
                 elif single_select.get("enabled"):
                     query["single_select"] = True

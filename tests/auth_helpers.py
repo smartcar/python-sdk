@@ -25,6 +25,8 @@ HEADLESS = "CI" in os.environ or (
 )
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
 CLIENT_SECRET = os.environ["E2E_SMARTCAR_CLIENT_SECRET"]
+REDIRECT_URI = "https://example.com/auth"
+
 DEFAULT_SCOPE = [
     "required:read_vehicle_info",
     "required:read_location",
@@ -40,9 +42,8 @@ DEFAULT_SCOPE = [
 
 
 def get_auth_client_params():
-    redirect_uri = "https://example.com/auth"
     test_mode = True
-    return [CLIENT_ID, CLIENT_SECRET, redirect_uri, test_mode]
+    return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, test_mode]
 
 
 def get_code_from_url(url):
