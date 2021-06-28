@@ -1,5 +1,6 @@
 import requests.structures as rs
 import smartcar.types as ty
+import tests.auth_helpers as ah
 
 
 # Tests
@@ -130,6 +131,27 @@ def test_batch_and_set_unit_system(chevy_volt):
     chevy_volt.set_unit_system("imperial")
     batch = chevy_volt.batch(["/odometer", "/fuel"])
     assert batch.odometer.meta.get("sc-unit-system") == "imperial"
+
+
+def test_webhooks(chevy_volt):
+    if ah.APPLICATION_MANAGEMENT_TOKEN:
+        if ah.WEBHOOK_ID is None:
+            raise Exception(
+                "To test webhooks, you must export 'E2E_SMARTCAR_AMT' and 'E2E_SMARTCAR_WEBHOOK_ID' as"
+                "environment variables."
+            )
+
+        subscribe = chevy_volt.subscribe(ah.WEBHOOK_ID)
+
+        assert subscribe is not None
+        assert type(subscribe) == ty.Subscribe
+        assert subscribe._fields == ("webhook_id", "vehicle_id", "meta")
+
+        unsubscribe = chevy_volt.unsubscribe(
+            ah.APPLICATION_MANAGEMENT_TOKEN, ah.WEBHOOK_ID
+        )
+        assert unsubscribe is not None
+        assert type(unsubscribe) == rs.CaseInsensitiveDict
 
 
 def test_disconnect(chevy_volt):

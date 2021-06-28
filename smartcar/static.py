@@ -1,6 +1,5 @@
 import hmac
 import hashlib
-import binascii
 from datetime import datetime
 from typing import List
 
@@ -140,8 +139,7 @@ def hash_challenge(amt: str, challenge: str) -> str:
     Returns:
         hex-encoding of resulting hash
     """
-    amt_bytes = binascii.unhexlify(amt)
-    h = hmac.new(amt_bytes, challenge.encode(), hashlib.sha256)
+    h = hmac.new(amt.encode(), challenge.encode(), hashlib.sha256)
     return h.hexdigest()
 
 

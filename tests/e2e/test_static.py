@@ -1,4 +1,10 @@
-from smartcar import get_user, get_vehicles, get_compatibility
+from smartcar import (
+    get_user,
+    get_vehicles,
+    get_compatibility,
+    hash_challenge,
+    verify_payload,
+)
 from smartcar.api import Smartcar, set_api_version
 from smartcar.constants import API_URL
 import tests.auth_helpers as ah
@@ -35,3 +41,9 @@ def test_get_compatibility(access, chevy_volt):
     )
 
     assert res.compatible is not None
+
+
+def test_static_webhook_methods():
+    amt = ah.APPLICATION_MANAGEMENT_TOKEN or "abc123abc123"
+    hashed_challenge = hash_challenge(amt, "9c9c9c9c")
+    assert verify_payload(amt, hashed_challenge, "9c9c9c9c")

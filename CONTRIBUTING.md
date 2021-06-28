@@ -23,12 +23,19 @@ and client secret. You'll also need to add the testing redirect URI to your appl
 3. Pass the client id and client secret to the tests as environment variables
 
 ```
-export E2E_SMARTCAR_CLIENT_ID='<YOUR client id>'
-export E2E_SMARTCAR_CLIENT_ID='<YOUR client secret>'
+export E2E_SMARTCAR_CLIENT_ID='<Your client id>'
+export E2E_SMARTCAR_CLIENT_ID='<Your client secret>'
 export E2E_SMARTCAR_REDIRECT_URI='<Your redirect URI>'
 ```
 
-4. Run tests: `make test`
+4. (Optional) Pass Application Management Token and webhook id to test webhooks:
+
+```
+export E2E_SMARTCAR_AMT='<Your application management token>'
+export E2E_SMARTCAR_WEBHOOK_ID='<Your webhook id>'
+```
+
+5. Run tests: `make test`
 
 Alternatively, you can use the `pytest` command to run specific directories, files, or tests.
 
