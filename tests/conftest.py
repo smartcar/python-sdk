@@ -25,7 +25,7 @@ def client():
 
 
 @pytest.fixture(scope="session")
-def access_object(client):
+def access(client):
     """
     Using the client fixture, go through Smartcar connect auth
     flow and acquire an access object. This object will have
@@ -37,13 +37,13 @@ def access_object(client):
     """
     auth_url = client.get_auth_url(scope=ah.DEFAULT_SCOPE)
     code = ah.run_auth_flow(auth_url)
-    access_object = client.exchange_code(code)
-    yield access_object
+    access = client.exchange_code(code)
+    yield access
 
 
 # # Vehicle Fixtures:
 @pytest.fixture(scope="session")
-def chevy_volt(access_object):
+def chevy_volt(access):
     """
     Using default access token that has the default scope
     permissions (found in ./auth_helpers), return the first
@@ -53,14 +53,13 @@ def chevy_volt(access_object):
     Yields:
         chevy_volt(smartcar.Vehicle)
     """
-    access_token = access_object["access_token"]
-    vehicle_ids = sc.get_vehicles(access_token)
+    vehicle_ids = sc.get_vehicles(access.access_token)
     volt_id = vehicle_ids.vehicles[0]
-    return sc.Vehicle(volt_id, access_token)
+    return sc.Vehicle(volt_id, access.access_token)
 
 
 @pytest.fixture(scope="session")
-def vw_egolf(access_object):
+def vw_egolf():
     """
     Using a separate instance of smartcar.AuthClient,
     run the Smartcar connect auth flow with different scope of permissions and
@@ -74,22 +73,21 @@ def vw_egolf(access_object):
     code = ah.run_auth_flow(
         client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN"
     )
-    access_token = client.exchange_code(code)["access_token"]
-    vehicle_ids = sc.get_vehicles(access_token)
+    access = client.exchange_code(code)
+    vehicle_ids = sc.get_vehicles(access.access_token)
     egolf_id = vehicle_ids.vehicles[0]
-    return sc.Vehicle(egolf_id, access_token)
+    return sc.Vehicle(egolf_id, access.access_token)
 
 
 # # API Fixture
 @pytest.fixture(scope="session")
-def api_instance(access_object, chevy_volt):
+def api_instance(access, chevy_volt):
     """
-    Using the token from the access_object, instantiate a api.Smartcar
+    Using the token from the "access" fixture, instantiate a api.Smartcar
     object to play around with. Keep in mind that this class
     is meant to be used frequently.
 
     Yields: Instance of api.Smartcar
     """
-    access_token = access_object.get("access_token")
-    test_api = api.Smartcar(access_token, vehicle_id=chevy_volt.vehicle_id)
+    test_api = api.Smartcar(access.access_token, vehicle_id=chevy_volt.vehicle_id)
     yield test_api

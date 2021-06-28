@@ -3,8 +3,8 @@ import urllib.parse as urlparse
 import tests.auth_helpers as ah
 
 
-def test_correct_keys_in_access_object(access_object):
-    assert access_object is not None
+def test_correct_keys_in_access_object(access):
+    access_object = access._asdict()
     assert "access_token" in access_object
     assert "token_type" in access_object
     assert "refresh_token" in access_object
@@ -13,10 +13,8 @@ def test_correct_keys_in_access_object(access_object):
     assert "refresh_expiration" in access_object
 
 
-def test_refresh_code(client, access_object):
-    new_access_object = client.exchange_refresh_token(
-        access_object.get("refresh_token")
-    )
+def test_refresh_code(client, access):
+    new_access_object = client.exchange_refresh_token(access.refresh_token)
     test_correct_keys_in_access_object(new_access_object)
 
 
@@ -51,7 +49,8 @@ def test_get_auth_url_with_options(client):
     assert query_params["flags"][0] == "flag_1:Yay flag_2:True flag_3:123"
 
 
-def test_set_expiration(access_object):
+def test_set_expiration(access):
+    access_object = access._asdict()
     access_object.pop("expiration")
     access_object.pop("refresh_expiration")
     assert "expiration" not in access_object

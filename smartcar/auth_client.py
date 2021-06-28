@@ -1,4 +1,5 @@
 import os
+from collections import namedtuple
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlencode
@@ -6,6 +7,7 @@ from urllib.parse import urlencode
 import smartcar.constants as constants
 import smartcar.requester as requester
 import smartcar.helpers as helpers
+import smartcar.types as ty
 
 
 class AuthClient(object):
@@ -128,7 +130,7 @@ class AuthClient(object):
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code: str, flags: dict = None) -> dict:
+    def exchange_code(self, code: str, flags: dict = None) -> namedtuple:
         """
         Exchange an authentication code for an access dictionary
 
@@ -138,7 +140,8 @@ class AuthClient(object):
                     application has early access to.
 
         Returns:
-            dict: dict containing the access and refresh token
+            namedtuple: containing access information, including access_token and
+                refresh_token
 
         Raises:
             SmartcarException
@@ -160,9 +163,11 @@ class AuthClient(object):
             response = requester.call(method, url, data=data, auth=self.auth)
 
         data = response.json()
-        return _set_expiration(data)
+        return ty.generate_named_tuple(_set_expiration(data), "access_object")
 
-    def exchange_refresh_token(self, refresh_token: str, flags: dict = None) -> dict:
+    def exchange_refresh_token(
+        self, refresh_token: str, flags: dict = None
+    ) -> namedtuple:
         """
         Exchange a refresh token for a new access dictionary
 
@@ -173,7 +178,8 @@ class AuthClient(object):
                     application has early access to.
 
         Returns:
-            dict: dict containing access and refresh token
+            namedtuple: containing access information, including access_token and
+                refresh_token
 
         Raises:
             SmartcarException
@@ -191,7 +197,7 @@ class AuthClient(object):
             response = requester.call(method, url, data=data, auth=self.auth)
 
         data = response.json()
-        return _set_expiration(data)
+        return ty.generate_named_tuple(_set_expiration(data), "access_object")
 
 
 # Static helpers for AuthClient

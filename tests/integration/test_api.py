@@ -4,11 +4,10 @@ import tests.auth_helpers as ah
 import smartcar.constants as constants
 
 
-def test_correct_attributes(api_instance, access_object, chevy_volt):
-    access_token = access_object.get("access_token")
-    assert api_instance.access_token == access_token
+def test_correct_attributes(api_instance, access, chevy_volt):
+    assert api_instance.access_token == access.access_token
     assert api_instance.vehicle_id == chevy_volt.vehicle_id
-    assert api_instance.auth == {"Authorization": f"Bearer {access_token}"}
+    assert api_instance.auth == {"Authorization": f"Bearer {access.access_token}"}
     assert api_instance.unit_system == "metric"
 
 
