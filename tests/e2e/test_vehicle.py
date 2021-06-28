@@ -132,6 +132,13 @@ def test_batch_and_set_unit_system(chevy_volt):
     batch = chevy_volt.batch(["/odometer", "/fuel"])
     assert batch.odometer.meta.get("sc-unit-system") == "imperial"
 
+    try:
+        chevy_volt.set_unit_system("THISSHOULDNTWORK")
+
+    except Exception as e:
+        assert type(e) == ValueError
+        assert e.args == ("unit must be either metric or imperial",)
+
 
 def test_webhooks(chevy_volt):
     if ah.APPLICATION_MANAGEMENT_TOKEN:

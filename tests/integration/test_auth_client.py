@@ -49,6 +49,24 @@ def test_get_auth_url_with_options(client):
     assert query_params["flags"][0] == "flag_1:Yay flag_2:True flag_3:123"
 
 
+def test_get_auth_url_single_select(client):
+    options = {"single_select": {"enabled": True}}
+
+    test_url_ss_enabled = client.get_auth_url(
+        ["read_odometer", "read_vehicle_info"], options
+    )
+    query_params = urlparse.parse_qs(test_url_ss_enabled)
+    assert query_params["single_select"][0] == "True"
+
+    # Testing the explicit setting of single_select to false:
+    options_2 = {"single_select": {"enabled": False}}
+    test_url_ss_disabled = client.get_auth_url(
+        ["read_odometer", "read_vehicle_info"], options_2
+    )
+    query_params_2 = urlparse.parse_qs(test_url_ss_disabled)
+    assert query_params_2["single_select"][0] == "False"
+
+
 def test_set_expiration(access):
     access_object = access._asdict()
     access_object.pop("expiration")

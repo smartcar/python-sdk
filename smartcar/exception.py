@@ -11,12 +11,12 @@ class SmartcarException(Exception):
     def __init__(self, **kwargs):
         # populate the error with passed in keys.
         for key in kwargs.keys():
-            self.__dict__[key] = kwargs[key] or "None"
+            self.__dict__[key] = kwargs[key] or ""
 
         # v2.0
         if "type" in kwargs and "code" in kwargs and "description" in kwargs:
             code = kwargs.get("code", "ERROR")
-            self.message = f"{kwargs['type']}:{code} - {kwargs['description']}"
+            self.message = f"{kwargs['type']}:{code or ''} - {kwargs['description']}"
 
         # v1.0
         else:

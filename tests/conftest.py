@@ -24,6 +24,7 @@ def client():
     yield client
 
 
+# # Chevy Volt
 @pytest.fixture(scope="session")
 def access(client):
     """
@@ -33,7 +34,7 @@ def access(client):
     project.
 
     Yields:
-        access_object(dict)
+        access namedtuple
     """
     auth_url = client.get_auth_url(scope=ah.DEFAULT_SCOPE)
     code = ah.run_auth_flow(auth_url)
@@ -41,7 +42,6 @@ def access(client):
     yield access
 
 
-# # Vehicle Fixtures:
 @pytest.fixture(scope="session")
 def chevy_volt(access):
     """
@@ -58,8 +58,28 @@ def chevy_volt(access):
     return sc.Vehicle(volt_id, access.access_token)
 
 
+# # VW E-Golf
 @pytest.fixture(scope="session")
-def vw_egolf():
+def access_vw(client):
+    """
+    Using the client fixture, go through Smartcar connect auth
+    flow and acquire an access object. This object will have
+    access and refresh tokens that can be used throughout the
+    project.
+
+    Yields:
+        access_vw namedtuple
+    """
+    client = sc.AuthClient(*ah.get_auth_client_params())
+    code = ah.run_auth_flow(
+        client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN"
+    )
+    access = client.exchange_code(code)
+    yield access
+
+
+@pytest.fixture(scope="session")
+def vw_egolf(access_vw):
     """
     Using a separate instance of smartcar.AuthClient,
     run the Smartcar connect auth flow with different scope of permissions and
@@ -69,14 +89,10 @@ def vw_egolf():
     Yields:
         vw_egolf(smartcar.Vehicle)
     """
-    client = sc.AuthClient(*ah.get_auth_client_params())
-    code = ah.run_auth_flow(
-        client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN"
-    )
-    access = client.exchange_code(code)
-    vehicle_ids = sc.get_vehicles(access.access_token)
+
+    vehicle_ids = sc.get_vehicles(access_vw.access_token)
     egolf_id = vehicle_ids.vehicles[0]
-    return sc.Vehicle(egolf_id, access.access_token)
+    return sc.Vehicle(egolf_id, access_vw.access_token)
 
 
 # # API Fixture

@@ -42,6 +42,9 @@ htmlcover
 ## Pycharm
 .idea/
 
+## Pytest
+htmlcov
+
 ## Vscode
 .vscode
 .settings
