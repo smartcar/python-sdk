@@ -1,7 +1,5 @@
 # AuthClient
 
----
-
 ### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, test_mode=False)`
 
 A client for accessing the Smartcar API
@@ -83,14 +81,15 @@ Exchange an authorization code for an access dictionary
 
 #### Return
 
-| Type                            | Description                                                                                                                                       |
-| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Dictionary                      | Dictionary containing the access and refresh token                                                                                                |
-| Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
-| Dictionary.`expiration`         | A datetime of the expiration of the access_token                                                                                                  |
-| Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token                                                                                                 |
-| Dictionary.`token_type`         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
+| Type                          | Description                                                                                                                                       |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| namedtuple                    | namedtuple containing the access and refresh token                                                                                                |
+| namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
+| namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
+| namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
+| namedtuple.refresh_token      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| namedtuple.refresh_expiration | A datetime of the expiration of the refresh_token                                                                                                 |
+| namedtuple.token_type         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
 
 #### Raises
 
@@ -112,14 +111,15 @@ Exchange a refresh token for a new access dictionary
 
 #### Return
 
-| Type                            | Description                                                                                                                                       |
-| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Dictionary                      | Dictionary containing the access and refresh token                                                                                                |
-| Dictionary.`access_token`       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
-| Dictionary.`expiration`         | A datetime of the expiration of the access_token                                                                                                  |
-| Dictionary.`refresh_token`      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| Dictionary.`refresh_expiration` | A datetime of the expiration of the refresh_token                                                                                                 |
-| Dictionary.`token_type`         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
+| Type                          | Description                                                                                                                                       |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| namedtuple                    | namedtuple containing the access and refresh token                                                                                                |
+| namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
+| namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
+| namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
+| namedtuple.refresh_token      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| namedtuple.refresh_expiration | A datetime of the expiration of the refresh_token                                                                                                 |
+| namedtuple.token_type         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
 
 #### Raises
 
@@ -159,7 +159,7 @@ Update the unit system to use in requests to the Smartcar API.
 | :------------ | :----- | :--------------------------------------- |
 | `unit_system` | String | the unit system to use (metric/imperial) |
 
-### Smartcar Vehicle Endpoints
+## Smartcar Vehicle Endpoints
 
 These methods act as wrappers for calls to vehicle-related endpoints to Smartcar API. These methods return explicitly
 defined `NamedTuples` from Python's [typing](https://docs.python.org/3/library/typing.html) library. Returned
@@ -169,9 +169,7 @@ hints and dot notation.
 ```python
 # using an instance of Vehicle called "my_model_3"
 location = my_model_3.location()
-print
 location.latitude
-print
 location.longitude
 ```
 
@@ -527,10 +525,9 @@ members. Visit https://smartcar.com/pricing to sign up and gain access.
 # Upon sending a batch request to '/odometer' and '/location' for an instantiated Vehicle "my_tesla_3"
 
 batch = my_tesla_3.batch(['/odometer', '/location'])
-
-print(batch.odometer.distance)
-print(batch.location.longitude)
-print(batch.meta)
+batch.odometer.distance
+batch.location.longitude
+batch.meta
 ```
 
 #### Raises
@@ -616,8 +613,6 @@ Unsbscribe vehicle from a Smartcar webhook.
 the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
 
 # Static Methods
-
----
 
 ### `smartcar.set_api_version(version)`
 
@@ -757,8 +752,6 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 **\*Note:** as we are only using the VIN, we can only guarantee if a vehicle is NOT compatible with the platform.
 
 # Webhook Static Methods
-
----
 
 ### `hash_challenge(amt, challenge)`
 

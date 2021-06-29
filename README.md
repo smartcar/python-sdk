@@ -8,10 +8,6 @@ Python package to quickly integrate Smartcar API
 - [Smartcar API Reference][smartcar-docs-api]
 - [Smartcar Python SDK Reference Documentation][smartcar-python-sdk-reference]
 
-# Supported Versions
-
-Python 3.6, 3.7, 3.8, 3.9
-
 # Installation
 
 ```python
@@ -163,7 +159,7 @@ Any time you make a request to the Smartcar API, something can go wrong. This me
 call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with
 some exception handling code.
 
-All exceptions will be of type `smartcar.SmartcarException` with the... exception (sorry, not sorry) of missing client
+All exceptions will be of type `smartcar.SmartcarException` with the... exception of missing client
 credentials. Navigate below to `AuthClient` for more details.
 
 Check out our [API Reference](https://smartcar.com/docs/api/?version=v2.0#errors)
@@ -176,3 +172,9 @@ and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn 
 [smartcar-developer]: https://developer.smartcar.com
 [smartcar-docs-api]: https://smartcar.com/docs
 [smartcar-python-sdk-reference]: https://github.com/smartcar/python-sdk/blob/master/REFERENCE.md
+
+# Supported Python Branches
+
+Smartcar aims to support the SDK on all Python branches that have a status of "bugfix" or "security" as defined in the [Python Developer's Guide](https://devguide.python.org/#status-of-python-branches).
+
+In accordance with the Semantic Versioning specification, the addition of support for new Python branches would result in a MINOR version bump and the removal of support for Python branches would result in a MAJOR version bump.
