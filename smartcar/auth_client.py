@@ -4,10 +4,9 @@ from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlencode
 
-import smartcar.constants as constants
-import smartcar.requester as requester
+import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.types as ty
+import smartcar.types as types
 
 
 class AuthClient(object):
@@ -40,8 +39,10 @@ class AuthClient(object):
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
         """
         self.client_id = client_id or os.environ.get("SMARTCAR_CLIENT_ID")
-        self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_ID")
-        self.redirect_uri = redirect_uri or os.environ.get("SMARTCAR_CLIENT_ID")
+        self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_SECRET")
+        self.redirect_uri = redirect_uri or os.environ.get("SMARTCAR_REDIRECT_URI")
+        self.test_mode = test_mode
+        self.auth = (self.client_id, self.client_secret)
 
         if (
             self.client_id is None
@@ -55,9 +56,6 @@ class AuthClient(object):
                 "with your client credentials. i.e.: "
                 "'SMARTCAR_CLIENT_ID', 'SMARTCAR_CLIENT_SECRET', and 'SMARTCAR_REDIRECT_URI'"
             )
-
-        self.auth = (client_id, client_secret)
-        self.test_mode = test_mode
 
     def get_auth_url(self, scope: List[str], options: dict = None) -> str:
         """
@@ -91,7 +89,7 @@ class AuthClient(object):
         Raises:
             SmartcarException
         """
-        base_url = constants.CONNECT_URL
+        base_url = config.CONNECT_URL
 
         query = {
             "response_type": "code",
@@ -147,7 +145,7 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = constants.AUTH_URL
+        url = config.AUTH_URL
         data = {
             "grant_type": "authorization_code",
             "code": code,
@@ -156,14 +154,14 @@ class AuthClient(object):
 
         if flags:
             flags_str = helpers.format_flag_query(flags)
-            response = requester.call(
-                method, url, data=data, auth=self.auth, flags=flags_str
+            response = helpers.requester(
+                method, url, data=data, auth=self.auth, params=flags_str
             )
         else:
-            response = requester.call(method, url, data=data, auth=self.auth)
+            response = helpers.requester(method, url, data=data, auth=self.auth)
 
         data = response.json()
-        return ty.generate_named_tuple(_set_expiration(data), "access_object")
+        return types.generate_named_tuple(_set_expiration(data), "access_object")
 
     def exchange_refresh_token(
         self, refresh_token: str, flags: dict = None
@@ -185,19 +183,19 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = constants.AUTH_URL
+        url = config.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
 
         if flags:
             flags_str = helpers.format_flag_query(flags)
-            response = requester.call(
-                method, url, data=data, auth=self.auth, flags=flags_str
+            response = helpers.requester(
+                method, url, data=data, auth=self.auth, params=flags_str
             )
         else:
-            response = requester.call(method, url, data=data, auth=self.auth)
+            response = helpers.requester(method, url, data=data, auth=self.auth)
 
         data = response.json()
-        return ty.generate_named_tuple(_set_expiration(data), "access_object")
+        return types.generate_named_tuple(_set_expiration(data), "access_object")
 
 
 # Static helpers for AuthClient

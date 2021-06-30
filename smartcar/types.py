@@ -1,14 +1,10 @@
 from collections import namedtuple
 from typing import List, NamedTuple
+import re
 import requests.structures as rs
 
 
 # Return types for Smartcar API.
-#
-# Below are explicitly defined NamedTuples that are to be used as
-# return values from Smartcar API. This will allow the SDK to provide
-# type hints and dot notation, # and will help return data following
-# python conventions (i.e. snake-cased attributes).
 #
 # 'generate_named_tuple' is used to generate an un-typed namedtuple from
 # a dictionary. It will return a namedtuple that has attributes matching
@@ -18,18 +14,16 @@ import requests.structures as rs
 # Otherwise, use the explicitly defined NamedTuples for better type hints!
 
 
-# ===========================================
-# General
-# ===========================================
-
-
-def generate_named_tuple(dictionary: dict, name: str = "namedtuple") -> namedtuple:
+def generate_named_tuple(
+    dictionary: dict, name: str = "namedtuple", kebab_case=False
+) -> namedtuple:
     """
     Take a dictionary and map its keys to the attributes of a named tuple.
 
     Args:
         dictionary (dict): Any dictionary
         name (str): The desired name of the returned namedtuple
+        kebab_case (bool): format kebab-cased keys, otherwise handle camelCased keys
 
     Returns:
         namedtuple: With attributes matching the keys of the inputted dictionary
@@ -40,20 +34,43 @@ def generate_named_tuple(dictionary: dict, name: str = "namedtuple") -> namedtup
     if len(keys) == 0:
         return None
 
-    attributes = ""
+    attributes = []
 
-    # Convert kebab to snake case, if relevant
     for key in keys:
-        formatted = key.replace("-", "_").lower()
-        attributes += f" {formatted}"
+        # Convert kebab to snake case, if relevant
+        if kebab_case:
+            formatted = key.replace("-", "_").lower()
 
-    gen = namedtuple(name, attributes.strip())
+        # convert camel to snake case (using regex function)
+        else:
+            formatted = _camel_to_snake(key)
+
+        attributes.append(formatted)
+
+    gen = namedtuple(name, attributes)
 
     return gen._make([dictionary[k] for k in keys])
 
 
+def _camel_to_snake(camel_string: str) -> str:
+    """
+    Use regex to change camelCased string to snake_case
+
+    Args:
+        camel_string(str)
+
+    Returns:
+        A snake_cased string
+
+    """
+    result = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_string)
+    result = re.sub("(.)([0-9]+)", r"\1_\2", result)
+    result = re.sub("([a-z0-9])([A-Z])", r"\1_\2", result)
+    return result.lower()
+
+
 # ===========================================
-# static.py
+# smartcar.py
 # ===========================================
 
 User = NamedTuple("User", [("id", str), ("meta", rs.CaseInsensitiveDict)])
@@ -194,7 +211,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         headers = response_or_dict.headers
         data = response_or_dict.json()
 
-    # static.py
+    # smartcar.py
     if path == "user":
         return User(data["id"], headers)
 

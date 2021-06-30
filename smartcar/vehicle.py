@@ -2,11 +2,9 @@ from collections import namedtuple
 from typing import List
 import requests.structures as rs
 
-import smartcar.api
-import smartcar.auth_client
-import smartcar.constants as constants
-import smartcar.types as ty
-from smartcar.api import Smartcar
+import smartcar.config as config
+import smartcar.helpers as helpers
+import smartcar.types as types
 
 
 class Vehicle(object):
@@ -22,33 +20,26 @@ class Vehicle(object):
                     Defaults to metric.
                 version(str, optional): Version of Smartcar API an instance of vehicle
                     will send requests to. This will override the instance's base url attribute.
+
+        Attributes:
+            self.vehicle_id (str)
+            self.access_token (str): Access token retrieved from Smartcar Connect
+            self.api_version (str): e.g. "1.0" or "2.0"
+            self.unit_system (str): Must be "metric" or "imperial" (case insensitive)
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
-        self.api = Smartcar(access_token, vehicle_id=vehicle_id)
+        self._api_version = config.API_VERSION
+        self._unit_system = "metric"
 
         if options:
             if options.get("unit_system"):
-                self.set_unit_system(options["unit_system"])
+                self._unit_system = options["unit_system"]
 
             if options.get("version"):
-                version = options["version"]
-                if version != smartcar.api.API_VERSION:
-                    self.api.base_url = f"{constants.API_URL}/v{version}"
+                self._api_version = options["version"]
 
-    def set_unit_system(self, unit_system: str) -> None:
-        """
-        Update the unit system to use in requests to the Smartcar API.
-
-        Args:
-            unit_system (str): the unit system to use ("metric" or "imperial")
-        """
-        if unit_system not in ("metric", "imperial"):
-            raise ValueError("unit must be either metric or imperial")
-        else:
-            self.api.set_unit_system(unit_system)
-
-    def vin(self) -> ty.Vin:
+    def vin(self) -> types.Vin:
         """
         GET Vehicle.vin
 
@@ -58,10 +49,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("vin")
-        return ty.select_named_tuple("vin", response)
+        path = "vin"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def charge(self) -> ty.Charge:
+    def charge(self) -> types.Charge:
         """
         GET Vehicle.charge
 
@@ -71,10 +65,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("charge")
-        return ty.select_named_tuple("charge", response)
+        path = "charge"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def battery(self) -> ty.Battery:
+    def battery(self) -> types.Battery:
         """
         GET Vehicle.battery
 
@@ -86,10 +83,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("battery")
-        return ty.select_named_tuple("battery", response)
+        path = "battery"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def battery_capacity(self) -> ty.BatteryCapacity:
+    def battery_capacity(self) -> types.BatteryCapacity:
         """
         GET Vehicle.battery_capacity
 
@@ -99,10 +99,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("battery/capacity")
-        return ty.select_named_tuple("battery/capacity", response)
+        path = "battery/capacity"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def fuel(self) -> ty.Fuel:
+    def fuel(self) -> types.Fuel:
         """
         GET Vehicle.fuel
 
@@ -113,10 +116,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("fuel")
-        return ty.select_named_tuple("fuel", response)
+        path = "fuel"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def tire_pressure(self) -> ty.TirePressure:
+    def tire_pressure(self) -> types.TirePressure:
         """
         GET Vehicle.tire_pressure
 
@@ -129,10 +135,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("tires/pressure")
-        return ty.select_named_tuple("tires/pressure", response)
+        path = "tires/pressure"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def engine_oil(self) -> ty.EngineOil:
+    def engine_oil(self) -> types.EngineOil:
         """
         GET Vehicle.engine_oil
 
@@ -142,10 +151,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("engine/oil")
-        return ty.select_named_tuple("engine/oil", response)
+        path = "engine/oil"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def odometer(self) -> ty.Odometer:
+    def odometer(self) -> types.Odometer:
         """
         GET Vehicle.odometer
 
@@ -155,10 +167,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("odometer")
-        return ty.select_named_tuple("odometer", response)
+        path = "odometer"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
-    def location(self) -> ty.Location:
+    def location(self) -> types.Location:
         """
         GET Vehicle.location
 
@@ -168,8 +183,11 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("location")
-        return ty.select_named_tuple("location", response)
+        path = "location"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
     def permissions(self, paging: dict = None):
         """
@@ -186,17 +204,22 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        if paging is None:
-            response = self.api.get("permissions")
+        path = "permissions"
+        url = self._format_url(path)
+        headers = self._get_headers()
 
+        if paging is None:
+            response = helpers.requester("GET", url, headers=self._get_headers())
         else:
             limit = paging.get("limit", 25)
             offset = paging.get("offset", 0)
-            response = self.api.get("permissions", limit=limit, offset=offset)
+            response = helpers.requester(
+                "GET", url, headers=headers, limit=limit, offset=offset
+            )
 
-        return ty.select_named_tuple("permissions", response)
+        return types.select_named_tuple(path, response)
 
-    def attributes(self) -> ty.Attributes:
+    def attributes(self) -> types.Attributes:
         """
         GET Vehicle.attributes
 
@@ -207,14 +230,17 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.get("")
-        return ty.select_named_tuple("", response)
+        path = ""
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
 
     # ===========================================
     # Action (POST) Requests
     # ===========================================
 
-    def lock(self) -> ty.Status:
+    def lock(self) -> types.Status:
         """
         POST Vehicle.lock
 
@@ -224,10 +250,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.post("security", action="LOCK")
-        return ty.select_named_tuple("lock", response)
+        url = self._format_url("security")
+        headers = self._get_headers(need_unit_system=False)
+        json = {"action": "LOCK"}
+        response = helpers.requester("POST", url, headers=headers, json=json)
+        return types.select_named_tuple("lock", response)
 
-    def unlock(self) -> ty.Status:
+    def unlock(self) -> types.Status:
         """
         POST Vehicle.unlock
 
@@ -237,10 +266,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.post("security", action="UNLOCK")
-        return ty.select_named_tuple("unlock", response)
+        url = self._format_url("security")
+        headers = self._get_headers(need_unit_system=False)
+        json = {"action": "UNLOCK"}
+        response = helpers.requester("POST", url, headers=headers, json=json)
+        return types.select_named_tuple("unlock", response)
 
-    def start_charge(self) -> ty.Status:
+    def start_charge(self) -> types.Status:
         """
         POST Vehicle.start_charge
 
@@ -250,10 +282,13 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.post("charge", action="START")
-        return ty.select_named_tuple("start_charge", response)
+        url = self._format_url("charge")
+        headers = self._get_headers(need_unit_system=False)
+        json = {"action": "START"}
+        response = helpers.requester("POST", url, headers=headers, json=json)
+        return types.select_named_tuple("start_charge", response)
 
-    def stop_charge(self) -> ty.Status:
+    def stop_charge(self) -> types.Status:
         """
         POST Vehicle.stop_charge
 
@@ -263,8 +298,11 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.post("charge", action="STOP")
-        return ty.select_named_tuple("stop_charge", response)
+        url = self._format_url("charge")
+        headers = self._get_headers(need_unit_system=False)
+        json = {"action": "STOP"}
+        response = helpers.requester("POST", url, headers=headers, json=json)
+        return types.select_named_tuple("stop_charge", response)
 
     def batch(self, paths: List[str]) -> namedtuple:
         """
@@ -281,25 +319,33 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        requests = []
-
-        # Match formatting required of Smartcar api
-        for path in paths:
-            requests.append({"path": path})
-
-        response = self.api.batch(requests)
+        url = self._format_url("batch")
+        requests = [{"path": path} for path in paths]
+        headers = self._get_headers()
+        json = {"requests": requests}
+        response = helpers.requester("POST", url, headers=headers, json=json)
 
         # Generate NamedTuple for every path requested. Store in a dictionary
         batch_dict = dict()
 
+        # PHASES of batch_dict
+        # 1. building dictionary of NamedTuples
+        # 2. building namedtuple of NamedTuple
+
+        # For each response (per path), set the key of batch_dict as the path (w/o slash)
+        # Then, create a tuple for each response dictionary.
         for res in response.json()["responses"]:
             path = res["path"][1:] if res["path"][0] == "/" else res["path"]
-            batch_dict[path] = ty.select_named_tuple(path, res)
+            # PHASE 1
+            batch_dict[path] = types.select_named_tuple(path, res)
 
-        # Attach response headers to the dictionary, and then transform to a NamedTuple
+        # Attach response headers to the dictionary
+        # ..and then transform batch_dict to a NamedTuple
         meta = rs.CaseInsensitiveDict(response.headers)
         batch_dict["meta"] = meta
-        batch = ty.generate_named_tuple(batch_dict, "batch")
+
+        # PHASE 2
+        batch = types.generate_named_tuple(batch_dict, "batch")
 
         return batch
 
@@ -307,7 +353,7 @@ class Vehicle(object):
     # DELETE requests
     # ===========================================
 
-    def disconnect(self) -> ty.Status:
+    def disconnect(self) -> types.Status:
         """
         Disconnect this vehicle from the connected application.
 
@@ -321,14 +367,16 @@ class Vehicle(object):
         Raises:
             SmartcarException
         """
-        response = self.api.delete("application")
-        return ty.select_named_tuple("disconnect", response)
+        url = self._format_url("application")
+        headers = self._get_headers(need_unit_system=False)
+        response = helpers.requester("DELETE", url, headers=headers)
+        return types.select_named_tuple("disconnect", response)
 
     # ===========================================
     # Webhook requests
     # ===========================================
 
-    def subscribe(self, webhook_id: str) -> ty.Subscribe:
+    def subscribe(self, webhook_id: str) -> types.Subscribe:
         """
         Subscribe a vehicle to a webhook
 
@@ -338,8 +386,10 @@ class Vehicle(object):
         Returns:
             Subscribe: NamedTuple("Subscribe", [("webhook_id", str"), ("vehicle_id", str), ("meta", CaseInsensitiveDict)
         """
-        response = self.api.post(f"webhooks/{webhook_id}")
-        return ty.select_named_tuple("subscribe", response)
+        url = self._format_url(f"webhooks/{webhook_id}")
+        headers = self._get_headers(need_unit_system=False)
+        response = helpers.requester("POST", url, headers=headers)
+        return types.select_named_tuple("subscribe", response)
 
     def unsubscribe(self, amt: str, webhook_id: str) -> rs.CaseInsensitiveDict:
         """
@@ -352,5 +402,55 @@ class Vehicle(object):
         Returns:
             CaseInsensitiveDict: The response headers (i.e. meta) of the request
         """
-        response = self.api.unsubscribe_from_webhook(amt, webhook_id)
+        url = self._format_url(f"webhooks/{webhook_id}")
+
+        # Note: Authorization header is different, compared to the other methods
+        headers = {"Authorization": f"Bearer {amt}"}
+        response = helpers.requester("DELETE", url, headers=headers)
         return rs.CaseInsensitiveDict(response.headers)
+
+    # ===========================================
+    # Utility
+    # ===========================================
+    def set_unit_system(self, unit_system: str) -> None:
+        """
+        Change unit system of this instance of smartcar.Vehicle
+
+        Args:
+            unit_system (str): Must be "metric" or "imperial",
+                case insensitive.
+
+        Returns: None
+        """
+        if unit_system.lower() != "metric" or unit_system.lower() != "imperial":
+            raise ValueError(
+                "'unit_system' must be either 'metric' or 'imperial' (case insensitive)"
+            )
+
+        else:
+            self._unit_system = unit_system.lower()
+
+    # ===========================================
+    # Private methods
+    # ===========================================
+    def _format_url(self, path: str) -> str:
+        """
+        Returns (str): Base url with current API version.
+        User can change api_version attribute at will.
+        """
+        return (
+            f"{config.API_URL}/v{self._api_version}/vehicles/{self.vehicle_id}/{path}"
+        )
+
+    def _get_headers(self, need_unit_system: bool = True) -> dict:
+        """
+        Returns (dict): Provides 'Authorization' Header
+        and (optionally) the 'sc-unit-system' header.
+        Some endpoints don't require the 'sc-unit-system' header.
+        """
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+
+        if need_unit_system:
+            headers["sc-unit-system"] = self._unit_system.lower()
+
+        return headers

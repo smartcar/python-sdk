@@ -1,7 +1,6 @@
 import pytest
 
 import smartcar as sc
-import smartcar.api as api
 import tests.auth_helpers as ah
 
 
@@ -55,7 +54,25 @@ def chevy_volt(access):
     """
     vehicle_ids = sc.get_vehicles(access.access_token)
     volt_id = vehicle_ids.vehicles[0]
-    return sc.Vehicle(volt_id, access.access_token)
+    yield sc.Vehicle(volt_id, access.access_token)
+
+
+@pytest.fixture(scope="session")
+def chevy_volt_imperial(chevy_volt, access):
+    """
+    Using default access token that has the default scope
+    permissions (found in ./auth_helpers), return the first
+    car. Since the test client defaults to Chevrolet, the first
+    car should be a Chevrolet Volt.
+
+    Set this instance of Vehicle to use "imperial" units
+
+    Yields:
+        chevy_volt(smartcar.Vehicle)
+    """
+    yield sc.Vehicle(
+        chevy_volt.vehicle_id, access.access_token, {"unit_system": "imperial"}
+    )
 
 
 # # VW E-Golf
@@ -92,18 +109,4 @@ def vw_egolf(access_vw):
 
     vehicle_ids = sc.get_vehicles(access_vw.access_token)
     egolf_id = vehicle_ids.vehicles[0]
-    return sc.Vehicle(egolf_id, access_vw.access_token)
-
-
-# # API Fixture
-@pytest.fixture(scope="session")
-def api_instance(access, chevy_volt):
-    """
-    Using the token from the "access" fixture, instantiate a api.Smartcar
-    object to play around with. Keep in mind that this class
-    is meant to be used frequently.
-
-    Yields: Instance of api.Smartcar
-    """
-    test_api = api.Smartcar(access.access_token, vehicle_id=chevy_volt.vehicle_id)
-    yield test_api
+    yield sc.Vehicle(egolf_id, access_vw.access_token)

@@ -1,5 +1,5 @@
 import requests.structures as rs
-import smartcar.types as ty
+import smartcar.types as types
 import tests.auth_helpers as ah
 
 
@@ -7,7 +7,7 @@ import tests.auth_helpers as ah
 def test_vin_and_meta(chevy_volt):
     vin = chevy_volt.vin()
     assert vin is not None
-    assert type(vin) == ty.Vin
+    assert type(vin) == types.Vin
     assert vin._fields == ("vin", "meta")
     assert type(vin.meta) == rs.CaseInsensitiveDict
 
@@ -15,7 +15,7 @@ def test_vin_and_meta(chevy_volt):
 def test_charge(chevy_volt):
     charge = chevy_volt.charge()
     assert charge is not None
-    assert type(charge) == ty.Charge
+    assert type(charge) == types.Charge
     assert charge._fields == ("is_plugged_in", "state", "meta")
     assert charge.is_plugged_in is not None
 
@@ -23,28 +23,28 @@ def test_charge(chevy_volt):
 def test_battery(chevy_volt):
     battery = chevy_volt.battery()
     assert battery is not None
-    assert type(battery) == ty.Battery
+    assert type(battery) == types.Battery
     assert battery._fields == ("percent_remaining", "range", "meta")
 
 
 def test_battery_capacity(chevy_volt):
     battery_capacity = chevy_volt.battery_capacity()
     assert battery_capacity is not None
-    assert type(battery_capacity) == ty.BatteryCapacity
+    assert type(battery_capacity) == types.BatteryCapacity
     assert battery_capacity._fields == ("capacity", "meta")
 
 
 def test_fuel(chevy_volt):
     fuel = chevy_volt.fuel()
     assert fuel is not None
-    assert type(fuel) == ty.Fuel
+    assert type(fuel) == types.Fuel
     assert fuel._fields == ("range", "percent_remaining", "amount_remaining", "meta")
 
 
 def test_tire_pressure(chevy_volt):
     tire_pressure = chevy_volt.tire_pressure()
     assert tire_pressure is not None
-    assert type(tire_pressure) == ty.TirePressure
+    assert type(tire_pressure) == types.TirePressure
     assert tire_pressure._fields == (
         "front_left",
         "front_right",
@@ -57,56 +57,56 @@ def test_tire_pressure(chevy_volt):
 def test_engine_oil(chevy_volt):
     engine_oil = chevy_volt.engine_oil()
     assert engine_oil is not None
-    assert type(engine_oil) == ty.EngineOil
+    assert type(engine_oil) == types.EngineOil
     assert engine_oil._fields == ("life_remaining", "meta")
 
 
 def test_odometer(chevy_volt):
     odometer = chevy_volt.odometer()
     assert odometer is not None
-    assert type(odometer) == ty.Odometer
+    assert type(odometer) == types.Odometer
     assert odometer._fields == ("distance", "meta")
 
 
 def test_location(chevy_volt):
     location = chevy_volt.location()
     assert location is not None
-    assert type(location) == ty.Location
+    assert type(location) == types.Location
     assert location._fields == ("latitude", "longitude", "meta")
 
 
 def test_attributes(chevy_volt):
     attributes = chevy_volt.attributes()
     assert attributes is not None
-    assert type(attributes) == ty.Attributes
+    assert type(attributes) == types.Attributes
     assert attributes._fields == ("id", "make", "model", "year", "meta")
 
 
 def test_lock(chevy_volt):
     response = chevy_volt.lock()
     assert response.status == "success"
-    assert type(response) == ty.Action
+    assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_unlock(chevy_volt):
     response = chevy_volt.unlock()
     assert response.status == "success"
-    assert type(response) == ty.Action
+    assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_start_charge(vw_egolf):
     response = vw_egolf.start_charge()
     assert response.status == "success"
-    assert type(response) == ty.Action
+    assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_stop_charge(vw_egolf):
     response = vw_egolf.stop_charge()
     assert response.status == "success"
-    assert type(response) == ty.Action
+    assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
 
@@ -123,21 +123,8 @@ def test_batch(chevy_volt):
 def test_permissions(chevy_volt):
     permissions = chevy_volt.permissions()
     assert permissions is not None
-    assert type(permissions) == ty.Permissions
+    assert type(permissions) == types.Permissions
     assert permissions._fields == ("permissions", "meta")
-
-
-def test_batch_and_set_unit_system(chevy_volt):
-    chevy_volt.set_unit_system("imperial")
-    batch = chevy_volt.batch(["/odometer", "/fuel"])
-    assert batch.odometer.meta.get("sc-unit-system") == "imperial"
-
-    try:
-        chevy_volt.set_unit_system("THISSHOULDNTWORK")
-
-    except Exception as e:
-        assert type(e) == ValueError
-        assert e.args == ("unit must be either metric or imperial",)
 
 
 def test_webhooks(chevy_volt):
@@ -151,7 +138,7 @@ def test_webhooks(chevy_volt):
         subscribe = chevy_volt.subscribe(ah.WEBHOOK_ID)
 
         assert subscribe is not None
-        assert type(subscribe) == ty.Subscribe
+        assert type(subscribe) == types.Subscribe
         assert subscribe._fields == ("webhook_id", "vehicle_id", "meta")
 
         unsubscribe = chevy_volt.unsubscribe(
@@ -161,8 +148,20 @@ def test_webhooks(chevy_volt):
         assert type(unsubscribe) == rs.CaseInsensitiveDict
 
 
+def test_chevy_imperial(chevy_volt_imperial):
+    response = chevy_volt_imperial.odometer()
+    assert response.meta["sc-unit-system"] == "imperial"
+
+
+def test_setting_unit_system(chevy_volt):
+    chevy_volt._unit_system = "imperial"
+    response = chevy_volt.odometer()
+    assert response.meta["sc-unit-system"] == "imperial"
+
+
+# Disconnect test MUST be at the end of the file
 def test_disconnect(chevy_volt):
     disconnected = chevy_volt.disconnect()
     assert disconnected is not None
-    assert type(disconnected) == ty.Status
+    assert type(disconnected) == types.Status
     assert disconnected._fields == ("status", "meta")

@@ -14,7 +14,9 @@ def test_correct_keys_in_access_object(access):
 
 
 def test_refresh_code(client, access):
-    new_access_object = client.exchange_refresh_token(access.refresh_token)
+    new_access_object = client.exchange_refresh_token(
+        access.refresh_token, {"test_flag": True}
+    )
     test_correct_keys_in_access_object(new_access_object)
 
 

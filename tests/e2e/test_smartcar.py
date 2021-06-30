@@ -3,21 +3,20 @@ from smartcar import (
     get_vehicles,
     get_compatibility,
     hash_challenge,
+    set_api_version,
     verify_payload,
 )
-from smartcar.api import Smartcar, set_api_version
-from smartcar.constants import API_URL
+import smartcar.config as config
+
 import tests.auth_helpers as ah
 
 
-def test_set_api_version(access):
+def test_set_api_version():
     set_api_version("1.0")
-    test_api = Smartcar(access.access_token)
-    assert test_api.base_url == f"{API_URL}/v1.0"
+    assert config.API_VERSION == "1.0"
 
     set_api_version("2.0")
-    test_api2 = Smartcar(access.access_token)
-    assert test_api2.base_url == f"{API_URL}/v2.0"
+    assert config.API_VERSION == "2.0"
 
 
 def test_get_user(access):
@@ -32,9 +31,8 @@ def test_get_vehicles(access):
     assert res.paging is not None
 
 
-def test_get_compatibility(access, chevy_volt):
+def test_get_compatibility(chevy_volt):
     res = get_compatibility(
-        access.access_token,
         vin=chevy_volt.vin().vin,
         scope=["read_vehicle_info"],
         options={"client_id": ah.CLIENT_ID, "client_secret": ah.CLIENT_SECRET},

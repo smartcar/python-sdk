@@ -1,14 +1,16 @@
+import base64
 import hmac
 import hashlib
+import os
 from datetime import datetime
 from typing import List
 
-import smartcar.api as api
+import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.types as ty
+import smartcar.types as types
 
 
-def get_user(access_token: str) -> ty.User:
+def get_user(access_token: str) -> types.User:
     """
     Retrieve the userId associated with the access_token
 
@@ -21,11 +23,14 @@ def get_user(access_token: str) -> ty.User:
     Raises:
         SmartcarException
     """
-    response = api.Smartcar(access_token).user()
-    return ty.select_named_tuple("user", response)
+    url = f"{config.API_URL}/v{config.API_VERSION}/user"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = helpers.requester("GET", url, headers=headers)
+
+    return types.select_named_tuple("user", response)
 
 
-def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
+def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
     """
     Get a list of the user's vehicle ids
 
@@ -43,19 +48,17 @@ def get_vehicles(access_token: str, paging: dict = None) -> ty.Vehicles:
     Raises:
         SmartcarException
     """
-    if paging is None:
-        paging = {"limit": 10, "offset": 0}
+    url = f"{config.API_URL}/v{config.API_VERSION}/vehicles"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = paging if paging is not None else None
+    response = helpers.requester("GET", url, headers=headers, params=params)
 
-    limit = paging.get("limit", 10)
-    offset = paging.get("offset", 0)
-
-    response = api.Smartcar(access_token).vehicles(limit=limit, offset=offset)
-    return ty.select_named_tuple("vehicles", response)
+    return types.select_named_tuple("vehicles", response)
 
 
 def get_compatibility(
-    access_token, vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> ty.Compatibility:
+    vin: str, scope: List[str], country: str = "US", options: dict = None
+) -> types.Compatibility:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -67,42 +70,59 @@ def get_compatibility(
             access to
 
     Args:
-        access_token (str)
         vin (str)
         scope (List[str]): List of scopes (permissions) -> to check if vehicle is compatible
         country (str, optional)
         options (dictionary): Can contain client_id, client_secret, and flags.
-            client_id & client_secret(str, optional): Technically, they are
-                both optional, but if using a client_id other than the one provided through
-                environment variables, it'll be likely that a client_secret will have to be
-                provided. Regardless, authentication will be verified.
+            client_id (str, optional)
+            client_secret (str, optional)
+            version (str): Version of API you want to use
             flags: dictionary(str, bool): An optional list of feature flags
 
 
     Returns:
         Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", Meta)])
     """
-    sc_api = api.Smartcar(access_token)
-    flags_str = None
+    client_id = os.environ.get("SMARTCAR_CLIENT_ID")
+    client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")
+    api_version = config.API_VERSION
+    params = {"vin": vin, "scope": " ".join(scope), "country": country}
 
+    # Configuring options.
     if options is None:
         helpers.validate_env()
     else:
-        if options.get("client_id"):
-            sc_api.set_env_custom(client_id=options["client_id"])
-
-        if options.get("client_secret"):
-            sc_api.set_env_custom(client_secret=options["client_secret"])
+        # client_id and client_secret passed in options dict() will take precedence
+        # over environment variables.
+        client_id = options.get("client_id", client_id)
+        client_secret = options.get("client_secret", client_secret)
+        api_version = options.get("version", api_version)
 
         if options.get("flags"):
             flags_str = helpers.format_flag_query(options["flags"])
+            params["flags"] = flags_str
 
-    scope_param = " ".join(scope)
+    # Ensuring client_id and client_secret are present
+    if client_id is None or client_secret is None:
+        raise Exception(
+            "'get_compatibility' requires a client_id AND client_secret. "
+            "Either set these as environment variables, OR pass them in as part of the 'options'"
+            "dictionary. The recommended course of action is to set up environment variables"
+            "with your client credentials. i.e.: "
+            "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
+        )
 
-    response = sc_api.compatibility(
-        vin=vin, scope=scope_param, country=country, flags=flags_str
-    )
-    return ty.select_named_tuple("compatibility", response)
+    url = f"{config.API_URL}/v{api_version}/compatibility"
+
+    # Configuring for compatibility endpoint
+    id_secret = f"{client_id}:{client_secret}"
+    encoded_id_secret = id_secret.encode("ascii")
+    base64_bytes = base64.b64encode(encoded_id_secret)
+    base64_id_secret = base64_bytes.decode("ascii")
+    headers = {"Authorization": f"Basic {base64_id_secret}"}
+
+    response = helpers.requester("GET", url, headers=headers, params=params)
+    return types.select_named_tuple("compatibility", response)
 
 
 def is_expired(expiration: datetime) -> bool:

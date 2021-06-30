@@ -1,28 +1,18 @@
 import os
 import uuid
+import urllib.parse as urlparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from distutils.util import strtobool
 
-try:
-    import urlparse
-except BaseException:
-    # python 3
-    import urllib.parse as urlparse
+import smartcar.helpers as helpers
 
-if (
-    not "E2E_SMARTCAR_CLIENT_ID" in os.environ
-    or not "E2E_SMARTCAR_CLIENT_SECRET" in os.environ
-):
-    raise Exception(
-        '"E2E_SMARTCAR_CLIENT_ID" and "E2E_SMARTCAR_CLIENT_SECRET" environment variables must be set'
-    )
+# Verify all E2E variables are present ('E2E_<CLIENT VARIABLE>')
+helpers.validate_env(test_mode=True)
 
-HEADLESS = "CI" in os.environ or (
-    "HEADLESS" in os.environ and strtobool(os.environ["HEADLESS"])
-)
+# Required environment variables
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
 CLIENT_SECRET = os.environ["E2E_SMARTCAR_CLIENT_SECRET"]
 REDIRECT_URI = "https://example.com/auth"
@@ -31,6 +21,12 @@ REDIRECT_URI = "https://example.com/auth"
 APPLICATION_MANAGEMENT_TOKEN = os.environ.get("E2E_SMARTCAR_AMT")
 WEBHOOK_ID = os.environ.get("E2E_SMARTCAR_WEBHOOK_ID")
 
+# Variables for Geckodriver
+HEADLESS = "CI" in os.environ or (
+    "HEADLESS" in os.environ and strtobool(os.environ["HEADLESS"])
+)
+
+# A list of all available permissions on Smartcar API
 DEFAULT_SCOPE = [
     "required:read_vehicle_info",
     "required:read_location",
