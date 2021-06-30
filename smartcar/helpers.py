@@ -36,7 +36,7 @@ def requester(method: str, url: str, **kwargs) -> requests.models.Response:
         if response.ok:
             return response
         else:
-            sce.exception_factory(code, headers, body)
+            raise sce.exception_factory(code, headers, body)
 
     except Exception as e:
         if isinstance(e, sce.SmartcarException):

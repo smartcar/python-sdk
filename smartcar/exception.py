@@ -11,12 +11,17 @@ class SmartcarException(Exception):
     def __init__(self, **kwargs):
         # populate the error with passed in keys.
         for key in kwargs.keys():
-            self.__dict__[key] = kwargs[key] or ""
+            # format resolution: must be a dictionary with "type" and "url"
+            if key == "resolution" and type(kwargs[key]) != dict:
+                formatted_resolution = {"type": kwargs[key], "url": None}
+                self.__dict__[key] = formatted_resolution
+            else:
+                self.__dict__[key] = kwargs[key] or ""
 
         # v2.0
         if "type" in kwargs and "code" in kwargs and "description" in kwargs:
-            code = kwargs.get("code", "ERROR")
-            self.message = f"{kwargs['type']}:{code or ''} - {kwargs['description']}"
+            code = kwargs.get("code", "")
+            self.message = f"{kwargs['type']}:{code} - {kwargs['description']}"
 
         # v1.0
         else:
@@ -28,32 +33,41 @@ class SmartcarException(Exception):
 def exception_factory(status_code: int, headers: dict, body: str):
     # v1.0 Exception: Content type other than application/json
     if "application/json" not in headers["Content-Type"]:
-        raise SmartcarException(status_code=status_code, message=body)
+        return SmartcarException(status_code=status_code, message=body)
 
     # Parse body into JSON. Throw SDK error if this fails.
     try:
         response = json.loads(body)
     except Exception:
-        raise SmartcarException(
+        return SmartcarException(
             status_code=status_code,
             request_id=headers["SC-Request-Id"],
             type="SDK_ERROR",
             message=body,
         )
 
-    # v1.0 with code
+    # v1.0 with code or OAuth error
     if response.get("error"):
-        raise SmartcarException(
-            status_code=response.get("statusCode"),
-            request_id=response.get("requestId"),
-            type=response.get("error"),
-            message=response.get("message"),
-            code=response.get("code"),
-        )
+        if response.get("message"):
+            # smartcar v1
+            return SmartcarException(
+                status_code=response.get("statusCode"),
+                request_id=response.get("requestId"),
+                type=response.get("error"),
+                message=response.get("message"),
+                code=response.get("code"),
+            )
+        elif response.get("error_description"):
+            # OAuth error
+            return SmartcarException(
+                status_code=status_code,
+                type=response.get("error"),
+                message=response.get("error_description"),
+            )
 
     # v2.0
     elif response.get("type"):
-        raise SmartcarException(
+        return SmartcarException(
             status_code=response.get("statusCode"),
             request_id=response.get("requestId"),
             type=response.get("type"),
@@ -66,7 +80,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
 
     # Weird...
     else:
-        raise SmartcarException(
+        return SmartcarException(
             status_code=status_code,
             request_id=headers["SC-Request-Id"],
             type="SDK_ERROR",

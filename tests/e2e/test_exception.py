@@ -4,15 +4,26 @@ from smartcar.smartcar import get_user
 from smartcar.exception import SmartcarException, exception_factory
 
 
-def test_wrong_access_token():
-    bad_token = "THIS_SHOULD_NOT_WORK"
+def test_bad_access_token_exchanging_code(client):
     try:
-        res = get_user(bad_token)
+        client.exchange_code("THIS_SHOULD_NOT_WORK")
     except Exception as e:
         assert isinstance(e, SmartcarException)
+        assert e.status_code == 400
+        assert e.message == "Invalid code: THIS_SHOULD_NOT_WORK."
 
 
-def test_wrong_vehicle_id(vw_egolf):
+def test_bad_access_token_api():
+    bad_token = "THIS_SHOULD_NOT_WORK"
+    try:
+        get_user(bad_token)
+    except Exception as e:
+        assert isinstance(e, SmartcarException)
+        assert type(e.resolution) == dict
+        assert "type" in e.resolution.keys() and "url" in e.resolution.keys()
+
+
+def test_out_of_permission_scope(vw_egolf):
     try:
         vw_egolf.odometer()
     except Exception as e:
@@ -21,6 +32,7 @@ def test_wrong_vehicle_id(vw_egolf):
         # 8 fields stated in exception.py + 'message'
         assert len(e.__dict__.keys()) == 9
         assert e.status_code == 403
+        assert "type" in e.resolution.keys() and "url" in e.resolution.keys()
 
 
 def test_set_unit_system_value_error(chevy_volt):
@@ -67,7 +79,7 @@ def test_v1_exception(access_vw, vw_egolf):
 
 def test_non_json_exception():
     try:
-        exception_factory(100, {"Content-Type": "weird"}, "Yay")
+        raise exception_factory(100, {"Content-Type": "weird"}, "Yay")
     except Exception as e:
         assert e.message == "Yay"
         assert e.status_code == 100
