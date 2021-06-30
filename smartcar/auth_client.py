@@ -128,13 +128,14 @@ class AuthClient(object):
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code: str, flags: dict = None) -> namedtuple:
+    def exchange_code(self, code: str, options: dict = None) -> namedtuple:
         """
         Exchange an authentication code for an access dictionary
 
         Args:
             code (str): A valid authorization code
-            flags: dictionary(str, bool): An optional list of feature flags that your
+            options (dict, optional): Can have the following keys:
+                flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.
 
         Returns:
@@ -151,20 +152,21 @@ class AuthClient(object):
             "code": code,
             "redirect_uri": self.redirect_uri,
         }
+        params = {}
 
-        if flags:
-            flags_str = helpers.format_flag_query(flags)
-            response = helpers.requester(
-                method, url, data=data, auth=self.auth, params=flags_str
-            )
-        else:
-            response = helpers.requester(method, url, data=data, auth=self.auth)
+        if options:
+            if options.get("flags"):
+                flags_str = helpers.format_flag_query(options["flags"])
+                params["flags"] = flags_str
 
+        response = helpers.requester(
+            method, url, data=data, auth=self.auth, params=params
+        )
         data = response.json()
         return types.generate_named_tuple(_set_expiration(data), "access_object")
 
     def exchange_refresh_token(
-        self, refresh_token: str, flags: dict = None
+        self, refresh_token: str, options: dict = None
     ) -> namedtuple:
         """
         Exchange a refresh token for a new access dictionary
@@ -172,7 +174,8 @@ class AuthClient(object):
         Args:
             refresh_token (str): A valid refresh token from a previously retrieved
                 access object
-            flags: dictionary(str, bool): An optional list of feature flags that your
+            options (dict, optional): Can have the following keys:
+                flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.
 
         Returns:
@@ -185,15 +188,16 @@ class AuthClient(object):
         method = "POST"
         url = config.AUTH_URL
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
+        params = {}
 
-        if flags:
-            flags_str = helpers.format_flag_query(flags)
-            response = helpers.requester(
-                method, url, data=data, auth=self.auth, params=flags_str
-            )
-        else:
-            response = helpers.requester(method, url, data=data, auth=self.auth)
+        if options:
+            if options.get("flags"):
+                flags_str = helpers.format_flag_query(options["flags"])
+                params["flags"] = flags_str
 
+        response = helpers.requester(
+            method, url, data=data, auth=self.auth, params=params
+        )
         data = response.json()
         return types.generate_named_tuple(_set_expiration(data), "access_object")
 
