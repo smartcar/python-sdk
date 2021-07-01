@@ -74,16 +74,17 @@ Exchange an authorization code for an access dictionary
 
 #### Arguments
 
-| Parameter | Type       | Required     | Description                                                            |
-| :-------- | :--------- | :----------- | ---------------------------------------------------------------------- |
-| `code`    | String     | **Required** | Authorization code to exchange with Smartcar for an `access_token`.    |
-| `flags`   | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to. |
+| Parameter      | Type       | Required     | Description                                                                |
+| :------------- | :--------- | :----------- | -------------------------------------------------------------------------- |
+| `code`         | String     | **Required** | Authorization code to exchange with Smartcar for an `access_token`.        |
+| `options`      | Dictionary | **Optional** | A dictionary where you can pass in additional options as query parameters. |
+| `opions.flags` | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.     |
 
 #### Return
 
 | Type                          | Description                                                                                                                                       |
 | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| namedtuple                    | namedtuple containing the access and refresh token                                                                                                |
+| collections.namedtuple        | namedtuple containing the access and refresh token                                                                                                |
 | namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
 | namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
 | namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
@@ -104,16 +105,17 @@ Exchange a refresh token for a new access dictionary
 
 #### Arguments
 
-| Parameter | Type       | Required     | Description                                                            |
-| :-------- | :--------- | :----------- | ---------------------------------------------------------------------- |
-| `token`   | String     | **Required** | Refresh token to exchange with Smartcar for an `access_token`.         |
-| `flags`   | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to. |
+| Parameter      | Type       | Required     | Description                                                                |
+| :------------- | :--------- | :----------- | -------------------------------------------------------------------------- |
+| `token`        | String     | **Required** | Refresh token to exchange with Smartcar for an `access_token`.             |
+| `options`      | Dictionary | **Optional** | A dictionary where you can pass in additional options as query parameters. |
+| `opions.flags` | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.     |
 
 #### Return
 
 | Type                          | Description                                                                                                                                       |
 | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| namedtuple                    | namedtuple containing the access and refresh token                                                                                                |
+| collections.namedtuple        | namedtuple containing the access and refresh token                                                                                                |
 | namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
 | namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
 | namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
@@ -181,13 +183,11 @@ Returns the vehicle's manufacturer identifier.
 
 #### Return
 
-| Value      | Type         | Description                                               |
-| :--------- | :----------- | :-------------------------------------------------------- |
-| `Vin`      | NamedTuple   | The returned object with vin-related data                 |
-| `Vin.vin`  | String       | The manufacturer unique identifier.                       |
-| `Vin.meta` | Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value      | Type                   | Description                                                                |
+| :--------- | :--------------------- | :------------------------------------------------------------------------- |
+| `Vin`      | typing.NamedTuple      | The returned object with vin-related data                                  |
+| `Vin.vin`  | String                 | The manufacturer unique identifier.                                        |
+| `Vin.meta` | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -202,14 +202,12 @@ Returns the vehicle's charging status of an electric vehicle.
 
 #### Return
 
-| Value                  | Type         | Description                                                                                             |
-| :--------------------- | :----------- | :------------------------------------------------------------------------------------------------------ |
-| `Charge`               | NamedTuple   | The returned object with charging status data                                                           |
-| `Charge.is_plugged_in` | Boolean      | State of whether car is plugged in                                                                      |
-| `Charge.status`        | String       | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
-| `Charge.meta`          | Dictionary\* | Response headers and other information about the response                                               |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                  | Type                   | Description                                                                                             |
+| :--------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------ |
+| `Charge`               | typing.NamedTuple      | The returned object with charging status data                                                           |
+| `Charge.is_plugged_in` | Boolean                | State of whether car is plugged in                                                                      |
+| `Charge.status`        | String                 | Indicates the current state of the charge system. Can be `FULLY_CHARGED`, `CHARGING`, or `NOT_CHARGING` |
+| `Charge.meta`          | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                              |
 
 #### Raises
 
@@ -224,14 +222,12 @@ Returns the vehicle's battery status.
 
 #### Return
 
-| Value                       | Type         | Description                                                                                                                                                                      |
-| :-------------------------- | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Battery`                   | NamedTuple   | The returned object with battery status data                                                                                                                                     |
-| `Battery.percent_remaining` | Float        | The remaining level of charge in the battery (in percent)                                                                                                                        |
-| `Battery.range`             | Float        | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| `Battery.meta`              | Dictionary\* | Response headers and other information about the response                                                                                                                        |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                       | Type                   | Description                                                                                                                                                                      |
+| :-------------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Battery`                   | typing.NamedTuple      | The returned object with battery status data                                                                                                                                     |
+| `Battery.percent_remaining` | Float                  | The remaining level of charge in the battery (in percent)                                                                                                                        |
+| `Battery.range`             | Float                  | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Battery.meta`              | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                                                       |
 
 #### Raises
 
@@ -247,13 +243,11 @@ early access.
 
 #### Return
 
-| Value                      | Type         | Description                                                          |
-| :------------------------- | :----------- | :------------------------------------------------------------------- |
-| `BatteryCapacity`          | NamedTuple   | The returned object data regarding total capacity of an EV's battery |
-| `BatteryCapacity.capacity` | Float        | vehicle's battery capacity in kWh                                    |
-| `BatteryCapacity.meta`     | Dictionary\* | Response headers and other information about the response            |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                      | Type                   | Description                                                                |
+| :------------------------- | :--------------------- | :------------------------------------------------------------------------- |
+| `BatteryCapacity`          | typing.NamedTuple      | The returned object data regarding total capacity of an EV's battery       |
+| `BatteryCapacity.capacity` | Float                  | vehicle's battery capacity in kWh                                          |
+| `BatteryCapacity.meta`     | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -268,15 +262,13 @@ Returns the vehicle's fuel status.
 
 #### Return
 
-| Value                    | Type         | Description                                                                                                                                                                      |
-| :----------------------- | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Fuel`                   | NamedTuple   | The returned object with vehicle's fuel status                                                                                                                                   |
-| `Fuel.range`             | Float        | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| `Fuel.percent_remaining` | Float        | The remaining level of fuel in the tank (in percent)                                                                                                                             |
-| `Fuel.amount_remaining`  | Float        | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).            |
-| `Fuel.meta`              | Dictionary\* | Response headers and other information about the response                                                                                                                        |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                    | Type                   | Description                                                                                                                                                                      |
+| :----------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Fuel`                   | typing.NamedTuple      | The returned object with vehicle's fuel status                                                                                                                                   |
+| `Fuel.range`             | Float                  | The estimated remaining distance the car can travel (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Fuel.percent_remaining` | Float                  | The remaining level of fuel in the tank (in percent)                                                                                                                             |
+| `Fuel.amount_remaining`  | Float                  | The amount of fuel in the tank (in liters or gallons (US)). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).            |
+| `Fuel.meta`              | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                                                       |
 
 #### Raises
 
@@ -291,16 +283,14 @@ Returns the vehicle's tire pressure status.
 
 #### Return
 
-| Value                      | Type         | Description                                                                                                                                                                 |
-| :------------------------- | :----------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TirePressure`             | NamedTuple   | The returned object with vehicle's tire pressure status                                                                                                                     |
-| `TirePressure.front_left`  | Float        | The current air pressure of the front left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
-| `TirePressure.front_right` | Float        | The current air pressure of the front right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| `TirePressure.back_left`   | Float        | The current air pressure of the back left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).   |
-| `TirePressure.back_right`  | Float        | The current air pressure of the back right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
-| `TirePressure.meta`        | Dictionary\* | Response headers and other information about the response                                                                                                                   |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                      | Type                   | Description                                                                                                                                                                 |
+| :------------------------- | :--------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TirePressure`             | typing.NamedTuple      | The returned object with vehicle's tire pressure status                                                                                                                     |
+| `TirePressure.front_left`  | Float                  | The current air pressure of the front left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
+| `TirePressure.front_right` | Float                  | The current air pressure of the front right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `TirePressure.back_left`   | Float                  | The current air pressure of the back left tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).   |
+| `TirePressure.back_right`  | Float                  | The current air pressure of the back right tire (in psi or kpa). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system).  |
+| `TirePressure.meta`        | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                                                  |
 
 #### Raises
 
@@ -315,13 +305,11 @@ Returns the vehicle's oil status.
 
 #### Return
 
-| Value                      | Type         | Description                                                                                                  |
-| :------------------------- | :----------- | :----------------------------------------------------------------------------------------------------------- |
-| `EngineOil`                | NamedTuple   | The returned object with vehicle's oil status                                                                |
-| `EngineOil.life_remaining` | Float        | The engine oil's remaining life span (as a percentage). Oil life is based on the current quality of the oil. |
-| `EngineOil.meta`           | Dictionary\* | Response headers and other information about the response                                                    |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                      | Type                   | Description                                                                                                  |
+| :------------------------- | :--------------------- | :----------------------------------------------------------------------------------------------------------- |
+| `EngineOil`                | typing.NamedTuple      | The returned object with vehicle's oil status                                                                |
+| `EngineOil.life_remaining` | Float                  | The engine oil's remaining life span (as a percentage). Oil life is based on the current quality of the oil. |
+| `EngineOil.meta`           | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                   |
 
 #### Raises
 
@@ -336,13 +324,11 @@ Returns the vehicle's current odometer reading.
 
 #### Return
 
-| Value               | Type         | Description                                                                                                                                                              |
-| :------------------ | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Odometer`          | NamedTuple   | The returned object with vehicle's odometer (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
-| `Odometer.distance` | Float        | The current odometer of the vehicle                                                                                                                                      |
-| `Odometer.meta`     | Dictionary\* | Response headers and other information about the response                                                                                                                |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value               | Type                   | Description                                                                                                                                                              |
+| :------------------ | :--------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Odometer`          | typing.NamedTuple      | The returned object with vehicle's odometer (in kms or miles). To set unit, see [setUnitSystem](https://github.com/smartcar/python-sdk#set_unit_systemself-unit_system). |
+| `Odometer.distance` | Float                  | The current odometer of the vehicle                                                                                                                                      |
+| `Odometer.meta`     | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                                               |
 
 #### Raises
 
@@ -357,14 +343,12 @@ Returns the location of the vehicle in geographic coordinates.
 
 #### Return
 
-| Value                | Type         | Description                                               |
-| :------------------- | :----------- | :-------------------------------------------------------- |
-| `Location`           | NamedTuple   | The returned object with vehicle's location/coordinates   |
-| `Location.latitude`  | Float        | The latitude (in degrees).                                |
-| `Location.longitude` | Float        | The longitude (in degrees).                               |
-| `Location.meta`      | Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                | Type                   | Description                                                                |
+| :------------------- | :--------------------- | :------------------------------------------------------------------------- |
+| `Location`           | typing.NamedTuple      | The returned object with vehicle's location/coordinates                    |
+| `Location.latitude`  | Float                  | The latitude (in degrees).                                                 |
+| `Location.longitude` | Float                  | The longitude (in degrees).                                                |
+| `Location.meta`      | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -379,16 +363,14 @@ Returns a single vehicle object, containing identifying information.
 
 #### Return
 
-| Value        | Type         | Description                                               |
-| :----------- | :----------- | :-------------------------------------------------------- |
-| `Info`       | NamedTuple   | The returned object with vehicle's info                   |
-| `Info.id`    | String       | A vehicle ID (UUID v4).                                   |
-| `Info.make`  | String       | The manufacturer of the vehicle.                          |
-| `Info.model` | String       | The model of the vehicle.                                 |
-| `Info.year`  | String       | The model year.                                           |
-| `Info.meta`  | Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value        | Type                   | Description                                                                |
+| :----------- | :--------------------- | :------------------------------------------------------------------------- |
+| `Info`       | typing.NamedTuple      | The returned object with vehicle's info                                    |
+| `Info.id`    | String                 | A vehicle ID (UUID v4).                                                    |
+| `Info.make`  | String                 | The manufacturer of the vehicle.                                           |
+| `Info.model` | String                 | The model of the vehicle.                                                  |
+| `Info.year`  | String                 | The model year.                                                            |
+| `Info.meta`  | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -403,14 +385,12 @@ Lock the vehicle.
 
 #### Return
 
-| Value            | Type         | Description                                                                         |
-| :--------------- | :----------- | :---------------------------------------------------------------------------------- |
-| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to lock the doors |
-| `Action.status`  | String       | Set to "success" on successful request.                                             |
-| `Action.message` | String       | Message of the response.                                                            |
-| `Action.meta`    | Dictionary\* | Response headers and other information about the response                           |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value            | Type                   | Description                                                                         |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------------------- |
+| `Action`         | typing.NamedTuple      | The returned object with vehicle's status after sending a request to lock the doors |
+| `Action.status`  | String                 | Set to "success" on successful request.                                             |
+| `Action.message` | String                 | Message of the response.                                                            |
+| `Action.meta`    | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)          |
 
 #### Raises
 
@@ -425,14 +405,12 @@ Unlock the vehicle.
 
 #### Return
 
-| Value            | Type         | Description                                                                           |
-| :--------------- | :----------- | :------------------------------------------------------------------------------------ |
-| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to unlock the doors |
-| `Action.status`  | String       | Set to "success" on successful request.                                               |
-| `Action.message` | String       | Message of the response.                                                              |
-| `Action.meta`    | Dictionary\* | Response headers and other information about the response                             |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value            | Type                   | Description                                                                           |
+| :--------------- | :--------------------- | :------------------------------------------------------------------------------------ |
+| `Action`         | typing.NamedTuple      | The returned object with vehicle's status after sending a request to unlock the doors |
+| `Action.status`  | String                 | Set to "success" on successful request.                                               |
+| `Action.message` | String                 | Message of the response.                                                              |
+| `Action.meta`    | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)            |
 
 #### Raises
 
@@ -446,14 +424,12 @@ Start charging the vehicle.
 
 #### Return
 
-| Value            | Type         | Description                                                                                |
-| :--------------- | :----------- | :----------------------------------------------------------------------------------------- |
-| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to start charging the EV |
-| `Action.status`  | String       | Set to "success" on successful request.                                                    |
-| `Action.message` | String       | Message of the response.                                                                   |
-| `Action.meta`    | Dictionary\* | Response headers and other information about the response                                  |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value            | Type                   | Description                                                                                |
+| :--------------- | :--------------------- | :----------------------------------------------------------------------------------------- |
+| `Action`         | typing.NamedTuple      | The returned object with vehicle's status after sending a request to start charging the EV |
+| `Action.status`  | String                 | Set to "success" on successful request.                                                    |
+| `Action.message` | String                 | Message of the response.                                                                   |
+| `Action.meta`    | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                 |
 
 #### Raises
 
@@ -467,14 +443,12 @@ Stop charging the vehicle.
 
 #### Return
 
-| Value            | Type         | Description                                                                               |
-| :--------------- | :----------- | :---------------------------------------------------------------------------------------- |
-| `Action`         | NamedTuple   | The returned object with vehicle's status after sending a request to stop charging the EV |
-| `Action.status`  | String       | Set to "success" on successful request.                                                   |
-| `Action.message` | String       | Message of the response.                                                                  |
-| `Action.meta`    | Dictionary\* | Response headers and other information about the response                                 |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value            | Type                   | Description                                                                               |
+| :--------------- | :--------------------- | :---------------------------------------------------------------------------------------- |
+| `Action`         | typing.NamedTuple      | The returned object with vehicle's status after sending a request to stop charging the EV |
+| `Action.status`  | String                 | Set to "success" on successful request.                                                   |
+| `Action.message` | String                 | Message of the response.                                                                  |
+| `Action.meta`    | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                |
 
 #### Raises
 
@@ -488,13 +462,11 @@ Returns the `Permissions` NamedTuple, paged list of all permissions currently as
 
 #### Return
 
-| Value                     | Type         | Description                                               |
-| :------------------------ | :----------- | :-------------------------------------------------------- |
-| `Permissions`             | NamedTuple   | The returned object with the vehicle's permissions        |
-| `Permissions.unit_system` | String[]     | An array of permission                                    |
-| `Permissions.meta`        | Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                     | Type                   | Description                                                                |
+| :------------------------ | :--------------------- | :------------------------------------------------------------------------- |
+| `Permissions`             | typing.NamedTuple      | The returned object with the vehicle's permissions                         |
+| `Permissions.unit_system` | String[]               | An array of permission                                                     |
+| `Permissions.meta`        | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 ---
 
@@ -511,13 +483,11 @@ members. Visit https://smartcar.com/pricing to sign up and gain access.
 
 #### Return
 
-| Value             | Type         | Description                                                                                                |
-| :---------------- | :----------- | :--------------------------------------------------------------------------------------------------------- |
-| `Batch`           | Batch        | The returned object with the results of the requests. Each request results in the corresponding NamedTuple |
-| `Batch.<request>` | NamedTuple   | The appropriate NamedTuple for the request. e.g. `Batch.odometer` -> <Odometer>                            |
-| `Batch.meta`      | Dictionary\* | Response headers and other information about the response                                                  |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value             | Type                   | Description                                                                                                |
+| :---------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `Batch`           | Batch                  | The returned object with the results of the requests. Each request results in the corresponding NamedTuple |
+| `Batch.<request>` | typing.NamedTuple      | The appropriate NamedTuple for the request. e.g. `Batch.odometer` -> <Odometer>                            |
+| `Batch.meta`      | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                 |
 
 #### Example Response
 
@@ -543,13 +513,11 @@ Disconnect this vehicle from the connected application.
 
 #### Returns
 
-| Value           | Type         | Description                                                                       |
-| :-------------- | :----------- | :-------------------------------------------------------------------------------- |
-| `Status`        | NamedTuple   | The returned object with vehicle's "status" after sending a request to disconnect |
-| `Status.status` | String       | Set to "success" on successful request.                                           |
-| `Status.meta`   | Dictionary\* | Response headers and other information about the response                         |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value           | Type                   | Description                                                                       |
+| :-------------- | :--------------------- | :-------------------------------------------------------------------------------- |
+| `Status`        | typing.NamedTuple      | The returned object with vehicle's "status" after sending a request to disconnect |
+| `Status.status` | String                 | Set to "success" on successful request.                                           |
+| `Status.meta`   | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)        |
 
 #### Raises
 
@@ -573,14 +541,12 @@ Subscribe vehicle to a Smartcar webhook.
 
 #### Returns
 
-| Value                  | Type         | Description                                                                                   |
-| :--------------------- | :----------- | :-------------------------------------------------------------------------------------------- |
-| `Subscribe`            | NamedTuple   | The returned object with vehicle's "status" after sending a request to subscribe to a webhook |
-| `Subscribe.webhook_id` | String       | Id of requested webhook                                                                       |
-| `Subscribe.vehicle_id` | String       | Id of requested vehicle                                                                       |
-| `Subscribe.meta`       | Dictionary\* | Response headers and other information about the response                                     |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                  | Type                   | Description                                                                                   |
+| :--------------------- | :--------------------- | :-------------------------------------------------------------------------------------------- |
+| `Subscribe`            | typing.NamedTuple      | The returned object with vehicle's "status" after sending a request to subscribe to a webhook |
+| `Subscribe.webhook_id` | String                 | Id of requested webhook                                                                       |
+| `Subscribe.vehicle_id` | String                 | Id of requested vehicle                                                                       |
+| `Subscribe.meta`       | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                    |
 
 #### Raises
 
@@ -601,11 +567,11 @@ Unsbscribe vehicle from a Smartcar webhook.
 
 #### Returns
 
-| Type         | Description                                               |
-| :----------- | :-------------------------------------------------------- |
-| Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value           | Type                   | Description                                                                                       |
+| :-------------- | :--------------------- | :------------------------------------------------------------------------------------------------ |
+| `Status`        | typing.NamedTuple      | The returned object with vehicle's "status" after sending a request to unsubscribe from a webhook |
+| `Status.status` | String                 | Set to "success" on successful request.                                                           |
+| `Status.meta`   | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                        |
 
 #### Raises
 
@@ -665,16 +631,14 @@ Get a list of the user's vehicle ids
 
 #### Returns
 
-| Value                    | Type         | Description                                                             |
-| :----------------------- | :----------- | :---------------------------------------------------------------------- |
-| `Vehicles`               | NamedTuple   | The returned object with the list of vehicle ids and paging information |
-| `Vehicles.vehicles`      | String       | Set to "success" on successful request.                                 |
-| `Vehicles.paging`        | Dictionary   | Contains paging information of returned data                            |
-| `Vehicles.paging.limit`  | Integer      | The number of vehicle ids to return                                     |
-| `Vehicles.paging.offset` | Integer      | The index to start the vehicle list at                                  |
-| `Vehicles.meta`          | Dictionary\* | Response headers and other information about the response               |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                    | Type                   | Description                                                                |
+| :----------------------- | :--------------------- | :------------------------------------------------------------------------- |
+| `Vehicles`               | typing.NamedTuple      | The returned object with the list of vehicle ids and paging information    |
+| `Vehicles.vehicles`      | String                 | Set to "success" on successful request.                                    |
+| `Vehicles.paging`        | typing.NamedTuple      | Contains paging information of returned data                               |
+| `Vehicles.paging.limit`  | Integer                | The number of vehicle ids to return                                        |
+| `Vehicles.paging.offset` | Integer                | The index to start the vehicle list at                                     |
+| `Vehicles.meta`          | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -695,13 +659,11 @@ Retrieve the userId associated with the access_token
 
 #### Returns
 
-| Value       | Type         | Description                                               |
-| :---------- | :----------- | :-------------------------------------------------------- |
-| `User`      | NamedTuple   | The returned object with User id                          |
-| `User.id`   | String       | The user id                                               |
-| `User.meta` | Dictionary\* | Response headers and other information about the response |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value       | Type                   | Description                                                                |
+| :---------- | :--------------------- | :------------------------------------------------------------------------- |
+| `User`      | typing.NamedTuple      | The returned object with User id                                           |
+| `User.id`   | String                 | The user id                                                                |
+| `User.meta` | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
@@ -732,17 +694,16 @@ _To use this function, please contact us!_
 | `options`               | Dictionary | **Optional** | A dictionary where you can pass in additional options as query parameters.                                                                                   |
 | `options.client_id`     | String     | **Optional** | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                              |
 | `options.client_secret` | String     | **Optional** | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                                          |
+| `options.version`       | String     | **Optional** | the version of Smartcar API (e.g. '1.0' or '2.0')                                                                                                            |
 | `options.flags`         | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.                                                                                       |
 
 #### Return
 
-| Value                      | Type         | Description                                                                           |
-| :------------------------- | :----------- | :------------------------------------------------------------------------------------ |
-| `Compatibility`            | NamedTuple   | The returned object with vehicle's compatibility with the permissions (scope) checked |
-| `Compatibility.compatible` | Boolean      | Whether the vehicle is compatibile with the permissions (or not)                      |
-| `Compatibility.meta`       | Dictionary\* | Response headers and other information about the response                             |
-
-\*`requests.structures.CaseInsensitiveDict`
+| Value                      | Type                   | Description                                                                           |
+| :------------------------- | :--------------------- | :------------------------------------------------------------------------------------ |
+| `Compatibility`            | typing.NamedTuple      | The returned object with vehicle's compatibility with the permissions (scope) checked |
+| `Compatibility.compatible` | Boolean                | Whether the vehicle is compatibile with the permissions (or not)                      |
+| `Compatibility.meta`       | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)            |
 
 #### Raises
 
@@ -770,8 +731,6 @@ Take the random string received in the challenge request and use your Applicatio
 | :----- | :----------------------------- |
 | String | Hex-encoding of resulting hash |
 
-\*`requests.structures.CaseInsensitiveDict`
-
 ---
 
 ### `hash_challenge(amt, signature, body)`
@@ -791,5 +750,3 @@ Verify webhook payload against AMT and signature.
 | Type    | Description                            |
 | :------ | :------------------------------------- |
 | Boolean | Matching signature and response header |
-
-\*`requests.structures.CaseInsensitiveDict`
