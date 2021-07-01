@@ -12,16 +12,25 @@ class SmartcarException(Exception):
         # populate the error with passed in keys.
         for key in kwargs.keys():
             # format resolution: must be a dictionary with "type" and "url"
-            if key == "resolution" and type(kwargs[key]) != dict:
-                formatted_resolution = {"type": kwargs[key], "url": None}
-                self.__dict__[key] = formatted_resolution
+            if key == "resolution":
+                if type((kwargs[key])) == str:
+                    formatted_resolution = {"type": kwargs[key], "url": None}
+                    self.__dict__[key] = formatted_resolution
+                if type(kwargs[key]) == dict:
+                    formatted_resolution = {
+                        "type": kwargs[key].get("type"),
+                        "url": kwargs[key].get("url"),
+                    }
+                    self.__dict__[key] = formatted_resolution
+                else:
+                    self.__dict__[key] = {"type": None, "url": None}
             else:
-                self.__dict__[key] = kwargs[key] or ""
+                self.__dict__[key] = kwargs[key] or None
 
         # v2.0
         if "type" in kwargs and "code" in kwargs and "description" in kwargs:
-            code = kwargs.get("code", "")
-            self.message = f"{kwargs['type']}:{code} - {kwargs['description']}"
+            code = f":{kwargs.get('code')}" if kwargs.get("code") else ""
+            self.message = f"{kwargs['type']}{code} - {kwargs['description']}"
 
         # v1.0
         else:
@@ -41,7 +50,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
     except Exception:
         return SmartcarException(
             status_code=status_code,
-            request_id=headers["SC-Request-Id"],
+            request_id=headers.get("SC-Request-Id"),
             type="SDK_ERROR",
             message=body,
         )

@@ -1,10 +1,12 @@
 from collections import namedtuple
+import json
 from typing import List
-import requests.structures as rs
 
 import smartcar.config as config
 import smartcar.helpers as helpers
+import smartcar.smartcar
 import smartcar.types as types
+import smartcar.exception as sce
 
 
 class Vehicle(object):
@@ -29,7 +31,7 @@ class Vehicle(object):
         """
         self.vehicle_id = vehicle_id
         self.access_token = access_token
-        self._api_version = config.API_VERSION
+        self._api_version = smartcar.smartcar.API_VERSION
         self._unit_system = "metric"
 
         if options:
@@ -320,25 +322,43 @@ class Vehicle(object):
             SmartcarException
         """
         url = self._format_url("batch")
-        requests = [{"path": path} for path in paths]
         headers = self._get_headers()
-        json = {"requests": requests}
-        response = helpers.requester("POST", url, headers=headers, json=json)
-
-        # Generate NamedTuple for every path requested. Store in a dictionary
-        batch_dict = dict()
+        json_body = {"requests": [{"path": path} for path in paths]}
+        response = helpers.requester("POST", url, headers=headers, json=json_body)
 
         # PHASES of batch_dict
-        # 1. building dictionary of NamedTuples
+        # 1. building dictionary of lambda functions, each function returns a
+        #     NamedTuple OR a SmartcarException
         # 2. building namedtuple of NamedTuple
 
         # For each response (per path), set the key of batch_dict as the path (w/o slash)
         # Then, create a tuple for each response dictionary.
-        for res in response.json()["responses"]:
-            path = res["path"][1:] if res["path"][0] == "/" else res["path"]
+        batch_dict = dict()
+        path_responses = response.json()["responses"]
+        for res_dict in path_responses:
+            path = (
+                res_dict["path"][1:] if res_dict["path"][0] == "/" else res_dict["path"]
+            )
             # PHASE 1
-            batch_dict[path] = types.select_named_tuple(path, res)
+            if res_dict.get("code") == 200:
+                # attach top-level sc-request-id to res_dict
+                res_dict["headers"]["sc-request-id"] = response.headers.get(
+                    "sc-request-id"
+                )
+                # use lambda default args to avoid issues with closures
+                batch_dict[path] = lambda p=path, r=res_dict: types.select_named_tuple(
+                    p, r
+                )
+            else:
+                # if individual response is erroneous, have it return an exception
+                def _raise(exception):
+                    raise exception
 
+                code = res_dict.get("code")
+                headers = response.headers
+                body = json.dumps(res_dict.get("body"))
+                exception = sce.exception_factory(code, headers, body)
+                batch_dict[path] = lambda: _raise(exception)
         # Attach response headers to the dictionary
         # ..and then transform batch_dict to a NamedTuple
         meta = types.build_meta(response.headers)
@@ -346,7 +366,6 @@ class Vehicle(object):
 
         # PHASE 2
         batch = types.generate_named_tuple(batch_dict, "batch")
-
         return batch
 
     # ===========================================

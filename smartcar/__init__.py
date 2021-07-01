@@ -1,7 +1,5 @@
 __version__ = "semantic-release"
 
-from smartcar.config import set_api_version
-
 from smartcar.auth_client import AuthClient
 
 from smartcar.exception import SmartcarException
@@ -11,6 +9,8 @@ from smartcar.smartcar import (
     get_vehicles,
     get_compatibility,
     hash_challenge,
+    get_api_version,
+    set_api_version,
     verify_payload,
 )
 

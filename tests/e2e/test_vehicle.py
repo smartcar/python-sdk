@@ -1,4 +1,5 @@
 import smartcar.types as types
+from smartcar.exception import SmartcarException
 import tests.auth_helpers as ah
 
 
@@ -109,14 +110,46 @@ def test_stop_charge(vw_egolf):
     assert response._fields == ("status", "message", "meta")
 
 
-def test_batch(chevy_volt):
+def test_batch_success(chevy_volt):
     batch = chevy_volt.batch(["/odometer", "/location"])
     assert batch is not None
     assert batch._fields == ("odometer", "location", "meta")
-
-    # assert meta and nested meta types
     assert isinstance(batch.meta, tuple)
-    assert isinstance(batch.odometer.meta, tuple)
+    assert isinstance(batch.odometer().meta, tuple)
+    assert batch.odometer().distance is not None
+    assert batch.odometer().meta.request_id is not None
+    assert batch.location().longitude is not None
+    assert batch.location().latitude is not None
+    assert batch.location().meta.request_id is not None
+
+
+def test_batch_misspelled_permission(chevy_volt):
+    try:
+        chevy_volt.batch(["/odometer", "/LOCATIONNNNNNNN"])
+    except Exception as e:
+        assert e.status_code == 400
+        assert e.type == "VALIDATION"
+
+
+def test_batch_unauthorized_permission(chevy_volt_limited_scope):
+    batch = chevy_volt_limited_scope.batch(["/odometer", "/location"])
+    try:
+        batch.location()
+    except Exception as e:
+        assert isinstance(e, SmartcarException)
+        assert e.status_code == 403
+
+
+def test_batch_unauthorized_permission_v1(chevy_volt_limited_scope):
+    chevy_volt_limited_scope._api_version = "1.0"
+    batch = chevy_volt_limited_scope.batch(["/odometer", "/location"])
+    try:
+        batch.location()
+    except Exception as e:
+        assert isinstance(e, SmartcarException)
+        assert e.status_code == 403
+    finally:
+        chevy_volt_limited_scope._api_version = "2.0"
 
 
 def test_permissions(chevy_volt):
@@ -157,6 +190,12 @@ def test_setting_unit_system(chevy_volt):
     chevy_volt._unit_system = "imperial"
     response = chevy_volt.odometer()
     assert response.meta.unit_system == "imperial"
+
+
+def test_v1_request(chevy_volt_v1):
+    odometer = chevy_volt_v1.odometer()
+    assert odometer.distance is not None
+    assert odometer.meta.request_id is not None
 
 
 # Disconnect test MUST be at the end of the file

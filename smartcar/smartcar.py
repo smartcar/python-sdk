@@ -2,12 +2,44 @@ import base64
 import hmac
 import hashlib
 import os
+import re
 from datetime import datetime
 from typing import List
 
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.types as types
+
+API_VERSION = "2.0"
+
+
+def set_api_version(version: str) -> None:
+    """
+    Update the version of Smartcar API you are using
+
+    Args:
+        version (str): the version of the api you want to use
+    """
+    if re.match(r"\d+\.\d+", version):
+        global API_VERSION
+        API_VERSION = version
+    else:
+        raise ValueError(
+            fr"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+        )
+
+
+def get_api_version() -> str:
+    """
+    Returns:
+        Version of API requests are currently being sent to.
+
+        NOTE: May not reflect the version of Smartcar API that instantiated smartcar.Vehicle's
+        are sending requests to.
+    """
+
+    global API_VERSION
+    return API_VERSION
 
 
 def get_user(access_token: str) -> types.User:
@@ -23,7 +55,7 @@ def get_user(access_token: str) -> types.User:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{config.API_VERSION}/user"
+    url = f"{config.API_URL}/v{API_VERSION}/user"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = helpers.requester("GET", url, headers=headers)
 
@@ -48,7 +80,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{config.API_VERSION}/vehicles"
+    url = f"{config.API_URL}/v{API_VERSION}/vehicles"
     headers = {"Authorization": f"Bearer {access_token}"}
     params = paging if paging is not None else None
     response = helpers.requester("GET", url, headers=headers, params=params)
@@ -85,7 +117,7 @@ def get_compatibility(
     """
     client_id = os.environ.get("SMARTCAR_CLIENT_ID")
     client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")
-    api_version = config.API_VERSION
+    api_version = API_VERSION
     params = {"vin": vin, "scope": " ".join(scope), "country": country}
 
     # Configuring options.

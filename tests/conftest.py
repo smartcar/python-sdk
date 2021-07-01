@@ -75,6 +75,49 @@ def chevy_volt_imperial(chevy_volt, access):
     )
 
 
+@pytest.fixture(scope="session")
+def chevy_volt_v1(chevy_volt, access):
+    """
+    Using default access token that has the default scope
+    permissions (found in ./auth_helpers), return the first
+    car. Since the test client defaults to Chevrolet, the first
+    car should be a Chevrolet Volt.
+
+    Set this instance of Vehicle to use "imperial" units
+
+    Yields:
+        chevy_volt(smartcar.Vehicle)
+    """
+    yield sc.Vehicle(
+        chevy_volt.vehicle_id,
+        access.access_token,
+        {"unit_system": "imperial", "version": "1.0"},
+    )
+
+
+@pytest.fixture(scope="session")
+def chevy_volt_limited_scope(client):
+    """
+    Using the client fixture, go through Smartcar connect auth
+    flow and acquire an access object. This object will have
+    access and refresh tokens that can be used throughout the
+    project.
+
+    This version of the chevy_volt will only have vehicle
+    attributes and odometer permissions.
+
+    Yields:
+        access namedtuple
+    """
+    scope = ["required:read_vehicle_info", "required:read_odometer"]
+    auth_url = client.get_auth_url(scope=scope)
+    code = ah.run_auth_flow(auth_url)
+    access = client.exchange_code(code)
+    vehicle_ids = sc.get_vehicles(access.access_token)
+    volt_id = vehicle_ids.vehicles[0]
+    yield sc.Vehicle(volt_id, access.access_token)
+
+
 # # VW E-Golf
 @pytest.fixture(scope="session")
 def access_vw(client):
