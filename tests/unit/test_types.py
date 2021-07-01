@@ -28,5 +28,4 @@ def test_select_named_tuple_on_dict():
     res2 = types.select_named_tuple(test_path_2, mock_user_res_dict)
 
     assert type(res2) == types.User
-    assert res2.meta == mock_user_res_dict["headers"]
     assert res2.id == "qwerty123"

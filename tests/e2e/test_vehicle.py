@@ -1,4 +1,3 @@
-import requests.structures as rs
 import smartcar.types as types
 import tests.auth_helpers as ah
 
@@ -9,7 +8,7 @@ def test_vin_and_meta(chevy_volt):
     assert vin is not None
     assert type(vin) == types.Vin
     assert vin._fields == ("vin", "meta")
-    assert type(vin.meta) == rs.CaseInsensitiveDict
+    assert isinstance(vin.meta, tuple)
 
 
 def test_charge(chevy_volt):
@@ -116,8 +115,8 @@ def test_batch(chevy_volt):
     assert batch._fields == ("odometer", "location", "meta")
 
     # assert meta and nested meta types
-    assert type(batch.meta) == rs.CaseInsensitiveDict
-    assert type(batch.odometer.meta) == rs.CaseInsensitiveDict
+    assert isinstance(batch.meta, tuple)
+    assert isinstance(batch.odometer.meta, tuple)
 
 
 def test_permissions(chevy_volt):
@@ -145,18 +144,19 @@ def test_webhooks(chevy_volt):
             ah.APPLICATION_MANAGEMENT_TOKEN, ah.WEBHOOK_ID
         )
         assert unsubscribe is not None
-        assert type(unsubscribe) == rs.CaseInsensitiveDict
+        assert type(unsubscribe) == types.Status
+        assert unsubscribe._fields == ("status", "meta")
 
 
 def test_chevy_imperial(chevy_volt_imperial):
     response = chevy_volt_imperial.odometer()
-    assert response.meta["sc-unit-system"] == "imperial"
+    assert response.meta.unit_system == "imperial"
 
 
 def test_setting_unit_system(chevy_volt):
     chevy_volt._unit_system = "imperial"
     response = chevy_volt.odometer()
-    assert response.meta["sc-unit-system"] == "imperial"
+    assert response.meta.unit_system == "imperial"
 
 
 # Disconnect test MUST be at the end of the file

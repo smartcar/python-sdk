@@ -18,7 +18,7 @@ def get_user(access_token: str) -> types.User:
         access_token (str): Smartcar access token
 
     Returns:
-        User: NamedTuple("User", [("id", str), ("meta", Meta)])
+        User: NamedTuple("User", [("id", str), ("meta", namedtuple)])
 
     Raises:
         SmartcarException
@@ -43,7 +43,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
             offset (int, optional): The index to start the vehicle list at
 
     Returns:
-        Vehicles: NamedTuple("Vehicles", [("vehicles", List[str]), ("paging", Paging), ("meta", Meta)])
+        Vehicles: NamedTuple("Vehicles", [("vehicles", List[str]), ("paging", Paging), ("meta", namedtuple)])
 
     Raises:
         SmartcarException
@@ -81,7 +81,7 @@ def get_compatibility(
 
 
     Returns:
-        Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", Meta)])
+        Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", namedtuple)])
     """
     client_id = os.environ.get("SMARTCAR_CLIENT_ID")
     client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")

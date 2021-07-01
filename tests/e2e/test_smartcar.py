@@ -7,7 +7,7 @@ from smartcar import (
     verify_payload,
 )
 import smartcar.config as config
-
+import smartcar.types as types
 import tests.auth_helpers as ah
 
 
@@ -26,9 +26,9 @@ def test_get_user(access):
 
 def test_get_vehicles(access):
     res = get_vehicles(access.access_token)
-
     assert res.vehicles is not None
     assert res.paging is not None
+    assert type(res.paging) == types.Paging
 
 
 def test_get_compatibility(chevy_volt):

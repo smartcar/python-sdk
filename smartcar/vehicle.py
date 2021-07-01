@@ -44,7 +44,7 @@ class Vehicle(object):
         GET Vehicle.vin
 
         Returns:
-            Vin: NamedTuple("Vin", [("vin", str), ("meta", CaseInsensitiveDict)])
+            Vin: NamedTuple("Vin", [("vin", str), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -60,7 +60,7 @@ class Vehicle(object):
         GET Vehicle.charge
 
         Returns:
-            Charge: NamedTuple("Charge", [("is_plugged_in", bool), ("state", str), ("meta", CaseInsensitiveDict)])
+            Charge: NamedTuple("Charge", [("is_plugged_in", bool), ("state", str), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -78,7 +78,7 @@ class Vehicle(object):
         Returns:
             Battery: NamedTuple("Battery", [("percent_remaining", float),
                 ("range", float),
-                ("meta", CaseInsensitiveDict)])
+                ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -94,7 +94,7 @@ class Vehicle(object):
         GET Vehicle.battery_capacity
 
         Returns:
-            BatteryCapacity: NamedTuple("BatteryCapacity", [("capacity", float), ("meta", CaseInsensitiveDict)])
+            BatteryCapacity: NamedTuple("BatteryCapacity", [("capacity", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -111,7 +111,7 @@ class Vehicle(object):
 
         Returns:
             Fuel: NamedTuple("Fuel", [("range", float),
-                ("percent_remaining", float), ("amount_remaining", float), ("meta", CaseInsensitiveDict)])
+                ("percent_remaining", float), ("amount_remaining", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -129,7 +129,7 @@ class Vehicle(object):
         Returns:
             TirePressure: NamedTuple("tirePressure", [
                 ("front_left", int), ("front_right", int), ("back_left", int), ("back_right", int),
-                ("meta", rs.CaseInsensitiveDict)
+                ("meta", rs.namedtuple)
                 ])
 
         Raises:
@@ -146,7 +146,7 @@ class Vehicle(object):
         GET Vehicle.engine_oil
 
         Returns:
-            EngineOil: NamedTuple("EngineOil", [("life_remaining", float), ("meta", CaseInsensitiveDict)])
+            EngineOil: NamedTuple("EngineOil", [("life_remaining", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -162,7 +162,7 @@ class Vehicle(object):
         GET Vehicle.odometer
 
         Returns:
-            Odometer: NamedTuple("Odometer", [("distance", float), ("meta", CaseInsensitiveDict)])
+            Odometer: NamedTuple("Odometer", [("distance", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -178,7 +178,7 @@ class Vehicle(object):
         GET Vehicle.location
 
         Returns:
-            Location: NamedTuple("Location", [("latitude", float), ("longitude", float), ("meta", CaseInsensitiveDict)])
+            Location: NamedTuple("Location", [("latitude", float), ("longitude", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -225,7 +225,7 @@ class Vehicle(object):
 
         Returns:
             Attributes: NamedTuple("Attributes", [("id", str), ("make", str), ("model", str), ("year", str),
-            ("meta", CaseInsensitiveDict)])
+            ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -245,7 +245,7 @@ class Vehicle(object):
         POST Vehicle.lock
 
         Returns:
-            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.namedtuple)])
 
         Raises:
             SmartcarException
@@ -261,7 +261,7 @@ class Vehicle(object):
         POST Vehicle.unlock
 
         Returns:
-            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.namedtuple)])
 
         Raises:
             SmartcarException
@@ -277,7 +277,7 @@ class Vehicle(object):
         POST Vehicle.start_charge
 
         Returns:
-            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.namedtuple)])
 
         Raises:
             SmartcarException
@@ -293,7 +293,7 @@ class Vehicle(object):
         POST Vehicle.stop_charge
 
         Returns:
-            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)])
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.namedtuple)])
 
         Raises:
             SmartcarException
@@ -341,7 +341,7 @@ class Vehicle(object):
 
         # Attach response headers to the dictionary
         # ..and then transform batch_dict to a NamedTuple
-        meta = rs.CaseInsensitiveDict(response.headers)
+        meta = types.build_meta(response.headers)
         batch_dict["meta"] = meta
 
         # PHASE 2
@@ -362,7 +362,7 @@ class Vehicle(object):
         wish to make requests to it
 
         Returns:
-            Status: NamedTuple("Status", [("status", str), ("meta", CaseInsensitiveDict)])
+            Status: NamedTuple("Status", [("status", str), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -384,14 +384,14 @@ class Vehicle(object):
             webhook_id (str)
 
         Returns:
-            Subscribe: NamedTuple("Subscribe", [("webhook_id", str"), ("vehicle_id", str), ("meta", CaseInsensitiveDict)
+            Subscribe: NamedTuple("Subscribe", [("webhook_id", str"), ("vehicle_id", str), ("meta", namedtuple)
         """
         url = self._format_url(f"webhooks/{webhook_id}")
         headers = self._get_headers(need_unit_system=False)
         response = helpers.requester("POST", url, headers=headers)
         return types.select_named_tuple("subscribe", response)
 
-    def unsubscribe(self, amt: str, webhook_id: str) -> rs.CaseInsensitiveDict:
+    def unsubscribe(self, amt: str, webhook_id: str) -> types.Status:
         """
         Subscribe a vehicle to a webhook
 
@@ -400,14 +400,14 @@ class Vehicle(object):
             webhook_id (str)
 
         Returns:
-            CaseInsensitiveDict: The response headers (i.e. meta) of the request
+            Status: NamedTuple("Subscribe", [("webhook_id", str"), ("vehicle_id", str), ("meta", namedtuple)
         """
         url = self._format_url(f"webhooks/{webhook_id}")
 
         # Note: Authorization header is different, compared to the other methods
         headers = {"Authorization": f"Bearer {amt}"}
         response = helpers.requester("DELETE", url, headers=headers)
-        return rs.CaseInsensitiveDict(response.headers)
+        return types.select_named_tuple("unsubscribe", response)
 
     # ===========================================
     # Utility

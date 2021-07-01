@@ -69,39 +69,55 @@ def _camel_to_snake(camel_string: str) -> str:
     return result.lower()
 
 
+def build_meta(response_headers: rs.CaseInsensitiveDict) -> namedtuple:
+    smartcar_headers = {
+        "sc-data-age": "data_age",
+        "sc-unit-system": "unit_system",
+        "sc-request-id": "request_id",
+    }
+
+    meta_dict = {}
+    for key, value in smartcar_headers.items():
+        if key in response_headers:
+            meta_dict[value] = response_headers[key]
+
+    return generate_named_tuple(meta_dict, "Meta", True)
+
+
 # ===========================================
 # smartcar.py
 # ===========================================
+Paging = NamedTuple("Paging", [("count", int), ("offset", int)])
 
-User = NamedTuple("User", [("id", str), ("meta", rs.CaseInsensitiveDict)])
+User = NamedTuple("User", [("id", str), ("meta", namedtuple)])
 
 Vehicles = NamedTuple(
     "Vehicles",
-    [("vehicles", List[str]), ("paging", dict), ("meta", rs.CaseInsensitiveDict)],
+    [("vehicles", List[str]), ("paging", Paging), ("meta", namedtuple)],
 )
 
 Compatibility = NamedTuple(
-    "Compatibility", [("compatible", bool), ("meta", rs.CaseInsensitiveDict)]
+    "Compatibility", [("compatible", bool), ("meta", namedtuple)]
 )
 
 # ===========================================
 # vehicle.py
 # ===========================================
 
-Vin = NamedTuple("Vin", [("vin", str), ("meta", rs.CaseInsensitiveDict)])
+Vin = NamedTuple("Vin", [("vin", str), ("meta", namedtuple)])
 
 Charge = NamedTuple(
     "Charge",
-    [("is_plugged_in", bool), ("state", str), ("meta", rs.CaseInsensitiveDict)],
+    [("is_plugged_in", bool), ("state", str), ("meta", namedtuple)],
 )
 
 Battery = NamedTuple(
     "Battery",
-    [("percent_remaining", float), ("range", float), ("meta", rs.CaseInsensitiveDict)],
+    [("percent_remaining", float), ("range", float), ("meta", namedtuple)],
 )
 
 BatteryCapacity = NamedTuple(
-    "BatteryCapacity", [("capacity", float), ("meta", rs.CaseInsensitiveDict)]
+    "BatteryCapacity", [("capacity", float), ("meta", namedtuple)]
 )
 
 Fuel = NamedTuple(
@@ -110,7 +126,7 @@ Fuel = NamedTuple(
         ("range", float),
         ("percent_remaining", float),
         ("amount_remaining", float),
-        ("meta", rs.CaseInsensitiveDict),
+        ("meta", namedtuple),
     ],
 )
 
@@ -121,21 +137,17 @@ TirePressure = NamedTuple(
         ("front_right", int),
         ("back_left", int),
         ("back_right", int),
-        ("meta", rs.CaseInsensitiveDict),
+        ("meta", namedtuple),
     ],
 )
 
-EngineOil = NamedTuple(
-    "EngineOil", [("life_remaining", float), ("meta", rs.CaseInsensitiveDict)]
-)
+EngineOil = NamedTuple("EngineOil", [("life_remaining", float), ("meta", namedtuple)])
 
-Odometer = NamedTuple(
-    "Odometer", [("distance", float), ("meta", rs.CaseInsensitiveDict)]
-)
+Odometer = NamedTuple("Odometer", [("distance", float), ("meta", namedtuple)])
 
 Location = NamedTuple(
     "Location",
-    [("latitude", float), ("longitude", float), ("meta", rs.CaseInsensitiveDict)],
+    [("latitude", float), ("longitude", float), ("meta", namedtuple)],
 )
 
 Attributes = NamedTuple(
@@ -145,28 +157,26 @@ Attributes = NamedTuple(
         ("make", str),
         ("model", str),
         ("year", str),
-        ("meta", rs.CaseInsensitiveDict),
+        ("meta", namedtuple),
     ],
 )
 
-Action = NamedTuple(
-    "Action", [("status", str), ("message", str), ("meta", rs.CaseInsensitiveDict)]
-)
+Action = NamedTuple("Action", [("status", str), ("message", str), ("meta", namedtuple)])
 
-Status = NamedTuple("Status", [("status", str), ("meta", rs.CaseInsensitiveDict)])
+Status = NamedTuple("Status", [("status", str), ("meta", namedtuple)])
 
-Permissions = NamedTuple(
-    "Permissions", [("permissions", list), ("meta", rs.CaseInsensitiveDict)]
-)
+Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", namedtuple)])
 
 Subscribe = NamedTuple(
     "Subscribe",
-    [("webhook_id", str), ("vehicle_id", str), ("meta", rs.CaseInsensitiveDict)],
+    [("webhook_id", str), ("vehicle_id", str), ("meta", namedtuple)],
 )
 
 
 # This version of Permissions will be implemented when "paging" is verified to be returned from Smartcar API:
-# Permissions = NamedTuple("Permissions", [("permissions", list), ("paging", dict), ("meta", Meta)])
+# Permissions = NamedTuple(
+#     "Permissions", [("permissions", list), ("paging", Paging), ("meta", namedtuple)]
+# )
 
 
 # ===========================================
@@ -205,10 +215,11 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     """
     if type(response_or_dict) == dict:
-        headers = rs.CaseInsensitiveDict(response_or_dict["headers"])
+        headers_dict = rs.CaseInsensitiveDict(response_or_dict["headers"])
+        headers = build_meta(headers_dict)
         data = response_or_dict["body"]
     else:
-        headers = response_or_dict.headers
+        headers = build_meta(response_or_dict.headers)
         data = response_or_dict.json()
 
     # smartcar.py
@@ -218,7 +229,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
     elif path == "vehicles":
         return Vehicles(
             data["vehicles"],
-            data["paging"],
+            Paging(data["paging"]["count"], data["paging"]["offset"]),
             headers,
         )
 
@@ -278,7 +289,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
     ):
         return Action(data["status"], data["message"], headers)
 
-    elif path == "disconnect":
+    elif path == "disconnect" or path == "unsubscribe":
         return Status(data["status"], headers)
 
     elif path == "":
