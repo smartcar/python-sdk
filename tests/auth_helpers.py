@@ -12,12 +12,12 @@ import smartcar.helpers as helpers
 # Verify all E2E variables are present ('E2E_<CLIENT VARIABLE>')
 helpers.validate_env(test_mode=True)
 
-# Required environment variables
+# Smartcar client environment variables (Required)
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
 CLIENT_SECRET = os.environ["E2E_SMARTCAR_CLIENT_SECRET"]
 REDIRECT_URI = "https://example.com/auth"
 
-# Variables for testing webhooks:
+# Variables for testing webhooks (Optional):
 APPLICATION_MANAGEMENT_TOKEN = os.environ.get("E2E_SMARTCAR_AMT")
 WEBHOOK_ID = os.environ.get("E2E_SMARTCAR_WEBHOOK_ID")
 
@@ -51,7 +51,7 @@ def get_code_from_url(url):
 
     if "code" not in search_params:
         raise Exception(
-            "Did not get code in url! Query string: {}".format(search_params["error"])
+            f"Did not get code in url! Query string: {search_params['error']}"
         )
 
     return search_params["code"]
@@ -63,7 +63,6 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     driver = webdriver.Firefox(options=firefox_options)
 
     driver.get(auth_url)
-
     # Preamble
     preamble_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "button#continue-button"))
@@ -73,14 +72,12 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     # Brand Selector
     brand_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
-            (
-                By.CSS_SELECTOR,
-                "button.brand-selector-button[data-make='{}']".format(brand),
-            )
+            (By.CSS_SELECTOR, f"button.brand-selector-button[data-make='{brand}']")
         )
     )
     brand_button.click()
 
+    # Logging in (with any random credentials to run through test-mode)
     username = str(uuid.uuid4()) + "@email.com"
     sign_in_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "sign-in-button"))
@@ -89,10 +86,18 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     driver.find_element_by_id("password").send_keys("password")
     sign_in_button.click()
 
+    # Permissions Approval
     permissions_approval_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "approval-button"))
     )
     permissions_approval_button.click()
+
+    permissions_continue_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "continue-button"))
+    )
+    permissions_continue_button.click()
+
+    # Capture URL and get the access `code`
     url = driver.current_url
     driver.close()
     return get_code_from_url(url)
