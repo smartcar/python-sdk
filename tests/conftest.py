@@ -104,12 +104,19 @@ def chevy_volt_limited_scope(client):
     project.
 
     This version of the chevy_volt will only have vehicle
-    attributes and odometer permissions.
+    attributes, odometer, and engine oil.
+
+    'attributes' is a special case because the path is empty ('/')
+    'engine oil' is a special case because the path is nested ('/engine/oil')
 
     Yields:
         access namedtuple
     """
-    scope = ["required:read_vehicle_info", "required:read_odometer"]
+    scope = [
+        "required:read_vehicle_info",
+        "required:read_odometer",
+        "required:read_engine_oil",
+    ]
     auth_url = client.get_auth_url(scope=scope)
     code = ah.run_auth_flow(auth_url)
     access = client.exchange_code(code)

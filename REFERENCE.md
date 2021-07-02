@@ -475,6 +475,8 @@ Returns the `Permissions` NamedTuple, paged list of all permissions currently as
 Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smartcar Pro](https://smartcar.com/pricing/)
 members. Visit https://smartcar.com/pricing to sign up and gain access.
 
+The batch method will return a named tuple named `batch`. Methods are attached to `batch`, and they return a `NamedTuple` corresponding to the path requested. Upon erroneous requests, the method will throw a `SmartcarException`.
+
 #### Arguments
 
 | Parameter | Type | Description                                                |
@@ -485,19 +487,28 @@ members. Visit https://smartcar.com/pricing to sign up and gain access.
 
 | Value             | Type                   | Description                                                                                                |
 | :---------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------- |
-| `Batch`           | Batch                  | The returned object with the results of the requests. Each request results in the corresponding NamedTuple |
-| `Batch.<request>` | typing.NamedTuple      | The appropriate NamedTuple for the request. e.g. `Batch.odometer` -> <Odometer>                            |
+| `Batch`           | collections.namedtuple | The returned object with the results of the requests. Each request results in the corresponding NamedTuple |
+| `Batch.<request>` | lambda                 | Returns the appropriate NamedTuple for the request. e.g. `Batch.odometer` -> <Odometer>                    |
 | `Batch.meta`      | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                 |
 
 #### Example Response
 
 ```Python
-# Upon sending a batch request to '/odometer' and '/location' for an instantiated Vehicle "my_tesla_3"
+# Sending a batch request for vehicle attributes (i.e. '/'), odometer, and engine oil
+batch = my_tesla_3.batch(['/', '/odometer', '/engine/oil'])
 
-batch = my_tesla_3.batch(['/odometer', '/location'])
-batch.odometer.distance
-batch.location.longitude
-batch.meta
+# attributes (path: "/")
+batch.attributes() # returns Attributes(...) or raises SmartcarException
+
+# Get 'make' of the car
+batch.attributes().make
+
+# odometer (path: "/odometer")
+batch.odometer() # returns Odometer(...) or raises SmartcarException
+
+# odometer (path: "/engine/oil")
+batch.engine_oil() # returns EngineOil(...) or raises SmartcarException
+
 ```
 
 #### Raises

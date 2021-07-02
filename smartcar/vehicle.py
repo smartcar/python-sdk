@@ -310,63 +310,69 @@ class Vehicle(object):
         """
         POST Vehicle.batch
 
+        This method follows a series of steps:
+        1. Format and send request to Smartcar API batch endpoint
+        2. Store each response in a batch dictionary.
+        3. Attach meta object for the high-level batch request to the dictionary
+        4. Transform batch_dict into a namedtuple, and return
+
         Args:
             paths (str[]): an array of paths to make
             the batch request to
 
         Returns:
-            namedtuple: the responses from Smartcar API, each attribute is the appropriate
-                NamedTuple for the requested path.
+            namedtuple: the responses from Smartcar API, each attribute is a lambda
+            that returns the appropriate NamedTuple OR raises a SmartcarException (if
+            the request results in an error).
 
         Raises:
             SmartcarException
         """
+        # STEP 1 - Send Request
         url = self._format_url("batch")
         headers = self._get_headers()
         json_body = {"requests": [{"path": path} for path in paths]}
         response = helpers.requester("POST", url, headers=headers, json=json_body)
 
-        # PHASES of batch_dict
-        # 1. building dictionary of lambda functions, each function returns a
-        #     NamedTuple OR a SmartcarException
-        # 2. building namedtuple of NamedTuple
-
-        # For each response (per path), set the key of batch_dict as the path (w/o slash)
-        # Then, create a tuple for each response dictionary.
+        # STEP 2 - Format batch_dict
+        # [KEYS] will represent the path sent in the batch.
+        # The name of the key will eventually be the name of the method attached to the final return.
+        # [VALUES] are lambdas that return a NamedTuple OR raises a SmartcarException, depending on the
+        # success of the request.
         batch_dict = dict()
         path_responses = response.json()["responses"]
         for res_dict in path_responses:
-            path = (
-                res_dict["path"][1:] if res_dict["path"][0] == "/" else res_dict["path"]
+            path, attribute = helpers.format_path_and_attribute_for_batch(
+                res_dict["path"]
             )
-            # PHASE 1
+
             if res_dict.get("code") == 200:
                 # attach top-level sc-request-id to res_dict
                 res_dict["headers"]["sc-request-id"] = response.headers.get(
                     "sc-request-id"
                 )
                 # use lambda default args to avoid issues with closures
-                batch_dict[path] = lambda p=path, r=res_dict: types.select_named_tuple(
-                    p, r
-                )
+                batch_dict[
+                    attribute
+                ] = lambda p=path, r=res_dict: types.select_named_tuple(p, r)
             else:
-                # if individual response is erroneous, have it return an exception
-                def _raise(exception):
-                    raise exception
+                # if individual response is erroneous, attach a lambda that returns a SmartcarException
+                def _attribute_raise_exception(smartcar_exception):
+                    raise smartcar_exception
 
                 code = res_dict.get("code")
                 headers = response.headers
                 body = json.dumps(res_dict.get("body"))
-                exception = sce.exception_factory(code, headers, body)
-                batch_dict[path] = lambda: _raise(exception)
-        # Attach response headers to the dictionary
-        # ..and then transform batch_dict to a NamedTuple
-        meta = types.build_meta(response.headers)
-        batch_dict["meta"] = meta
+                sc_exception = sce.exception_factory(code, headers, body)
+                batch_dict[
+                    attribute
+                ] = lambda e=sc_exception: _attribute_raise_exception(e)
 
-        # PHASE 2
-        batch = types.generate_named_tuple(batch_dict, "batch")
-        return batch
+        # STEP 3 - Attach Meta to batch_dict
+        batch_dict["meta"] = types.build_meta(response.headers)
+
+        # STEP 4 - Transform batch_dict into a namedtuple
+        return types.generate_named_tuple(batch_dict, "batch")
 
     # ===========================================
     # DELETE requests

@@ -90,3 +90,32 @@ def format_flag_query(flags: dict) -> str:
         flags_str += f"{flag}:{flags[flag]} "
 
     return flags_str.strip()
+
+
+def format_path_and_attribute_for_batch(raw_path: str) -> tuple:
+    """
+    Prettify the batch attribute and path names.
+    Returned formatted_path will have the slash sliced off.
+    Returned formatted_attribute will be attached to the final return of vehicle.batch().
+    The naming of the attribute should consider empty and nested paths.
+
+    Args:
+        raw_path: Raw path (minus the slash) to smartcar endpoint
+
+    Returns:
+        (<formatted path>, <formatted attribute>)
+
+        e.g.
+        1. "EMPTY" raw_path  == '/' -> ('', 'attributes')
+        2. "NORMAL" raw_path == '/odometer' -> ('odometer', 'odometer')
+        3. "NESTED" raw_path == '/engine/oil' -> ('engine/oil', 'engine_oil')
+    """
+    mapper = {
+        "battery/capacity": "battery_capacity",
+        "engine/oil": "engine_oil",
+        "tires/pressure": "tire_pressure",
+        "": "attributes",
+    }
+    formatted_path = raw_path[1:] if raw_path[0] == "/" else raw_path
+    formatted_attribute = mapper.get(formatted_path, formatted_path)
+    return formatted_path, formatted_attribute

@@ -132,7 +132,19 @@ def test_batch_misspelled_permission(chevy_volt):
 
 
 def test_batch_unauthorized_permission(chevy_volt_limited_scope):
-    batch = chevy_volt_limited_scope.batch(["/odometer", "/location"])
+    """
+    Test for weird path names (empty or nested, e.g. '' or 'engine/oil')
+    Test for error attachment on out of scope permissions
+
+    In scope: "/", "/odometer", "/engine/oil"
+    Out of scope: "/location
+    """
+    batch = chevy_volt_limited_scope.batch(
+        ["/", "/odometer", "/engine/oil", "/location"]
+    )
+    assert batch.attributes().make is not None
+    assert batch.odometer().distance is not None
+    assert batch.engine_oil().life_remaining is not None
     try:
         batch.location()
     except Exception as e:
