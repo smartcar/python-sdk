@@ -82,15 +82,15 @@ Exchange an authorization code for an access dictionary
 
 #### Return
 
-| Type                          | Description                                                                                                                                       |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| collections.namedtuple        | namedtuple containing the access and refresh token                                                                                                |
-| namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
-| namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
-| namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
-| namedtuple.refresh_token      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| namedtuple.refresh_expiration | A datetime of the expiration of the refresh_token                                                                                                 |
-| namedtuple.token_type         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
+| Value                       | Type              | Description                                                                                                                                       |
+| :-------------------------- | :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Access`                    | typing.NamedTuple | namedtuple containing the access and refresh token                                                                                                |
+| `Access.access_token`       | String            | A string representing an access token used to make requests to the Smartcar API.                                                                  |
+| `Access.expiration`         | datetime.datetime | A datetime of the expiration of the access_token                                                                                                  |
+| `Access.refresh_token`      | String            | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| `Access.refresh_expiration` | datetime.datetime | A datetime of the expiration of the refresh_token                                                                                                 |
+| `Access.expires_in`         | Int               | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
+| `Access.token_type`         | String            | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
 
 #### Raises
 
@@ -113,15 +113,15 @@ Exchange a refresh token for a new access dictionary
 
 #### Return
 
-| Type                          | Description                                                                                                                                       |
-| :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| collections.namedtuple        | namedtuple containing the access and refresh token                                                                                                |
-| namedtuple.access_token       | A string representing an access token used to make requests to the Smartcar API.                                                                  |
-| namedtuple.expiration         | A datetime of the expiration of the access_token                                                                                                  |
-| namedtuple.expires_in         | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
-| namedtuple.refresh_token      | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
-| namedtuple.refresh_expiration | A datetime of the expiration of the refresh_token                                                                                                 |
-| namedtuple.token_type         | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
+| Value                       | Type              | Description                                                                                                                                       |
+| :-------------------------- | :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Access`                    | typing.NamedTuple | namedtuple containing the access and refresh token                                                                                                |
+| `Access.access_token`       | String            | A string representing an access token used to make requests to the Smartcar API.                                                                  |
+| `Access.expiration`         | datetime.datetime | A datetime of the expiration of the access_token                                                                                                  |
+| `Access.refresh_token`      | String            | A string representing a refresh token, which is used to renew access when the current access token expires. The refresh token expires in 60 days. |
+| `Access.refresh_expiration` | datetime.datetime | A datetime of the expiration of the refresh_token                                                                                                 |
+| `Access.expires_in`         | Int               | The number of seconds the access token is valid for. This is always set to 7200 (2 hours).                                                        |
+| `Access.token_type`         | String            | Always set to Bearer . Token type is used in forming the Authorization header used by the Smartcar API in the following step.                     |
 
 #### Raises
 

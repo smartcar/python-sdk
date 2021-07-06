@@ -1,3 +1,4 @@
+import datetime
 from collections import namedtuple
 from typing import List, NamedTuple
 import re
@@ -85,8 +86,37 @@ def build_meta(response_headers: rs.CaseInsensitiveDict) -> namedtuple:
 
 
 # ===========================================
+# auth_client.py
+# ===========================================
+
+Access = NamedTuple(
+    "Access",
+    [
+        ("access_token", str),
+        ("token_type", str),
+        ("expires_in", int),
+        ("expiration", datetime.datetime),
+        ("refresh_token", str),
+        ("refresh_expiration", datetime.datetime),
+    ],
+)
+
+
+def make_access_object(access: dict) -> Access:
+    return Access(
+        access.get("access_token"),
+        access.get("token_type"),
+        access.get("expires_in"),
+        access.get("expiration"),
+        access.get("refresh_token"),
+        access.get("refresh_expiration"),
+    )
+
+
+# ===========================================
 # smartcar.py
 # ===========================================
+
 Paging = NamedTuple("Paging", [("count", int), ("offset", int)])
 
 User = NamedTuple("User", [("id", str), ("meta", namedtuple)])

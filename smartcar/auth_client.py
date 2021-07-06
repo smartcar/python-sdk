@@ -1,5 +1,4 @@
 import os
-from collections import namedtuple
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlencode
@@ -52,7 +51,7 @@ class AuthClient(object):
             raise Exception(
                 "AuthClient MUST have client_id, client_secret, and redirect_uri attributes."
                 "Either set these as environment variables, OR pass them in as arguments when instantiating "
-                "AuthClient. The recommended course of action is to set up environment variables"
+                "AuthClient. The recommended course of action is to set up environment variables "
                 "with your client credentials. i.e.: "
                 "'SMARTCAR_CLIENT_ID', 'SMARTCAR_CLIENT_SECRET', and 'SMARTCAR_REDIRECT_URI'"
             )
@@ -128,7 +127,7 @@ class AuthClient(object):
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code: str, options: dict = None) -> namedtuple:
+    def exchange_code(self, code: str, options: dict = None) -> types.Access:
         """
         Exchange an authentication code for an access dictionary
 
@@ -139,7 +138,7 @@ class AuthClient(object):
                     application has early access to.
 
         Returns:
-            namedtuple: containing access information, including access_token and
+            Access: containing access information, including access_token and
                 refresh_token
 
         Raises:
@@ -163,11 +162,11 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return types.generate_named_tuple(_set_expiration(data), "access_object")
+        return types.make_access_object(_set_expiration(data))
 
     def exchange_refresh_token(
         self, refresh_token: str, options: dict = None
-    ) -> namedtuple:
+    ) -> types.Access:
         """
         Exchange a refresh token for a new access dictionary
 
@@ -179,7 +178,7 @@ class AuthClient(object):
                     application has early access to.
 
         Returns:
-            namedtuple: containing access information, including access_token and
+            Access: containing access information, including access_token and
                 refresh_token
 
         Raises:
@@ -199,7 +198,7 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return types.generate_named_tuple(_set_expiration(data), "access_object")
+        return types.make_access_object(_set_expiration(data))
 
 
 # Static helpers for AuthClient

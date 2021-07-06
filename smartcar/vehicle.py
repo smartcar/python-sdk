@@ -254,8 +254,9 @@ class Vehicle(object):
         """
         url = self._format_url("security")
         headers = self._get_headers(need_unit_system=False)
-        json = {"action": "LOCK"}
-        response = helpers.requester("POST", url, headers=headers, json=json)
+        response = helpers.requester(
+            "POST", url, headers=headers, json={"action": "LOCK"}
+        )
         return types.select_named_tuple("lock", response)
 
     def unlock(self) -> types.Status:
@@ -270,8 +271,9 @@ class Vehicle(object):
         """
         url = self._format_url("security")
         headers = self._get_headers(need_unit_system=False)
-        json = {"action": "UNLOCK"}
-        response = helpers.requester("POST", url, headers=headers, json=json)
+        response = helpers.requester(
+            "POST", url, headers=headers, json={"action": "UNLOCK"}
+        )
         return types.select_named_tuple("unlock", response)
 
     def start_charge(self) -> types.Status:
@@ -286,8 +288,9 @@ class Vehicle(object):
         """
         url = self._format_url("charge")
         headers = self._get_headers(need_unit_system=False)
-        json = {"action": "START"}
-        response = helpers.requester("POST", url, headers=headers, json=json)
+        response = helpers.requester(
+            "POST", url, headers=headers, json={"action": "START"}
+        )
         return types.select_named_tuple("start_charge", response)
 
     def stop_charge(self) -> types.Status:
@@ -302,8 +305,9 @@ class Vehicle(object):
         """
         url = self._format_url("charge")
         headers = self._get_headers(need_unit_system=False)
-        json = {"action": "STOP"}
-        response = helpers.requester("POST", url, headers=headers, json=json)
+        response = helpers.requester(
+            "POST", url, headers=headers, json={"action": "STOP"}
+        )
         return types.select_named_tuple("stop_charge", response)
 
     def batch(self, paths: List[str]) -> namedtuple:
