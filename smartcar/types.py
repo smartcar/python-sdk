@@ -195,19 +195,14 @@ Action = NamedTuple("Action", [("status", str), ("message", str), ("meta", named
 
 Status = NamedTuple("Status", [("status", str), ("meta", namedtuple)])
 
-Permissions = NamedTuple("Permissions", [("permissions", list), ("meta", namedtuple)])
+Permissions = NamedTuple(
+    "Permissions", [("permissions", list), ("paging", Paging), ("meta", namedtuple)]
+)
 
 Subscribe = NamedTuple(
     "Subscribe",
     [("webhook_id", str), ("vehicle_id", str), ("meta", namedtuple)],
 )
-
-
-# This version of Permissions will be implemented when "paging" is verified to be returned from Smartcar API:
-# Permissions = NamedTuple(
-#     "Permissions", [("permissions", list), ("paging", Paging), ("meta", namedtuple)]
-# )
-
 
 # ===========================================
 # Named Tuple Selector Function
@@ -306,7 +301,11 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         return Location(data["latitude"], data["longitude"], headers)
 
     elif path == "permissions":
-        return Permissions(data["permissions"], headers)
+        return Permissions(
+            data["permissions"],
+            Paging(data["paging"]["count"], data["paging"]["offset"]),
+            headers,
+        )
 
     elif path == "subscribe":
         return Subscribe(data["webhookId"], data["vehicleId"], headers)

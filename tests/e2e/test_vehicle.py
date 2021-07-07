@@ -168,7 +168,16 @@ def test_permissions(chevy_volt):
     permissions = chevy_volt.permissions()
     assert permissions is not None
     assert type(permissions) == types.Permissions
-    assert permissions._fields == ("permissions", "meta")
+    assert permissions._fields == ("permissions", "paging", "meta")
+
+
+def test_permissions_with_paging(chevy_volt):
+    permissions = chevy_volt.permissions({"limit": 1, "offset": 1})
+    assert permissions is not None
+    assert type(permissions) == types.Permissions
+    assert permissions._fields == ("permissions", "paging", "meta")
+    assert permissions.paging.count == len(ah.DEFAULT_SCOPE)
+    assert permissions.paging.offset == 1
 
 
 def test_webhooks(chevy_volt):

@@ -30,12 +30,16 @@ class AuthClient(object):
         Args:
             client_id (str): The application id, provided in the application
                 dashboard
+
             client_secret (str): The application secret, provided in the
                 application dashboard
+
             redirect_uri (str): The URL to redirect to after the user accepts
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
+
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
+
         """
         self.client_id = client_id or os.environ.get("SMARTCAR_CLIENT_ID")
         self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_SECRET")
@@ -62,15 +66,20 @@ class AuthClient(object):
 
         Args:
             scope (str[], required): A list of permissions requested by the application
+
             options (dict, optional): Can have the following keys:
+
                 force_prompt (bool, optional): Set to True in order to force the approval
                     dialog shown to the user. Defaults to False.
+
                 state (str, optional): A random string that will be passed back on
                     redirect, this allows protection against cross-site forgery
                     requests. Defaults to None.
+
                 make_bypass (str, optional): A string that represents a make(car brand).
                     Allows users to bypass the car brand selection screen, allowing the
                     user to go directly to the vehicle login screen. Defaults to None.
+
                 single_select (dictionary, optional): An optional value that
                     sets the behavior of the grant dialog displayed to the user.
                     Can have keys of enabled(bool) and vin(str).
@@ -79,6 +88,7 @@ class AuthClient(object):
                     of `vin`, Smartcar will only authorize the vehicle with the specified VIN.
                     See the [Single Select guide](https://smartcar.com/docs/guides/single-select/)
                     for more information. Defaults to None.
+
                 flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.
 
@@ -133,7 +143,9 @@ class AuthClient(object):
 
         Args:
             code (str): A valid authorization code
+
             options (dict, optional): Can have the following keys:
+
                 flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.
 

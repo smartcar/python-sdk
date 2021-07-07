@@ -13,7 +13,9 @@ def requester(method: str, url: str, **kwargs) -> requests.models.Response:
 
     Args:
         method (str): HTTP method
+
         url (str): url of the request
+
         **kwargs: parameters for the request
 
     Returns:

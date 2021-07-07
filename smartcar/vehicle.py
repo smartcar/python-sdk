@@ -216,7 +216,7 @@ class Vehicle(object):
             limit = paging.get("limit", 25)
             offset = paging.get("offset", 0)
             response = helpers.requester(
-                "GET", url, headers=headers, limit=limit, offset=offset
+                "GET", url, headers=headers, params={"limit": limit, "offset": offset}
             )
 
         return types.select_named_tuple(path, response)
