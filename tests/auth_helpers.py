@@ -92,11 +92,6 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     )
     permissions_approval_button.click()
 
-    permissions_continue_button = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "continue-button"))
-    )
-    permissions_continue_button.click()
-
     # Capture URL and get the access `code`
     url = driver.current_url
     driver.close()
