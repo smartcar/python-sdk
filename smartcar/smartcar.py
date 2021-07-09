@@ -72,6 +72,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
 
         paging (dictionary, optional): Can include "limit" and "offset" keys:
             limit (int, optional): The number of vehicle ids to return
+
             offset (int, optional): The index to start the vehicle list at
 
     Returns:
@@ -103,14 +104,24 @@ def get_compatibility(
 
     Args:
         vin (str)
+
         scope (List[str]): List of scopes (permissions) -> to check if vehicle is compatible
+
         country (str, optional)
+
         options (dictionary): Can contain client_id, client_secret, and flags.
             client_id (str, optional)
-            client_secret (str, optional)
-            version (str): Version of API you want to use
-            flags: dictionary(str, bool): An optional list of feature flags
 
+            client_secret (str, optional)
+
+            version (str): Version of API you want to use
+
+            flags (dictionary - {str: bool}): An optional list of feature flags
+
+            test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
+
+            test_mode_compatibility_level (str): This parameter is required when the API is invoked in test mode.
+                Possible values with details are documented in our Integration Guide.
 
     Returns:
         Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", namedtuple)])
@@ -133,6 +144,17 @@ def get_compatibility(
         if options.get("flags"):
             flags_str = helpers.format_flag_query(options["flags"])
             params["flags"] = flags_str
+
+        if options.get("version"):
+            api_version = options["version"]
+
+        if options.get("test_mode_compatibility_level"):
+            params["mode"] = "test"
+            params["test_mode_compatibility_level"] = options[
+                "test_mode_compatibility_level"
+            ]
+        elif options.get("test_mode"):
+            params["mode"] = "test"
 
     # Ensuring client_id and client_secret are present
     if client_id is None or client_secret is None:
@@ -185,6 +207,7 @@ def hash_challenge(amt: str, challenge: str) -> str:
 
     Args:
         amt (str): Application Management Token from Smartcar Dashboard
+
         challenge: Randomly generated string from smartcar after requesting
             a challenge.
 
@@ -201,7 +224,9 @@ def verify_payload(amt: str, signature: str, body: str) -> bool:
 
     Args:
         amt (str): Application Management Token from Smartcar Dashboard
+
         signature: sc-signature header value
+
         body: Stringified JSON of the webhook response body
 
     Returns:

@@ -16,10 +16,13 @@ class Vehicle(object):
 
         Args:
             vehicle_id (str): the vehicle's unique identifier
+
             access_token (str): a valid access token
+
             options (dict, optional): Can contain the following keys:
                 unit_system (str, optional): the unit system to use for vehicle data.
                     Defaults to metric.
+
                 version(str, optional): Version of Smartcar API an instance of vehicle
                     will send requests to. This will override the instance's base url attribute.
 
@@ -198,6 +201,7 @@ class Vehicle(object):
         Args:
             paging (dict, optional): Can contain "limit" or "offset":
                 limit (int, optional): The number of permissions to return
+
                 offset (int, optional): The index to start permission list at
 
         Returns:

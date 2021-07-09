@@ -185,6 +185,7 @@ class AuthClient(object):
         Args:
             refresh_token (str): A valid refresh token from a previously retrieved
                 access object
+
             options (dict, optional): Can have the following keys:
                 flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.

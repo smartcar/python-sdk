@@ -51,8 +51,41 @@ def test_get_compatibility_with_flags(chevy_volt):
             "flags": {"flag1": True},
         },
     )
-
     assert res.compatible is not None
+
+
+def test_get_compatibility_in_test_mode_but_no_level():
+    try:
+        get_compatibility(
+            "WAUAFAFL1GN014882",
+            scope=["read_vehicle_info"],
+            options={
+                "client_id": ah.CLIENT_ID,
+                "client_secret": ah.CLIENT_SECRET,
+                "test_mode": True,
+            },
+        )
+
+    except Exception as e:
+        assert e.type == "VALIDATION"
+        assert e.detail[0]["field"] == "test_mode_compatibility_level"
+        assert (
+            e.detail[0]["message"]
+            == "Field must be one of: [compatible,phev,incompatible,fuel,dinosaur,bev]"
+        )
+
+
+def test_get_compatibility_with_non_test_mode_vin():
+    res = get_compatibility(
+        "WAUAFAFL1GN014882",
+        scope=["read_vehicle_info"],
+        options={
+            "client_id": ah.CLIENT_ID,
+            "client_secret": ah.CLIENT_SECRET,
+            "test_mode_compatibility_level": "compatible",
+        },
+    )
+    assert res.compatible
 
 
 def test_get_compatibility_without_client_id(chevy_volt):
