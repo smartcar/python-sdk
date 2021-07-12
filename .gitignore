@@ -1,9 +1,11 @@
 # Repo Specific
 examples/app/requests*
 examples/app/smartcar
+.t/
 
 # Python
 *env*/
+*venv*/
 build/
 *.egg-info/
 .cache
@@ -32,7 +34,16 @@ coverage
 htmlcover
 .coverage
 
+# Misc
+.t/.t.sh
+
 # Editors
+
+## Pycharm
+.idea/
+
+## Pytest
+htmlcov
 
 ## Vscode
 .vscode

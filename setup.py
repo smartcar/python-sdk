@@ -38,12 +38,14 @@ setup(
     extras_require={
         "dev": [
             "black",
-            "coverage",
-            "nose",
+            "ipdb",
             "mock",
             "responses",
+            "pytest",
+            "pytest-cov",
             "selenium",
             "retrying",
+            "wheel",
         ]
     },
 )
