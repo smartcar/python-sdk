@@ -92,9 +92,7 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
         driver.find_element_by_css_selector(".input-button-custom.checkbox").click()
 
         # Enter Pin 1-1-1-1
-        for i in range(1, 5):
-            driver.find_element_by_id(f"f2-pin-input-number-{i}").send_keys("1")
-
+        driver.find_element_by_id(f"f2-pin-input-number-1").send_keys("1111")
         driver.find_element_by_id("f2-approval-button").click()
 
     # Permissions Approval
