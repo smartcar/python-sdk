@@ -125,9 +125,9 @@ def chevy_volt_limited_scope(client):
     yield sc.Vehicle(volt_id, access.access_token)
 
 
-# # VW E-Golf
+# # Tesla
 @pytest.fixture(scope="session")
-def access_vw(client):
+def access_tesla(client):
     """
     Using the client fixture, go through Smartcar connect auth
     flow and acquire an access object. This object will have
@@ -135,28 +135,23 @@ def access_vw(client):
     project.
 
     Yields:
-        access_vw namedtuple
+        access_tesla namedtuple
     """
     client = sc.AuthClient(*ah.get_auth_client_params())
-    code = ah.run_auth_flow(
-        client.get_auth_url(["required:control_charge"]), "VOLKSWAGEN"
-    )
+    code = ah.run_auth_flow(client.get_auth_url(["required:control_charge"]), "TESLA")
     access = client.exchange_code(code)
     yield access
 
 
 @pytest.fixture(scope="session")
-def vw_egolf(access_vw):
+def tesla_model_s(access_tesla):
     """
     Using a separate instance of smartcar.AuthClient,
     run the Smartcar connect auth flow with different scope of permissions and
-    a different brand. This time, get the first vehicle acquired for Volkswagen.
-    The first car should be a Volkswagen E-Golf.
-
+    a different brand. This time, get the first vehicle acquired for Tesla
     Yields:
-        vw_egolf(smartcar.Vehicle)
+        tesla(smartcar.Vehicle)
     """
-
-    vehicle_ids = sc.get_vehicles(access_vw.access_token)
-    egolf_id = vehicle_ids.vehicles[0]
-    yield sc.Vehicle(egolf_id, access_vw.access_token)
+    vehicle_ids = sc.get_vehicles(access_tesla.access_token)
+    tesla_id = vehicle_ids.vehicles[0]
+    yield sc.Vehicle(tesla_id, access_tesla.access_token)

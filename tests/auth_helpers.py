@@ -86,15 +86,6 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     driver.find_element_by_id("password").send_keys("password")
     sign_in_button.click()
 
-    # For Volkswagen Pin Flow
-    if brand == "VOLKSWAGEN":
-        # Click the first vehicle compatible with EV endpoints. *Should* be an eGolf
-        driver.find_element_by_css_selector(".input-button-custom.checkbox").click()
-
-        # Enter Pin 1-1-1-1
-        driver.find_element_by_id(f"f2-pin-input-number-1").send_keys("1111")
-        driver.find_element_by_id("f2-approval-button").click()
-
     # Permissions Approval
     permissions_approval_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "approval-button"))
