@@ -627,7 +627,7 @@ Check if an expiration is expired
 
 ---
 
-### `smartcar.get_vehicle_ids(access_token, limit=10, offset=0)`
+### `smartcar.get_vehicles(access_token, limit=10, offset=0)`
 
 Get a list of the user's vehicle ids
 
