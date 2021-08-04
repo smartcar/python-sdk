@@ -111,10 +111,10 @@ fresh_access_token = get_fresh_access()['access_token']
 
 ## Vehicle Data and Commands
 
-With your fresh access token in hand, use `smartcar.get_vehicle_ids(access_token)` to get a list of the user's vehicles.
+With your fresh access token in hand, use `smartcar.get_vehicles(access_token)` to get a list of the user's vehicles.
 
 ```python
-vehicles = smartcar.get_vehicle_ids(<access_token>)
+vehicles = smartcar.get_vehicles(<access_token>)
 
 print(vehicles.vehicles)
 # [ uuid-of-first-vehicle, "...", uuid-of-nth-vehicle ]
@@ -147,7 +147,7 @@ print(info.model)
 ## Handling Exceptions
 
 Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each
-call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with
+call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicles`, and any vehicle method with
 some exception handling code.
 
 All exceptions will be of type `smartcar.SmartcarException` with the... exception of missing client
