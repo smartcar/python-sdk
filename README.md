@@ -30,8 +30,8 @@ and make requests with the Smartcar API.
 
 ```
 export SMARTCAR_CLIENT_ID='<your client id>'
-export SMARTCAR_CLIENT_ID='<your client secret>'
-export SMARTCAR_CLIENT_ID='<your redirect URI>'
+export SMARTCAR_CLIENT_SECRET='<your client secret>'
+export SMARTCAR_REDIRECT_URI='<your redirect uri>'
 ```
 
 - Import the sdk `import smartcar`
@@ -48,7 +48,7 @@ client = smartcar.AuthClient()
 ```python
 
 # Alter this list to specify the scope of permissions your application is requesting access to
-scopes = ['read_vehicle_info', <scope2>, <scope3>...]
+scopes = ['read_vehicle_info', 'read_odometer', <scope3>...]
 
 # Generate auth url for User OAuth flow
 auth_url = client.get_auth_url(scope)
@@ -111,27 +111,18 @@ fresh_access_token = get_fresh_access()['access_token']
 
 ## Vehicle Data and Commands
 
-With your fresh access token in hand, use `smartcar.get_vehicle_ids(access_token)` to get a list of the user's vehicles.
+With your fresh access token in hand, use `smartcar.get_vehicles(access_token)` to get a list of the user's vehicles.
 
 ```python
-vehicles = smartcar.get_vehicle_ids(<access_token>)
+vehicles = smartcar.get_vehicles(<access_token>)
 
-# 1
 print(vehicles.vehicles)
+# [ uuid-of-first-vehicle, "...", uuid-of-nth-vehicle ]
 
-# 2
-print(vehicles.vehicles[0])
+# Vehicle ID of first vehicle
+vehicle_id = vehicle.vehicles[0]
 ```
 
-`vehicle.vehicles` looks like this:
-
-```python
-# 1
-["uuid-of-first-vehicle", "...", "uuid-of-nth-vehicle"]
-
-# 2
-"uuid-of-first-vehicle"
-```
 
 - Now with a **vehicle id** in hand, use `smartcar.Vehicle(vehicle_id, access_token)` to get a Vehicle object
   representing the user's vehicle.
@@ -156,7 +147,7 @@ print(info.model)
 ## Handling Exceptions
 
 Any time you make a request to the Smartcar API, something can go wrong. This means that you _really_ should wrap each
-call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicle_ids`, and any vehicle method with
+call to `client.exchange_code`, `client.exchange_refresh_token`, `client.get_vehicles`, and any vehicle method with
 some exception handling code.
 
 All exceptions will be of type `smartcar.SmartcarException` with the... exception of missing client
