@@ -744,7 +744,7 @@ Take the random string received in the challenge request and use your Applicatio
 
 ---
 
-### `hash_challenge(amt, signature, body)`
+### `verify_payload(amt, signature, body)`
 
 Verify webhook payload against AMT and signature.
 
