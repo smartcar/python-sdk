@@ -41,19 +41,6 @@ def test_get_vehicles_with_paging(access):
     assert len(res.vehicles) == 0
 
 
-def test_get_compatibility_with_flags(chevy_volt):
-    res = get_compatibility(
-        vin=chevy_volt.vin().vin,
-        scope=["read_vehicle_info"],
-        options={
-            "client_id": ah.CLIENT_ID,
-            "client_secret": ah.CLIENT_SECRET,
-            "flags": {"flag1": True},
-        },
-    )
-    assert res.compatible is not None
-
-
 def test_get_compatibility_in_test_mode_but_no_level():
     try:
         get_compatibility(
