@@ -125,11 +125,11 @@ class AuthClient(object):
 
                 if single_select.get("vin"):
                     query["single_select_vin"] = single_select["vin"]
-                    query["single_select"] = True
+                    query["single_select"] = "true"
                 elif single_select.get("enabled"):
-                    query["single_select"] = True
+                    query["single_select"] = "true"
                 else:
-                    query["single_select"] = False
+                    query["single_select"] = "false"
 
             if options.get("flags"):
                 flags_str = helpers.format_flag_query(options["flags"])

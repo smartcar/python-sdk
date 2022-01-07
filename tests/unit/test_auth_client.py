@@ -21,7 +21,7 @@ def test_get_auth_url_with_options(client):
     assert query_params["mode"][0] == "test"
     assert query_params["state"][0] == "WEEEEEEEEE"
     assert query_params["make"][0] == "Ford"
-    assert query_params["single_select"][0] == "True"
+    assert query_params["single_select"][0] == "true"
     assert query_params["single_select_vin"][0] == "abcdefghi12345678"
     assert query_params["flags"][0] == "flag_1:Yay flag_2:True flag_3:123"
 
