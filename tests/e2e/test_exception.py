@@ -62,12 +62,12 @@ def test_vehicle_state_error_v1(access):
         assert "resolution" not in e.__dict__
 
 
-def test_out_of_permission_scope(tesla_model_s):
+def test_out_of_permission_scope(ford_car):
     """
     status code: 403, no "error" code
     """
     try:
-        tesla_model_s.odometer()
+        ford_car.odometer()
     except Exception as e:
         assert isinstance(e, SmartcarException)
 
@@ -81,14 +81,14 @@ def test_out_of_permission_scope(tesla_model_s):
         assert "type" in e.resolution.keys() and "url" in e.resolution.keys()
 
 
-def test_out_of_permission_scope_v1(access_tesla, tesla_model_s):
+def test_out_of_permission_scope_v1(access_ford, ford_car):
     """
     v1 permission error, code is None
     """
     try:
         smartcar.set_api_version("1.0")
         tesla_for_v1_api = smartcar.Vehicle(
-            tesla_model_s.vehicle_id, access_tesla.access_token
+            ford_car.vehicle_id, access_ford.access_token
         )
         tesla_for_v1_api.odometer()
     except Exception as e:

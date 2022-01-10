@@ -96,15 +96,15 @@ def test_unlock(chevy_volt):
     assert response._fields == ("status", "message", "meta")
 
 
-def test_start_charge(tesla_model_s):
-    response = tesla_model_s.start_charge()
+def test_start_charge(ford_car):
+    response = ford_car.start_charge()
     assert response.status == "success"
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
 
-def test_stop_charge(tesla_model_s):
-    response = tesla_model_s.stop_charge()
+def test_stop_charge(ford_car):
+    response = ford_car.stop_charge()
     assert response.status == "success"
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")

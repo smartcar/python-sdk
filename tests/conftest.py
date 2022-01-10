@@ -127,7 +127,7 @@ def chevy_volt_limited_scope(client):
 
 # # Tesla
 @pytest.fixture(scope="session")
-def access_tesla(client):
+def access_ford(client):
     """
     Using the client fixture, go through Smartcar connect auth
     flow and acquire an access object. This object will have
@@ -138,13 +138,13 @@ def access_tesla(client):
         access_tesla namedtuple
     """
     client = sc.AuthClient(*ah.get_auth_client_params())
-    code = ah.run_auth_flow(client.get_auth_url(["required:control_charge"]), "TESLA")
+    code = ah.run_auth_flow(client.get_auth_url(["required:control_charge"]), "FORD")
     access = client.exchange_code(code)
     yield access
 
 
 @pytest.fixture(scope="session")
-def tesla_model_s(access_tesla):
+def ford_car(access_ford):
     """
     Using a separate instance of smartcar.AuthClient,
     run the Smartcar connect auth flow with different scope of permissions and
@@ -152,6 +152,6 @@ def tesla_model_s(access_tesla):
     Yields:
         tesla(smartcar.Vehicle)
     """
-    vehicle_ids = sc.get_vehicles(access_tesla.access_token)
+    vehicle_ids = sc.get_vehicles(access_ford.access_token)
     tesla_id = vehicle_ids.vehicles[0]
-    yield sc.Vehicle(tesla_id, access_tesla.access_token)
+    yield sc.Vehicle(tesla_id, access_ford.access_token)
