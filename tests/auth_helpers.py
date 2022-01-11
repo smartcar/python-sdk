@@ -64,13 +64,13 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
 
     driver.get(auth_url)
     # Preamble
-    preamble_button = WebDriverWait(driver, 10).until(
+    preamble_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "button#continue-button"))
     )
     preamble_button.click()
 
     # Brand Selector
-    brand_button = WebDriverWait(driver, 10).until(
+    brand_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, f"button.brand-selector-button[data-make='{brand}']")
         )
@@ -79,7 +79,7 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
 
     # Logging in (with any random credentials to run through test-mode)
     username = str(uuid.uuid4()) + "@email.com"
-    sign_in_button = WebDriverWait(driver, 10).until(
+    sign_in_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.ID, "sign-in-button"))
     )
     driver.find_element_by_id("username").send_keys(username)
@@ -87,7 +87,7 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     sign_in_button.click()
 
     # Permissions Approval
-    permissions_approval_button = WebDriverWait(driver, 10).until(
+    permissions_approval_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.ID, "approval-button"))
     )
     permissions_approval_button.click()

@@ -5,8 +5,6 @@ services:
 
 addons:
   firefox: latest
-  apt:
-    packages: firefox-geckodriver
 
 language: python
 
@@ -17,6 +15,14 @@ python:
   - '3.9'
 
 if: tag IS blank # do not build tags
+
+before_install:
+  - wget -N https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -P ~/
+  - tar -xzf ~/geckodriver-v0.30.0-linux64.tar.gz -C ~/
+  - rm ~/geckodriver-v0.30.0-linux64.tar.gz
+  - sudo mv -f ~/geckodriver /usr/local/share
+  - sudo chmod +x /usr/local/share/geckodriver
+  - sudo ln -s /usr/local/share/geckodriver /usr/local/bin/geckodriver
 
 install:
   - pip install -e '.[dev]'
