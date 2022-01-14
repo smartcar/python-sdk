@@ -443,7 +443,7 @@ class Vehicle(object):
         return types.select_named_tuple("unsubscribe", response)
 
     # ===========================================
-    # Request Method
+    # Request Method (General Purpose)
     # ===========================================
 
     def request(self, method: str, path: str, body: dict = {}, headers: dict = {}) -> types.Response:
