@@ -446,9 +446,11 @@ class Vehicle(object):
     # General Purpose Request Method
     # ===========================================
 
-    def request(self, method: str, path: str, body: dict = {}, headers: dict = {}) -> types.Response:
+    def request(
+        self, method: str, path: str, body: dict = {}, headers: dict = {}
+    ) -> types.Response:
         """
-        Utility method to make a request to a Smartcar endpoint - can be used 
+        Utility method to make a request to a Smartcar endpoint - can be used
         to make requests to brand specific endpoints.
 
         Args:
@@ -467,14 +469,16 @@ class Vehicle(object):
 
         # Authorization header not provided
         if not "Authorization" in headers:
-            has_units_header = ("sc-unit-system" in headers)
-            generated_headers = self._get_headers(need_unit_system=(not has_units_header))
+            has_units_header = "sc-unit-system" in headers
+            generated_headers = self._get_headers(
+                need_unit_system=(not has_units_header)
+            )
             headers.update(generated_headers)
 
         response = helpers.requester(method, url, headers=headers, json=body)
 
         return types.select_named_tuple("request", response)
-        
+
     # ===========================================
     # Utility
     # ===========================================

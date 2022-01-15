@@ -334,7 +334,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     elif path == "request":
         return Response(data, headers)
-        
+
     elif type(data) == dict:
         return generate_named_tuple(data, "Data")
 

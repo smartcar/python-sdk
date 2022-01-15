@@ -203,21 +203,32 @@ def test_webhooks(chevy_volt):
 
 
 def test_request(chevy_volt):
-    odometer = chevy_volt.request("GET", "odometer", None, {"sc-unit-system": "imperial"})
+    odometer = chevy_volt.request(
+        "GET", "odometer", None, {"sc-unit-system": "imperial"}
+    )
     assert type(odometer) == types.Response
     assert odometer.body is not None
     assert isinstance(odometer.meta, tuple)
     assert odometer._fields == ("body", "meta")
     assert odometer.meta.unit_system == "imperial"
 
+
 def test_request_override_header(chevy_volt):
     try:
-        chevy_volt.request("GET", "odometer", None, {
-        "sc-unit-system": "imperial",
-        "Authorization": 'Bearer abc',
-        })
+        chevy_volt.request(
+            "GET",
+            "odometer",
+            None,
+            {
+                "sc-unit-system": "imperial",
+                "Authorization": "Bearer abc",
+            },
+        )
     except SmartcarException as sc_e:
-        assert sc_e.message == "AUTHENTICATION - The authorization header is missing or malformed, or it contains invalid or expired authentication credentials. Please check for missing parameters, spelling and casing mistakes, and other syntax issues."
+        assert (
+            sc_e.message
+            == "AUTHENTICATION - The authorization header is missing or malformed, or it contains invalid or expired authentication credentials. Please check for missing parameters, spelling and casing mistakes, and other syntax issues."
+        )
 
 
 def test_request_with_body(chevy_volt):
