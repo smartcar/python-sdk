@@ -443,12 +443,13 @@ class Vehicle(object):
         return types.select_named_tuple("unsubscribe", response)
 
     # ===========================================
-    # Request Method (General Purpose)
+    # General Purpose Request Method
     # ===========================================
 
     def request(self, method: str, path: str, body: dict = {}, headers: dict = {}) -> types.Response:
         """
-        Make a request to a Smartcar endpoint
+        Utility method to make a request to a Smartcar endpoint - can be used 
+        to make requests to brand specific endpoints.
 
         Args:
             method (str): The HTTP request method to use.
