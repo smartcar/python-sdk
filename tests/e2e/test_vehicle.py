@@ -232,12 +232,20 @@ def test_request_override_header(chevy_volt):
 
 
 def test_request_with_body(chevy_volt):
-    response = chevy_volt.request("POST", "security", {"action": "LOCK"})
-    assert response.body["status"] == "success"
-    assert type(response) == types.Response
-    assert response.body["status"] is not None
-    assert response.body["message"] is not None
-
+    batch = chevy_volt.request(
+        "post",
+        "batch",
+        {"requests": [{"path": "/odometer"}, {"path": "/tires/pressure"}]},
+    )
+    assert type(batch) == types.Response
+    assert batch.body is not None
+    assert isinstance(batch.meta, tuple)
+    assert batch.body["responses"][0]["path"] == "/odometer"
+    assert batch.body["responses"][0]["path"] == "/odometer"
+    assert batch.body["responses"][0]["code"] == 200
+    assert type(batch.body["responses"][0]["body"]["distance"]) == float
+    assert batch.body["responses"][1]["path"] == "/tires/pressure"
+    
 
 def test_chevy_imperial(chevy_volt_imperial):
     response = chevy_volt_imperial.odometer()
