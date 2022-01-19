@@ -457,10 +457,10 @@ class Vehicle(object):
             method (str): The HTTP request method to use.
             path (str): The path to make the request to.
             body (dict): The request body.
-            headers (dict): The headers to inlcude in the request.
+            headers (dict): The headers to include in the request.
 
         Returns:
-            Response = NamedTuple("Response", [("body", dict), ("meta", dict)])
+            Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
@@ -474,7 +474,7 @@ class Vehicle(object):
                 need_unit_system=(not has_units_header)
             )
             headers.update(generated_headers)
-
+    
         response = helpers.requester(method, url, headers=headers, json=body)
 
         return types.select_named_tuple("request", response)

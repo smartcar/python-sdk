@@ -204,7 +204,7 @@ Subscribe = NamedTuple(
     [("webhook_id", str), ("vehicle_id", str), ("meta", namedtuple)],
 )
 
-Response = NamedTuple("Response", [("body", dict), ("meta", dict)])
+Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
 
 # ===========================================
 # Named Tuple Selector Function
