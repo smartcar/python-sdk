@@ -474,7 +474,7 @@ class Vehicle(object):
                 need_unit_system=(not has_units_header)
             )
             headers.update(generated_headers)
-    
+
         response = helpers.requester(method, url, headers=headers, json=body)
 
         return types.select_named_tuple("request", response)

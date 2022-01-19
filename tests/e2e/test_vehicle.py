@@ -250,7 +250,7 @@ def test_request_with_body(chevy_volt):
     assert isinstance(batch.body["responses"][1]["body"]["frontRight"], float)
     assert isinstance(batch.body["responses"][1]["body"]["backLeft"], float)
     assert isinstance(batch.body["responses"][1]["body"]["backRight"], float)
-    
+
 
 def test_chevy_imperial(chevy_volt_imperial):
     response = chevy_volt_imperial.odometer()
