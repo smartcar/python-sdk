@@ -237,14 +237,19 @@ def test_request_with_body(chevy_volt):
         "batch",
         {"requests": [{"path": "/odometer"}, {"path": "/tires/pressure"}]},
     )
-    assert type(batch) == types.Response
+    print(batch)
+    assert type(batch) is types.Response
     assert batch.body is not None
     assert isinstance(batch.meta, tuple)
     assert batch.body["responses"][0]["path"] == "/odometer"
     assert batch.body["responses"][0]["path"] == "/odometer"
     assert batch.body["responses"][0]["code"] == 200
-    assert type(batch.body["responses"][0]["body"]["distance"]) == float
+    assert isinstance(batch.body["responses"][0]["body"]["distance"], float)
     assert batch.body["responses"][1]["path"] == "/tires/pressure"
+    assert isinstance(batch.body["responses"][1]["body"]["frontLeft"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["frontRight"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["backLeft"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["backRight"], float)
     
 
 def test_chevy_imperial(chevy_volt_imperial):
