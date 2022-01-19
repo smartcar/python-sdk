@@ -237,7 +237,6 @@ def test_request_with_body(chevy_volt):
         "batch",
         {"requests": [{"path": "/odometer"}, {"path": "/tires/pressure"}]},
     )
-    print(batch)
     assert type(batch) is types.Response
     assert batch.body is not None
     assert isinstance(batch.meta, tuple)
