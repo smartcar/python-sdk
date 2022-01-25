@@ -202,6 +202,55 @@ def test_webhooks(chevy_volt):
         assert unsubscribe._fields == ("status", "meta")
 
 
+def test_request(chevy_volt):
+    odometer = chevy_volt.request(
+        "GET", "odometer", None, {"sc-unit-system": "imperial"}
+    )
+    assert type(odometer) == types.Response
+    assert odometer.body is not None
+    assert isinstance(odometer.meta, tuple)
+    assert odometer._fields == ("body", "meta")
+    assert odometer.meta.unit_system == "imperial"
+
+
+def test_request_override_header(chevy_volt):
+    try:
+        chevy_volt.request(
+            "GET",
+            "odometer",
+            None,
+            {
+                "sc-unit-system": "imperial",
+                "Authorization": "Bearer abc",
+            },
+        )
+    except SmartcarException as sc_e:
+        assert (
+            sc_e.message
+            == "AUTHENTICATION - The authorization header is missing or malformed, or it contains invalid or expired authentication credentials. Please check for missing parameters, spelling and casing mistakes, and other syntax issues."
+        )
+
+
+def test_request_with_body(chevy_volt):
+    batch = chevy_volt.request(
+        "post",
+        "batch",
+        {"requests": [{"path": "/odometer"}, {"path": "/tires/pressure"}]},
+    )
+    assert type(batch) is types.Response
+    assert batch.body is not None
+    assert isinstance(batch.meta, tuple)
+    assert batch.body["responses"][0]["path"] == "/odometer"
+    assert batch.body["responses"][0]["path"] == "/odometer"
+    assert batch.body["responses"][0]["code"] == 200
+    assert isinstance(batch.body["responses"][0]["body"]["distance"], float)
+    assert batch.body["responses"][1]["path"] == "/tires/pressure"
+    assert isinstance(batch.body["responses"][1]["body"]["frontLeft"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["frontRight"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["backLeft"], float)
+    assert isinstance(batch.body["responses"][1]["body"]["backRight"], float)
+
+
 def test_chevy_imperial(chevy_volt_imperial):
     response = chevy_volt_imperial.odometer()
     assert response.meta.unit_system == "imperial"

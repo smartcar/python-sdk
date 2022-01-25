@@ -443,6 +443,43 @@ class Vehicle(object):
         return types.select_named_tuple("unsubscribe", response)
 
     # ===========================================
+    # General Purpose Request Method
+    # ===========================================
+
+    def request(
+        self, method: str, path: str, body: dict = {}, headers: dict = {}
+    ) -> types.Response:
+        """
+        Utility method to make a request to a Smartcar endpoint - can be used
+        to make requests to brand specific endpoints.
+
+        Args:
+            method (str): The HTTP request method to use.
+            path (str): The path to make the request to.
+            body (dict): The request body.
+            headers (dict): The headers to include in the request.
+
+        Returns:
+            Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
+
+        Raises:
+            SmartcarException
+        """
+        url = self._format_url(path)
+
+        # Authorization header not provided
+        if not "Authorization" in headers:
+            has_units_header = "sc-unit-system" in headers
+            generated_headers = self._get_headers(
+                need_unit_system=(not has_units_header)
+            )
+            headers.update(generated_headers)
+
+        response = helpers.requester(method, url, headers=headers, json=body)
+
+        return types.select_named_tuple("request", response)
+
+    # ===========================================
     # Utility
     # ===========================================
     def set_unit_system(self, unit_system: str) -> None:

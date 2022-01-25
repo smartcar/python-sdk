@@ -204,6 +204,8 @@ Subscribe = NamedTuple(
     [("webhook_id", str), ("vehicle_id", str), ("meta", namedtuple)],
 )
 
+Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
+
 # ===========================================
 # Named Tuple Selector Function
 # ===========================================
@@ -329,6 +331,9 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
             data["year"],
             headers,
         )
+
+    elif path == "request":
+        return Response(data, headers)
 
     elif type(data) == dict:
         return generate_named_tuple(data, "Data")
