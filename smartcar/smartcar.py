@@ -4,7 +4,7 @@ import hashlib
 import os
 import re
 from datetime import datetime
-from typing import List
+from typing import List, Union
 
 import smartcar.config as config
 import smartcar.helpers as helpers
@@ -25,7 +25,7 @@ def set_api_version(version: str) -> None:
         API_VERSION = version
     else:
         raise ValueError(
-            fr"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
+            rf"Version '{version}' must match regex '\d+\.\d+' .  e.g. '2.0', '1.0'"
         )
 
 
@@ -91,7 +91,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
 
 def get_compatibility(
     vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> types.Compatibility:
+) -> Union[types.CompatibilityV1, types.CompatibilityV2]:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -102,6 +102,8 @@ def get_compatibility(
         3. Is compatible with the required permissions (scope) that your app is requesting
             access to
 
+    Note: the options (dict) argument is only valid for Smartcar API v1.0.
+
     Args:
         vin (str)
 
@@ -109,14 +111,14 @@ def get_compatibility(
 
         country (str, optional)
 
-        options (dictionary): Can contain client_id, client_secret, and flags.
+        options (dict): Can contain client_id, client_secret, and flags.
             client_id (str, optional)
 
             client_secret (str, optional)
 
             version (str): Version of API you want to use
 
-            flags (dictionary - {str: bool}): An optional list of feature flags
+            flags (dict - {str: bool}): An optional list of feature flags
 
             test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
 
@@ -124,7 +126,16 @@ def get_compatibility(
                 Possible values with details are documented in our Integration Guide.
 
     Returns:
-        Compatibility: NamedTuple("Compatibility", [("compatible", bool), ("meta", namedtuple)])
+        CompatibilityV1: NamedTuple("Compatibility", [("compatible", bool), ("meta", namedtuple)])
+        OR
+        CompatibilityV2: NamedTuple("Compatibility",
+            [
+                ("compatible", bool),
+                ("reason", Union[str, None]),
+                ("capabilities", List[dict]),
+                ("meta", namedtuple),
+            ],
+        )
     """
     client_id = os.environ.get("SMARTCAR_CLIENT_ID")
     client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")
@@ -140,28 +151,30 @@ def get_compatibility(
         client_id = options.get("client_id", client_id)
         client_secret = options.get("client_secret", client_secret)
         api_version = options.get("version", api_version)
+        
+        if api_version == "1.0":
 
-        if options.get("flags"):
-            flags_str = helpers.format_flag_query(options["flags"])
-            params["flags"] = flags_str
+            if options.get("flags"):
+                flags_str = helpers.format_flag_query(options["flags"])
+                params["flags"] = flags_str
 
-        if options.get("version"):
-            api_version = options["version"]
+            if options.get("version"):
+                api_version = options["version"]
 
-        if options.get("test_mode_compatibility_level"):
-            params["mode"] = "test"
-            params["test_mode_compatibility_level"] = options[
-                "test_mode_compatibility_level"
-            ]
-        elif options.get("test_mode"):
-            params["mode"] = "test"
+            if options.get("test_mode_compatibility_level"):
+                params["mode"] = "test"
+                params["test_mode_compatibility_level"] = options[
+                    "test_mode_compatibility_level"
+                ]
+            elif options.get("test_mode"):
+                params["mode"] = "test"
 
     # Ensuring client_id and client_secret are present
     if client_id is None or client_secret is None:
         raise Exception(
             "'get_compatibility' requires a client_id AND client_secret. "
             "Either set these as environment variables, OR pass them in as part of the 'options'"
-            "dictionary. The recommended course of action is to set up environment variables"
+            "dictionary, if using v2.0). The recommended course of action is to set up environment variables"
             "with your client credentials. i.e.: "
             "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
         )
@@ -176,7 +189,13 @@ def get_compatibility(
     headers = {"Authorization": f"Basic {base64_id_secret}"}
 
     response = helpers.requester("GET", url, headers=headers, params=params)
-    return types.select_named_tuple("compatibility", response)
+
+    if api_version == "1.0":
+        return types.select_named_tuple("compatibility_v1", response)
+    elif api_version == "2.0":
+        return types.select_named_tuple("compatibility_v2", response)
+    else:
+        raise Exception("Please use a valid API version (e.g. '1.0' or '2.0')")
 
 
 def is_expired(expiration: datetime) -> bool:

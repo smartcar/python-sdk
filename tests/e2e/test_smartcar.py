@@ -62,6 +62,31 @@ def test_get_compatibility_in_test_mode_but_no_level():
         )
 
 
+def test_get_compatibility_v2():
+    set_api_version("2.0")
+
+    compatibility = smartcar.get_compatibility(
+        "0SCGMCT0386A85356",
+        scope=["read_odometer", "read_fuel"],
+        country="US",
+        options={
+            "client_id": ah.CLIENT_ID,
+            "client_secret": ah.CLIENT_SECRET,
+        },
+    )
+
+    assert compatibility.compatible == True
+    assert compatibility.reason == None
+    assert compatibility.capabilities[0].permission == "read_odometer"
+    assert compatibility.capabilities[0].endpoint == "/odometer"
+    assert compatibility.capabilities[0].capable == True
+    assert compatibility.capabilities[0].reason == None
+    assert compatibility.capabilities[1].permission == "read_fuel"
+    assert compatibility.capabilities[1].endpoint == "/fuel"
+    assert compatibility.capabilities[1].capable == False
+    assert compatibility.capabilities[1].reason == "VEHICLE_NOT_CAPABLE"
+
+
 def test_get_compatibility_with_non_test_mode_vin():
     res = get_compatibility(
         "WAUAFAFL1GN014882",

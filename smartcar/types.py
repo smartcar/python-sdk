@@ -1,9 +1,9 @@
 import datetime
 from collections import namedtuple
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Union
 import re
 import requests.structures as rs
-
+import enum
 
 # Return types for Smartcar API.
 #
@@ -126,8 +126,49 @@ Vehicles = NamedTuple(
     [("vehicles", List[str]), ("paging", Paging), ("meta", namedtuple)],
 )
 
-Compatibility = NamedTuple(
+
+class Reason(enum.Enum):
+    VEHICLE_NOT_COMPATIBLE = "VEHICLE_NOT_COMPATIBLE"
+    MAKE_NOT_COMPATIBLE = "MAKE_NOT_COMPATIBLE"
+
+
+Capability = NamedTuple(
+    "Capability",
+    [
+        ("permission", str),
+        ("endpoint", str),
+        ("capable", bool),
+        ("reason", Union[Reason, None]),
+    ],
+)
+
+
+def format_capabilities(capabilities_list: List[dict]) -> List[Capability]:
+    typed_capabilities_map = map(
+        lambda capability: Capability(
+            capability["permission"],
+            capability["endpoint"],
+            capability["capable"],
+            capability["reason"],
+        ),
+        capabilities_list,
+    )  # Returns iterable map
+    typed_capabilities_list = list(typed_capabilities_map)
+    return typed_capabilities_list
+
+
+CompatibilityV1 = NamedTuple(
     "Compatibility", [("compatible", bool), ("meta", namedtuple)]
+)
+
+CompatibilityV2 = NamedTuple(
+    "Compatibility",
+    [
+        ("compatible", bool),
+        ("reason", Union[Reason, None]),
+        ("capabilities", List[Capability]),
+        ("meta", namedtuple),
+    ],
 )
 
 # ===========================================
@@ -241,6 +282,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         NamedTuple: Appropriate to the path.
 
     """
+
     if type(response_or_dict) == dict:
         headers_dict = rs.CaseInsensitiveDict(response_or_dict["headers"])
         headers = build_meta(headers_dict)
@@ -260,8 +302,14 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
             headers,
         )
 
-    elif path == "compatibility":
-        return Compatibility(data["compatible"], headers)
+    elif path == "compatibility_v1":
+        return CompatibilityV1(data["compatible"], headers)
+
+    elif path == "compatibility_v2":
+        typed_capabilities = format_capabilities(data["capabilities"])
+        return CompatibilityV2(
+            data["compatible"], data["reason"], typed_capabilities, headers
+        )
 
     # vehicle.py
     elif path == "vin":
