@@ -42,8 +42,8 @@ jobs:
         firefox: 'skip'
         apt: []
       install:
-        - nvm install 14
-        - npm install semantic-release@15.x.x @google/semantic-release-replace-plugin@1.x.x
+        - nvm install 16
+        - npm install semantic-release@19.x.x @google/semantic-release-replace-plugin@1.x.x
       script:
         - npx semantic-release
       deploy:
