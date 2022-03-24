@@ -694,8 +694,6 @@ A compatible vehicle is a vehicle that:
 2. belongs to the makes and models Smartcar supports, and
 3. supports the permissions.
 
-**\*Note:** the options (dict) argument is only valid for Smartcar API v1.0.
-
 #### Arguments
 
 | Parameter               | Type       | Required     | Description                                                                                                                                                  |

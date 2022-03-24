@@ -174,7 +174,7 @@ def get_compatibility(
         raise Exception(
             "'get_compatibility' requires a client_id AND client_secret. "
             "Either set these as environment variables, OR pass them in as part of the 'options'"
-            "dictionary). The recommended course of action is to set up environment variables"
+            "dictionary. The recommended course of action is to set up environment variables"
             "with your client credentials. i.e.: "
             "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
         )
