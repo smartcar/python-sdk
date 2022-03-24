@@ -13,6 +13,7 @@ python:
   - '3.7'
   - '3.8'
   - '3.9'
+  - '3.10'
 
 if: tag IS blank # do not build tags
 
@@ -35,7 +36,7 @@ script:
 jobs:
   include:
     - stage: publish
-      python: '3.8'
+      python: '3.9'
       services: []
       addons:
         firefox: 'skip'
