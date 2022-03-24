@@ -709,11 +709,17 @@ A compatible vehicle is a vehicle that:
 
 #### Return
 
-| Value                      | Type                   | Description                                                                           |
-|:---------------------------|:-----------------------|:--------------------------------------------------------------------------------------|
-| `Compatibility`            | typing.NamedTuple      | The returned object with vehicle's compatibility with the permissions (scope) checked |
-| `Compatibility.compatible` | Boolean                | Whether the vehicle is compatible with the permissions                                |
-| `Compatibility.meta`       | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)            |
+| Value                                     | Type                    | Availability          | Description                                                                                                                                         |
+|:------------------------------------------|:------------------------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Compatibility`                           | typing.NamedTuple       | **API v1.0 and v2.0** |The returned object with vehicle's compatibility with the permissions (scope) checked                                                                | 
+| `Compatibility.compatible`                | Boolean                 | **API v1.0 and v2.0** | Whether the vehicle is compatible with the permissions                                                                                              |
+| `Compatibility.reason`                    | String or None          | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "MAKE_NOT_COMPATIBLE"                          |
+| `Compatibility.capabilities`              | List                    | **API v2.0 only**     | A list containing the set of endpoints that the provided scope value can provide authorization for. This list will be empty if compatible is false. |
+| `Compatibility.capabilities[].permission` | String                  | **API v2.0 only**     | One of the permissions provided in the scope parameter.                                                                                             |
+| `Compatibility.capabilities[].endpoint`   | String                  | **API v2.0 only**     | One of the endpoints that the permission authorizes access to.                                                                                      |
+| `Compatibility.capabilities[].capable`    | Boolean                 | **API v2.0 only**     | True if the vehicle is likely capable of this feature, False otherwise.                                                                             |
+| `Compatibility.capabilities[].reason`     | String or None          | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "SMARTCAR_NOT_CAPABLE"                         |
+| `Compatibility.meta`                      | collections.namedtuple  | **API v1.0 and v2.0** | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                          |
 
 #### Raises
 
