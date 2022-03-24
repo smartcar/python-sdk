@@ -102,7 +102,7 @@ def get_compatibility(
         3. Is compatible with the required permissions (scope) that your app is requesting
             access to
 
-    Note: the options (dict) argument is only valid for Smartcar API v1.0.
+    Note: The `test_mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0.
 
     Args:
         vin (str)
@@ -151,15 +151,15 @@ def get_compatibility(
         client_id = options.get("client_id", client_id)
         client_secret = options.get("client_secret", client_secret)
         api_version = options.get("version", api_version)
-        
+
+        if options.get("flags"):
+            flags_str = helpers.format_flag_query(options["flags"])
+            params["flags"] = flags_str
+
+        if options.get("version"):
+            api_version = options["version"]
+
         if api_version == "1.0":
-
-            if options.get("flags"):
-                flags_str = helpers.format_flag_query(options["flags"])
-                params["flags"] = flags_str
-
-            if options.get("version"):
-                api_version = options["version"]
 
             if options.get("test_mode_compatibility_level"):
                 params["mode"] = "test"
@@ -174,7 +174,7 @@ def get_compatibility(
         raise Exception(
             "'get_compatibility' requires a client_id AND client_secret. "
             "Either set these as environment variables, OR pass them in as part of the 'options'"
-            "dictionary, if using v2.0). The recommended course of action is to set up environment variables"
+            "dictionary). The recommended course of action is to set up environment variables"
             "with your client credentials. i.e.: "
             "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
         )

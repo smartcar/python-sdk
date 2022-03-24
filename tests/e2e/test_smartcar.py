@@ -63,7 +63,6 @@ def test_get_compatibility_in_test_mode_but_no_level():
 
 
 def test_get_compatibility_v2():
-    set_api_version("2.0")
 
     compatibility = smartcar.get_compatibility(
         "0SCGMCT0386A85356",
@@ -72,6 +71,7 @@ def test_get_compatibility_v2():
         options={
             "client_id": ah.CLIENT_ID,
             "client_secret": ah.CLIENT_SECRET,
+            "version": "2.0",
         },
     )
 
