@@ -2,7 +2,7 @@ import smartcar.helpers as helpers
 
 
 def test_validate_env():
-    assert helpers.validate_env(mode='test') is None
+    assert helpers.validate_env(mode="test") is None
 
 
 def test_format_flag_query():

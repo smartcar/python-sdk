@@ -49,7 +49,6 @@ class Vehicle(object):
             if options.get("flags"):
                 self._flags = options["flags"]
 
-
     def vin(self) -> types.Vin:
         """
         GET Vehicle.vin

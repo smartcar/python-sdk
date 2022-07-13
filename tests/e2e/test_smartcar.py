@@ -49,7 +49,7 @@ def test_get_compatibility_in_test_mode_but_no_level():
             options={
                 "client_id": ah.CLIENT_ID,
                 "client_secret": ah.CLIENT_SECRET,
-                "mode": 'test',
+                "mode": "test",
             },
         )
 

@@ -10,7 +10,7 @@ from distutils.util import strtobool
 import smartcar.helpers as helpers
 
 # Verify all E2E variables are present ('E2E_<CLIENT VARIABLE>')
-helpers.validate_env(mode='test')
+helpers.validate_env(mode="test")
 
 # Smartcar client environment variables (Required)
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
@@ -42,7 +42,7 @@ DEFAULT_SCOPE = [
 
 
 def get_auth_client_params():
-    mode = 'test'
+    mode = "test"
     return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, mode]
 
 
