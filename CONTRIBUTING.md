@@ -25,7 +25,6 @@ and client secret. You'll also need to add the testing redirect URI to your appl
 ```
 export E2E_SMARTCAR_CLIENT_ID='<Your client id>'
 export E2E_SMARTCAR_CLIENT_SECRET='<Your client secret>'
-export E2E_SMARTCAR_REDIRECT_URI='<Your redirect URI>'
 ```
 
 4. (Optional) Pass Application Management Token and webhook id to test webhooks:

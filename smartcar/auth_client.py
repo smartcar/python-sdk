@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import urlencode
+from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
@@ -14,7 +15,8 @@ class AuthClient(object):
         client_id=None,
         client_secret=None,
         redirect_uri=None,
-        test_mode=False,
+        test_mode=None,
+        mode="test"
     ):
         """
         A client for accessing the Smartcar API.
@@ -28,23 +30,34 @@ class AuthClient(object):
         However, if neither an environment variable nor an argument is passed in, an exception will be raised.
 
         Args:
-            client_id (str): The application id, provided in the application
+            client_id (str, optional): The application id, provided in the application
                 dashboard
 
-            client_secret (str): The application secret, provided in the
+            client_secret (str, optional): The application secret, provided in the
                 application dashboard
 
-            redirect_uri (str): The URL to redirect to after the user accepts
+            redirect_uri (str, optional): The URL to redirect to after the user accepts
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
 
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
+                test_mode is now deprecated. Use mode instead
+
+            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to test.
+
+
 
         """
         self.client_id = client_id or os.environ.get("SMARTCAR_CLIENT_ID")
         self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_SECRET")
         self.redirect_uri = redirect_uri or os.environ.get("SMARTCAR_REDIRECT_URI")
-        self.test_mode = test_mode
+        self.mode = mode.lower()
+        
+        if test_mode is not None:
+            warn("Parameter test_mode has deprecated, use mode to specify the mode instead", DeprecationWarning)
+        else:
+            self.mode = "test" if test_mode else 'live'
+
         self.auth = (self.client_id, self.client_secret)
 
         if (
@@ -59,6 +72,11 @@ class AuthClient(object):
                 "with your client credentials. i.e.: "
                 "'SMARTCAR_CLIENT_ID', 'SMARTCAR_CLIENT_SECRET', and 'SMARTCAR_REDIRECT_URI'"
             )
+        if (self.mode not in ['test','live','simulated']):
+            raise Exception(
+                "Mode MUST be one of the following 'test', 'live', 'simulated'"
+            )
+        
 
     def get_auth_url(self, scope: List[str], options: dict = None) -> str:
         """
@@ -106,9 +124,8 @@ class AuthClient(object):
             "redirect_uri": self.redirect_uri,
             "approval_prompt": "auto",
             "scope": " ".join(scope),
+            "mode": self.mode
         }
-        if self.test_mode:
-            query["mode"] = "test"
 
         if options:
             if options.get("force_prompt"):

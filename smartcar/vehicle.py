@@ -26,6 +26,8 @@ class Vehicle(object):
                 version(str, optional): Version of Smartcar API an instance of vehicle
                     will send requests to. This will override the instance's base url attribute.
 
+                flags(dict, optional): Feature Flags (early access)
+
         Attributes:
             self.vehicle_id (str)
             self.access_token (str): Access token retrieved from Smartcar Connect
@@ -43,6 +45,10 @@ class Vehicle(object):
 
             if options.get("version"):
                 self._api_version = options["version"]
+
+            if options.get("flags"):
+                self._flags = options["flags"]
+
 
     def vin(self) -> types.Vin:
         """

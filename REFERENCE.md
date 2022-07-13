@@ -1,6 +1,6 @@
 # AuthClient
 
-### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, test_mode=False)`
+### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, mode='live')`
 
 A client for accessing the Smartcar API
 
@@ -11,7 +11,7 @@ A client for accessing the Smartcar API
 | `client_id`     | String  | **Optional**\* | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                   |
 | `client_secret` | String  | **Optional**\* | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                               |
 | `redirect_uri`  | String  | **Optional**\* | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
-| `test_mode`     | Boolean | **Optional**   | Launch the Smartcar Connect in test mode.                                                                                         |
+| `mode`          | String  | **Optional**   | Mode to Launch the Smartcar Connect [test|simulated|live]  |
 
 ##### \***Environment Variables VS Passing Arguments:**
 

@@ -47,18 +47,18 @@ def requester(method: str, url: str, **kwargs) -> requests.models.Response:
             raise sce.SmartcarException(message="SDK_ERROR") from e
 
 
-def validate_env(test_mode: bool = False) -> None:
+def validate_env(mode: str = 'live') -> None:
     """
     Helper Function to determine if environment variables for client id
     and secret are set properly.
 
     Args:
-        test_mode: bool
+        mode: str ['test'|'simulated'|'live']
 
     Raises:
         Basic Exception
     """
-    prefix = "E2E_SMARTCAR" if test_mode else "SMARTCAR"
+    prefix = "E2E_SMARTCAR" if mode != "live" else "SMARTCAR"
 
     if (
         f"{prefix}_CLIENT_ID" not in os.environ

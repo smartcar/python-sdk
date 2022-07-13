@@ -5,6 +5,7 @@ import os
 import re
 from datetime import datetime
 from typing import List, Union
+from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
@@ -102,7 +103,8 @@ def get_compatibility(
         3. Is compatible with the required permissions (scope) that your app is requesting
             access to
 
-    Note: The `test_mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0.
+    Note: The `mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0 
+            and `test_mode` has deprecated 
 
     Args:
         vin (str)
@@ -120,7 +122,10 @@ def get_compatibility(
 
             flags (dict - {str: bool}): An optional list of feature flags
 
-            test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
+            test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode) 
+                test_mode is now deprecated. Use mode instead
+
+            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to test.
 
             test_mode_compatibility_level (str): This parameter is required when the API is invoked in test mode.
                 Possible values with details are documented in our Integration Guide.
@@ -162,13 +167,20 @@ def get_compatibility(
         if api_version == "1.0":
 
             if options.get("test_mode_compatibility_level"):
-                params["mode"] = "test"
                 params["test_mode_compatibility_level"] = options[
                     "test_mode_compatibility_level"
                 ]
-            elif options.get("test_mode"):
-                params["mode"] = "test"
 
+                if options.get("test_mode") is not None:
+                    warn("test_mode is deprecated, use mode to specify the mode instead", DeprecationWarning)
+                    params["mode"] = "test" if options.get("test_mode") else "live"
+                elif options.get("mode"):
+                    params["mode"] = options.get[mode]               
+                if (self.mode not in ['test','live','simulated']):
+                    raise Exception(
+                        "Mode MUST be one of the following 'test', 'live', 'simulated'"
+                    )
+            
     # Ensuring client_id and client_secret are present
     if client_id is None or client_secret is None:
         raise Exception(
