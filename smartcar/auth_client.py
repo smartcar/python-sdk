@@ -16,7 +16,7 @@ class AuthClient(object):
         client_secret=None,
         redirect_uri=None,
         test_mode=None,
-        mode="test",
+        mode="live",
     ):
         """
         A client for accessing the Smartcar API.
@@ -43,7 +43,7 @@ class AuthClient(object):
             test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
                 test_mode is now deprecated. Use mode instead
 
-            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to test.
+            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to live.
 
 
 
