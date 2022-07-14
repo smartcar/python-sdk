@@ -43,7 +43,7 @@ DEFAULT_SCOPE = [
 
 def get_auth_client_params():
     mode = "test"
-    return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, mode]
+    return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, True, mode]
 
 
 def get_code_from_url(url):
