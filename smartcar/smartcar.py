@@ -125,7 +125,7 @@ def get_compatibility(
             test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
                 test_mode is now deprecated. Use mode instead
 
-            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to test.
+            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated].
 
             test_mode_compatibility_level (str): This parameter is required when the API is invoked in test mode.
                 Possible values with details are documented in our Integration Guide.
@@ -165,24 +165,25 @@ def get_compatibility(
             api_version = options["version"]
 
         if api_version == "1.0":
+            if options.get("test_mode") is not None:
+                warn(
+                    "test_mode is deprecated, use mode to specify the mode instead",
+                    DeprecationWarning,
+                )
+                params["mode"] = "test" if options.get("test_mode") else "live"
+            elif options.get("mode"):
+                params["mode"] = options.get["mode"]
 
             if options.get("test_mode_compatibility_level"):
                 params["test_mode_compatibility_level"] = options[
                     "test_mode_compatibility_level"
                 ]
+                params["mode"] = "test"
 
-                if options.get("test_mode") is not None:
-                    warn(
-                        "test_mode is deprecated, use mode to specify the mode instead",
-                        DeprecationWarning,
-                    )
-                    params["mode"] = "test" if options.get("test_mode") else "live"
-                elif options.get("mode"):
-                    params["mode"] = options.get[mode]
-                if self.mode not in ["test", "live", "simulated"]:
-                    raise Exception(
-                        "Mode MUST be one of the following 'test', 'live', 'simulated'"
-                    )
+            if params.mode not in ["test", "live", "simulated"]:
+                raise Exception(
+                    "Mode MUST be one of the following 'test', 'live', 'simulated'"
+                )
 
     # Ensuring client_id and client_secret are present
     if client_id is None or client_secret is None:
