@@ -89,6 +89,8 @@ def format_flag_query(flags: dict) -> str:
     flags_str = ""
 
     for flag in flags.keys():
+        if type(flags[flag]) == bool:
+            flags[flag] = str(flags[flag]).lower()
         flags_str += f"{flag}:{flags[flag]} "
 
     return flags_str.strip()

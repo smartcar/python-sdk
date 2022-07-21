@@ -40,13 +40,11 @@ class AuthClient(object):
                 or declines the application's permissions. This URL must also be
                 present in the Redirect URIs field in the application dashboard
 
-            test_mode (bool, optional): Launch the Smartcar auth flow in test mode. Defaults to false.
-                test_mode is now deprecated. Use mode instead
+            test_mode (bool, optional): Deprecated, please use `mode` instead.
+                Launch Smartcar Connect in [test mode](https://smartcar.com/docs/guides/testing/).
 
-            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated]. Defaults to live.
-
-
-
+            mode (str, optional): Determine what mode Smartcar Connect should be launched in.
+                Should be one of test, live or simulated. Defaults to live.
         """
         self.client_id = client_id or os.environ.get("SMARTCAR_CLIENT_ID")
         self.client_secret = client_secret or os.environ.get("SMARTCAR_CLIENT_SECRET")
@@ -55,10 +53,9 @@ class AuthClient(object):
 
         if test_mode is not None:
             warn(
-                "Parameter test_mode has deprecated, use mode to specify the mode instead",
+                'The "testMode" parameter is deprecated, please use the "mode" parameter instead.',
                 DeprecationWarning,
             )
-        else:
             self.mode = "test" if test_mode else "live"
 
         self.auth = (self.client_id, self.client_secret)
@@ -77,7 +74,7 @@ class AuthClient(object):
             )
         if self.mode not in ["test", "live", "simulated"]:
             raise Exception(
-                "Mode MUST be one of the following 'test', 'live', 'simulated'"
+                "The \"mode\" parameter MUST be one of the following: 'test', 'live', 'simulated'",
             )
 
     def get_auth_url(self, scope: List[str], options: dict = None) -> str:

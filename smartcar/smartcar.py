@@ -104,7 +104,7 @@ def get_compatibility(
             access to
 
     Note: The `mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0
-            and `test_mode` has deprecated
+            and `test_mode` has been deprecated
 
     Args:
         vin (str)
@@ -120,14 +120,15 @@ def get_compatibility(
 
             version (str): Version of API you want to use
 
-            flags (dict - {str: bool}): An optional list of feature flags
+            flags (dict - {str: bool}, optional): An optional list of feature flags
 
-            test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
-                test_mode is now deprecated. Use mode instead
+            test_mode (bool, optional): Deprecated, please use `mode` instead.
+                Launch Smartcar Connect in [test mode](https://smartcar.com/docs/guides/testing/).
 
-            mode (str, optional): Mode to Launch the Smartcar auth flow [test|live|simulated].
+            mode (str, optional): Determine what mode Smartcar Connect should be launched in.
+                Should be one of test, live or simulated.
 
-            test_mode_compatibility_level (str): This parameter is required when the API is invoked in test mode.
+            test_mode_compatibility_level (str, optional): This parameter is required when the API is invoked in test mode.
                 Possible values with details are documented in our Integration Guide.
 
     Returns:
@@ -167,7 +168,7 @@ def get_compatibility(
         if api_version == "1.0":
             if options.get("test_mode") is not None:
                 warn(
-                    "test_mode is deprecated, use mode to specify the mode instead",
+                    'The "testMode" parameter is deprecated, please use the "mode" parameter instead.',
                     DeprecationWarning,
                 )
                 params["mode"] = "test" if options.get("test_mode") else "live"
@@ -182,7 +183,7 @@ def get_compatibility(
 
             if params.mode not in ["test", "live", "simulated"]:
                 raise Exception(
-                    "Mode MUST be one of the following 'test', 'live', 'simulated'"
+                    "The \"mode\" parameter MUST be one of the following: 'test', 'live', 'simulated'",
                 )
 
     # Ensuring client_id and client_secret are present
