@@ -58,26 +58,6 @@ def chevy_volt(access):
 
 
 @pytest.fixture(scope="session")
-def chevy_volt_with_flags(access):
-    """
-    Using default access token that has the default scope
-    permissions (found in ./auth_helpers) with optional flags,
-    return the first car. Since the test client defaults to
-    Chevrolet, the first car should be a Chevrolet Volt.
-
-    Yields:
-        chevy_volt(smartcar.Vehicle)
-    """
-    vehicle_ids = sc.get_vehicles(access.access_token)
-    volt_id = vehicle_ids.vehicles[0]
-    yield sc.Vehicle(
-        volt_id,
-        access.access_token,
-        options={"flags": {"country": "DE", "flag": True}},
-    )
-
-
-@pytest.fixture(scope="session")
 def chevy_volt_imperial(chevy_volt, access):
     """
     Using default access token that has the default scope

@@ -65,8 +65,8 @@ def validate_env(mode: str = "live") -> None:
         or f"{prefix}_CLIENT_SECRET" not in os.environ
     ):
         raise Exception(
-            f'"{prefix}_CLIENT_ID", "{prefix}_CLIENT_SECRET", and '
-            f'"{prefix}_CLIENT_REDIRECT_URI environment variables must be set'
+            f'"{prefix}_CLIENT_ID" and "{prefix}_CLIENT_SECRET"'
+            f" environment variables must be set"
         )
 
 
@@ -88,10 +88,10 @@ def format_flag_query(flags: dict) -> str:
     """
     flags_str = ""
 
-    for flag in flags.keys():
-        if type(flags[flag]) == bool:
-            flags[flag] = str(flags[flag]).lower()
-        flags_str += f"{flag}:{flags[flag]} "
+    for flag_name, flag_value in flags.items():
+        if type(flag_value) == bool:
+            flag_value = str(flag_value).lower()
+        flags_str += f"{flag_name}:{flag_value} "
 
     return flags_str.strip()
 
