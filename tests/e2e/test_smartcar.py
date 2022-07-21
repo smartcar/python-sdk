@@ -49,7 +49,7 @@ def test_get_compatibility_in_test_mode_but_no_level():
             options={
                 "client_id": ah.CLIENT_ID,
                 "client_secret": ah.CLIENT_SECRET,
-                "test_mode": True,
+                "mode": "test",
             },
         )
 
@@ -105,7 +105,7 @@ def test_get_compatibility_without_client_id(chevy_volt):
         get_compatibility(vin=chevy_volt.vin().vin, scope=["read_vehicle_info"])
     except Exception as e:
         assert e.args == (
-            '"SMARTCAR_CLIENT_ID", "SMARTCAR_CLIENT_SECRET", and "SMARTCAR_CLIENT_REDIRECT_URI environment variables must be set',
+            '"SMARTCAR_CLIENT_ID" and "SMARTCAR_CLIENT_SECRET" environment variables must be set',
         )
 
 

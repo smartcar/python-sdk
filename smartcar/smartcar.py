@@ -5,6 +5,7 @@ import os
 import re
 from datetime import datetime
 from typing import List, Union
+from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
@@ -102,7 +103,8 @@ def get_compatibility(
         3. Is compatible with the required permissions (scope) that your app is requesting
             access to
 
-    Note: The `test_mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0.
+    Note: The `mode` and `test_mode_compatibility_level` options arguments are only valid for Smartcar API v1.0
+            and `test_mode` has been deprecated
 
     Args:
         vin (str)
@@ -118,11 +120,15 @@ def get_compatibility(
 
             version (str): Version of API you want to use
 
-            flags (dict - {str: bool}): An optional list of feature flags
+            flags (dict - {str: bool}, optional): An optional list of feature flags
 
-            test_mode (bool): Indicates whether the API should be invoked in test mode (as opposed to live mode)
+            test_mode (bool, optional): Deprecated, please use `mode` instead.
+                Launch Smartcar Connect in [test mode](https://smartcar.com/docs/guides/testing/).
 
-            test_mode_compatibility_level (str): This parameter is required when the API is invoked in test mode.
+            mode (str, optional): Determine what mode Smartcar Connect should be launched in.
+                Should be one of test, live or simulated.
+
+            test_mode_compatibility_level (str, optional): This parameter is required when the API is invoked in test mode.
                 Possible values with details are documented in our Integration Guide.
 
     Returns:
@@ -160,14 +166,25 @@ def get_compatibility(
             api_version = options["version"]
 
         if api_version == "1.0":
+            if options.get("test_mode") is not None:
+                warn(
+                    'The "testMode" parameter is deprecated, please use the "mode" parameter instead.',
+                    DeprecationWarning,
+                )
+                params["mode"] = "test" if options.get("test_mode") else "live"
+            elif options.get("mode"):
+                params["mode"] = options.get["mode"]
 
             if options.get("test_mode_compatibility_level"):
-                params["mode"] = "test"
                 params["test_mode_compatibility_level"] = options[
                     "test_mode_compatibility_level"
                 ]
-            elif options.get("test_mode"):
                 params["mode"] = "test"
+
+            if params.mode not in ["test", "live", "simulated"]:
+                raise Exception(
+                    "The \"mode\" parameter MUST be one of the following: 'test', 'live', 'simulated'",
+                )
 
     # Ensuring client_id and client_secret are present
     if client_id is None or client_secret is None:

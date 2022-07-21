@@ -1,7 +1,6 @@
 from collections import namedtuple
 import json
 from typing import List
-
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.smartcar
@@ -26,6 +25,9 @@ class Vehicle(object):
                 version(str, optional): Version of Smartcar API an instance of vehicle
                     will send requests to. This will override the instance's base url attribute.
 
+                flags(dict, optional): Object of flags where key is the name of the flag and
+                    value is string or boolean value.
+
         Attributes:
             self.vehicle_id (str)
             self.access_token (str): Access token retrieved from Smartcar Connect
@@ -36,6 +38,7 @@ class Vehicle(object):
         self.access_token = access_token
         self._api_version = smartcar.smartcar.API_VERSION
         self._unit_system = "metric"
+        self._flags = {}
 
         if options:
             if options.get("unit_system"):
@@ -43,6 +46,9 @@ class Vehicle(object):
 
             if options.get("version"):
                 self._api_version = options["version"]
+
+            if options.get("flags"):
+                self._flags = options["flags"]
 
     def vin(self) -> types.Vin:
         """
@@ -503,14 +509,20 @@ class Vehicle(object):
     # ===========================================
     # Private methods
     # ===========================================
+    def _format_query_params(self) -> str:
+        """
+        Returns (str): Query parameters as a query string
+        """
+        if self._flags:
+            return f"?flags={helpers.format_flag_query(self._flags)}"
+        return ""
+
     def _format_url(self, path: str) -> str:
         """
         Returns (str): Base url with current API version.
         User can change api_version attribute at will.
         """
-        return (
-            f"{config.API_URL}/v{self._api_version}/vehicles/{self.vehicle_id}/{path}"
-        )
+        return f"{config.API_URL}/v{self._api_version}/vehicles/{self.vehicle_id}/{path}{self._format_query_params()}"
 
     def _get_headers(self, need_unit_system: bool = True) -> dict:
         """

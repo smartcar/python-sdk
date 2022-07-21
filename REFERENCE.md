@@ -1,6 +1,6 @@
 # AuthClient
 
-### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, test_mode=False)`
+### `smartcar.AuthClient(self, client_id, client_secret, redirect_uri, mode='live')`
 
 A client for accessing the Smartcar API
 
@@ -11,7 +11,7 @@ A client for accessing the Smartcar API
 | `client_id`     | String  | **Optional**\* | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                   |
 | `client_secret` | String  | **Optional**\* | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                               |
 | `redirect_uri`  | String  | **Optional**\* | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
-| `test_mode`     | Boolean | **Optional**   | Launch the Smartcar Connect in test mode.                                                                                         |
+| `mode`          | String  | **Optional**   | Determine what mode Smartcar Connect should be launched in. Should be one of test, live or simulated.  |
 
 ##### \***Environment Variables VS Passing Arguments:**
 
@@ -711,7 +711,7 @@ A compatible vehicle is a vehicle that:
 
 | Value                                     | Type                    | Availability          | Description                                                                                                                                         |
 |:------------------------------------------|:------------------------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Compatibility`                           | typing.NamedTuple       | **API v1.0 and v2.0** |The returned object with vehicle's compatibility with the permissions (scope) checked                                                                | 
+| `Compatibility`                           | typing.NamedTuple       | **API v1.0 and v2.0** |The returned object with vehicle's compatibility with the permissions (scope) checked                                                                |
 | `Compatibility.compatible`                | Boolean                 | **API v1.0 and v2.0** | Whether the vehicle is compatible with the permissions                                                                                              |
 | `Compatibility.reason`                    | String or None          | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "MAKE_NOT_COMPATIBLE"                          |
 | `Compatibility.capabilities`              | List                    | **API v2.0 only**     | A list containing the set of endpoints that the provided scope value can provide authorization for. This list will be empty if compatible is false. |

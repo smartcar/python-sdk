@@ -47,26 +47,26 @@ def requester(method: str, url: str, **kwargs) -> requests.models.Response:
             raise sce.SmartcarException(message="SDK_ERROR") from e
 
 
-def validate_env(test_mode: bool = False) -> None:
+def validate_env(mode: str = "live") -> None:
     """
     Helper Function to determine if environment variables for client id
     and secret are set properly.
 
     Args:
-        test_mode: bool
+        mode: str ['test'|'simulated'|'live']
 
     Raises:
         Basic Exception
     """
-    prefix = "E2E_SMARTCAR" if test_mode else "SMARTCAR"
+    prefix = "E2E_SMARTCAR" if mode != "live" else "SMARTCAR"
 
     if (
         f"{prefix}_CLIENT_ID" not in os.environ
         or f"{prefix}_CLIENT_SECRET" not in os.environ
     ):
         raise Exception(
-            f'"{prefix}_CLIENT_ID", "{prefix}_CLIENT_SECRET", and '
-            f'"{prefix}_CLIENT_REDIRECT_URI environment variables must be set'
+            f'"{prefix}_CLIENT_ID" and "{prefix}_CLIENT_SECRET"'
+            f" environment variables must be set"
         )
 
 
@@ -88,8 +88,10 @@ def format_flag_query(flags: dict) -> str:
     """
     flags_str = ""
 
-    for flag in flags.keys():
-        flags_str += f"{flag}:{flags[flag]} "
+    for flag_name, flag_value in flags.items():
+        if type(flag_value) == bool:
+            flag_value = str(flag_value).lower()
+        flags_str += f"{flag_name}:{flag_value} "
 
     return flags_str.strip()
 

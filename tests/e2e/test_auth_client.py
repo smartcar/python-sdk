@@ -23,7 +23,7 @@ def test_auth_client(client):
     assert client.client_id is not None
     assert client.client_secret is not None
     assert client.redirect_uri is not None
-    assert client.test_mode
+    assert client.mode == "test"
 
 
 def test_get_auth_url_single_select(client):

@@ -10,7 +10,7 @@ from distutils.util import strtobool
 import smartcar.helpers as helpers
 
 # Verify all E2E variables are present ('E2E_<CLIENT VARIABLE>')
-helpers.validate_env(test_mode=True)
+helpers.validate_env(mode="test")
 
 # Smartcar client environment variables (Required)
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
@@ -42,8 +42,8 @@ DEFAULT_SCOPE = [
 
 
 def get_auth_client_params():
-    test_mode = True
-    return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, test_mode]
+    mode = "test"
+    return [CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, True, mode]
 
 
 def get_code_from_url(url):
@@ -82,8 +82,8 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     sign_in_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.ID, "sign-in-button"))
     )
-    driver.find_element_by_id("username").send_keys(username)
-    driver.find_element_by_id("password").send_keys("password")
+    driver.find_element(By.ID, "username").send_keys(username)
+    driver.find_element(By.ID, "password").send_keys("password")
     sign_in_button.click()
 
     # Permissions Approval
