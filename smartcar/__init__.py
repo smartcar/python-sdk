@@ -12,6 +12,7 @@ from smartcar.smartcar import (
     get_api_version,
     set_api_version,
     verify_payload,
+    is_expired,
 )
 
 from smartcar.vehicle import Vehicle
