@@ -356,7 +356,7 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 
 ---
 
-### `info(self)`
+### `attributes(self)`
 
 Returns a single vehicle object, containing identifying information.
 
@@ -364,12 +364,12 @@ Returns a single vehicle object, containing identifying information.
 
 | Value        | Type                   | Description                                                                |
 |:-------------|:-----------------------|:---------------------------------------------------------------------------|
-| `Info`       | typing.NamedTuple      | The returned object with vehicle's info                                    |
-| `Info.id`    | String                 | A vehicle ID (UUID v4).                                                    |
-| `Info.make`  | String                 | The manufacturer of the vehicle.                                           |
-| `Info.model` | String                 | The model of the vehicle.                                                  |
-| `Info.year`  | String                 | The model year.                                                            |
-| `Info.meta`  | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
+| `Attributes`       | typing.NamedTuple      | The returned object with vehicle's info                                    |
+| `Attributes.id`    | String                 | A vehicle ID (UUID v4).                                                    |
+| `Attributes.make`  | String                 | The manufacturer of the vehicle.                                           |
+| `Attributes.model` | String                 | The model of the vehicle.                                                  |
+| `Attributes.year`  | String                 | The model year.                                                            |
+| `Attributes.meta`  | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
 
 #### Raises
 
