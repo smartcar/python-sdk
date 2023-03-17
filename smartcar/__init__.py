@@ -1,4 +1,4 @@
-__version__ = "semantic-release"
+__version__ = "6.4.0"
 
 from smartcar.auth_client import AuthClient
 
