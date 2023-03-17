@@ -72,7 +72,7 @@ def run_auth_flow(auth_url, brand="CHEVROLET"):
     # Brand Selector
     brand_button = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located(
-            (By.CSS_SELECTOR, f"button.brand-selector-button[data-make='{brand}']")
+            (By.CSS_SELECTOR, f"button#{brand.upper()}.brand-list-item")
         )
     )
     brand_button.click()
