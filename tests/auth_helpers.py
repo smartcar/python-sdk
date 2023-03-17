@@ -59,7 +59,8 @@ def get_code_from_url(url):
 
 def run_auth_flow(auth_url, brand="CHEVROLET"):
     firefox_options = webdriver.FirefoxOptions()
-    firefox_options.headless = HEADLESS
+    if HEADLESS:
+        firefox_options.add_argument('-headless')
     driver = webdriver.Firefox(options=firefox_options)
 
     driver.get(auth_url)
