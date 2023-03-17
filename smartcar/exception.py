@@ -85,6 +85,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
             doc_url=response.get("docURL"),
             resolution=response.get("resolution"),
             detail=response.get("detail"),
+            retry_after=headers.get("retry-after")
         )
 
     # Weird...
