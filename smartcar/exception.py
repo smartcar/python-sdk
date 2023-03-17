@@ -76,17 +76,30 @@ def exception_factory(status_code: int, headers: dict, body: str):
 
     # v2.0
     elif response.get("type"):
-        return SmartcarException(
-            status_code=response.get("statusCode"),
-            request_id=response.get("requestId"),
-            type=response.get("type"),
-            description=response.get("description"),
-            code=response.get("code"),
-            doc_url=response.get("docURL"),
-            resolution=response.get("resolution"),
-            detail=response.get("detail"),
-            retry_after=headers.get("retry-after")
-        )
+        # Set retry_after only for Vehicle Rate Limit errors
+        if headers.get("retry-after") is not None:
+            return SmartcarException(
+                status_code=response.get("statusCode"),
+                request_id=response.get("requestId"),
+                type=response.get("type"),
+                description=response.get("description"),
+                code=response.get("code"),
+                doc_url=response.get("docURL"),
+                resolution=response.get("resolution"),
+                detail=response.get("detail"),
+                retry_after=headers.get("retry-after")
+            )
+        else:
+            return SmartcarException(
+                status_code=response.get("statusCode"),
+                request_id=response.get("requestId"),
+                type=response.get("type"),
+                description=response.get("description"),
+                code=response.get("code"),
+                doc_url=response.get("docURL"),
+                resolution=response.get("resolution"),
+                detail=response.get("detail"),
+            )
 
     # Weird...
     else:
