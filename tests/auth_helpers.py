@@ -35,7 +35,7 @@ DEFAULT_SCOPE = [
     "required:read_vin",
     "required:read_fuel",
     "required:read_battery",
-    "required:read_charge",
+    "read_charge",
     "required:read_engine_oil",
     "required:read_tires",
 ]
