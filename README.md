@@ -153,6 +153,8 @@ some exception handling code.
 All exceptions will be of type `smartcar.SmartcarException` with the... exception of missing client
 credentials. Navigate below to `AuthClient` for more details.
 
+Upon a vehicle rate limit error, see `SmartcarException.retry_after` (seconds) for when to retry the request.
+
 Check out our [API Reference](https://smartcar.com/docs/api/?version=v2.0#errors)
 and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn more.
 

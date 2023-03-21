@@ -63,7 +63,6 @@ def test_get_compatibility_in_test_mode_but_no_level():
 
 
 def test_get_compatibility_v2():
-
     compatibility = smartcar.get_compatibility(
         "0SCGMCT0386A85356",
         scope=["read_odometer", "read_fuel"],
