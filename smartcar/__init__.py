@@ -1,4 +1,4 @@
-__version__ = "6.4.0"
+__version__ = "0.0.0"
 
 from smartcar.auth_client import AuthClient
 
