@@ -182,6 +182,11 @@ Charge = NamedTuple(
     [("is_plugged_in", bool), ("state", str), ("meta", namedtuple)],
 )
 
+ChargeLimit = NamedTuple(
+    "ChargeLimit",
+    [("limit", float), ("meta", namedtuple)]
+)
+
 Battery = NamedTuple(
     "Battery",
     [("percent_remaining", float), ("range", float), ("meta", namedtuple)],
@@ -350,6 +355,9 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
     elif path == "location":
         return Location(data["latitude"], data["longitude"], headers)
 
+    elif path == "charge/limit":
+        return ChargeLimit(data["limit"], headers)
+
     elif path == "permissions":
         return Permissions(
             data["permissions"],
@@ -365,6 +373,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         or path == "unlock"
         or path == "start_charge"
         or path == "stop_charge"
+        or path == "set_charge_limit"
     ):
         return Action(data["status"], data["message"], headers)
 

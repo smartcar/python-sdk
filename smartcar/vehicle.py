@@ -248,6 +248,23 @@ class Vehicle(object):
         response = helpers.requester("GET", url, headers=headers)
         return types.select_named_tuple(path, response)
 
+    def get_charge_limit(self) -> types.ChargeLimit:
+        """
+        GET Vehicle.get
+
+        Returns:
+            Attributes: NamedTuple("Attributes", [("id", str), ("make", str), ("model", str), ("year", str),
+            ("meta", namedtuple)])
+
+        Raises:
+            SmartcarException
+        """
+        path = "charge/limit"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+
     # ===========================================
     # Action (POST) Requests
     # ===========================================
