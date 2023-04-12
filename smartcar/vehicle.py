@@ -350,7 +350,7 @@ class Vehicle(object):
         url = self._format_url("charge/limit")
         headers = self._get_headers(need_unit_system=False)
         response = helpers.requester(
-            "POST", url, headers=headers, json={limit}
+            "POST", url, headers=headers, json={{ limit: limit }}
         )
         return types.select_named_tuple("set_charge_limit", response)
 
