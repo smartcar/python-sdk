@@ -337,6 +337,23 @@ class Vehicle(object):
         )
         return types.select_named_tuple("stop_charge", response)
 
+    def set_charge_limit(self, limit) -> types.Status:
+        """
+        POST Vehicle.set_charge_limit
+
+        Returns:
+            Action: NamedTuple("Action", [("status", str), ("message", str), ("meta", rs.namedtuple)])
+
+        Raises:
+            SmartcarException
+        """
+        url = self._format_url("charge/limit")
+        headers = self._get_headers(need_unit_system=False)
+        response = helpers.requester(
+            "POST", url, headers=headers, json={limit}
+        )
+        return types.select_named_tuple("set_charge_limit", response)
+
     def batch(self, paths: List[str]) -> namedtuple:
         """
         POST Vehicle.batch
