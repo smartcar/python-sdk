@@ -82,6 +82,13 @@ def test_attributes(chevy_volt):
     assert attributes._fields == ("id", "make", "model", "year", "meta")
 
 
+def test_get_charge_limit(ford_car):
+    charge_limit = ford_car.get_charge_limit()
+    assert charge_limit is not None
+    assert type(charge_limit) == types.ChargeLimit
+    assert charge_limit._fields == ("limit", "meta")
+
+
 def test_lock(chevy_volt):
     response = chevy_volt.lock()
     assert response.status == "success"
@@ -105,6 +112,13 @@ def test_start_charge(ford_car):
 
 def test_stop_charge(ford_car):
     response = ford_car.stop_charge()
+    assert response.status == "success"
+    assert type(response) == types.Action
+    assert response._fields == ("status", "message", "meta")
+
+
+def test_set_charge_limit(ford_car):
+    response = ford_car.set_charge_limit(0.7)
     assert response.status == "success"
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
