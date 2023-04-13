@@ -250,11 +250,10 @@ class Vehicle(object):
 
     def get_charge_limit(self) -> types.ChargeLimit:
         """
-        GET Vehicle.get
+        GET Vehicle.get_charge_limit
 
         Returns:
-            Attributes: NamedTuple("Attributes", [("id", str), ("make", str), ("model", str), ("year", str),
-            ("meta", namedtuple)])
+            ChargeLimit = NamedTuple("ChargeLimit", [("limit", float), ("meta", namedtuple)])
 
         Raises:
             SmartcarException
