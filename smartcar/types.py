@@ -182,10 +182,7 @@ Charge = NamedTuple(
     [("is_plugged_in", bool), ("state", str), ("meta", namedtuple)],
 )
 
-ChargeLimit = NamedTuple(
-    "ChargeLimit",
-    [("limit", float), ("meta", namedtuple)]
-)
+ChargeLimit = NamedTuple("ChargeLimit", [("limit", float), ("meta", namedtuple)])
 
 Battery = NamedTuple(
     "Battery",

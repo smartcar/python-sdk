@@ -2,6 +2,7 @@ import smartcar.types as types
 from smartcar.exception import SmartcarException
 import tests.auth_helpers as ah
 
+
 # Tests
 def test_vin_and_meta(chevy_volt):
     vin = chevy_volt.vin()
@@ -52,6 +53,7 @@ def test_tire_pressure(chevy_volt):
         "meta",
     )
 
+
 def test_engine_oil(chevy_volt):
     engine_oil = chevy_volt.engine_oil()
     assert engine_oil is not None
@@ -79,11 +81,13 @@ def test_attributes(chevy_volt):
     assert type(attributes) == types.Attributes
     assert attributes._fields == ("id", "make", "model", "year", "meta")
 
+
 def test_get_charge_limit(ford_car):
     charge_limit = ford_car.get_charge_limit()
     assert charge_limit is not None
     assert type(charge_limit) == types.ChargeLimit
     assert charge_limit._fields == ("limit", "meta")
+
 
 def test_lock(chevy_volt):
     response = chevy_volt.lock()
@@ -112,11 +116,13 @@ def test_stop_charge(ford_car):
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
+
 def test_set_charge_limit(ford_car):
     response = ford_car.set_charge_limit(0.7)
     assert response.status == "success"
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
+
 
 def test_batch_success(chevy_volt):
     batch = chevy_volt.batch(["/odometer", "/location"])
