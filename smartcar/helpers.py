@@ -123,6 +123,6 @@ def format_path_and_attribute_for_batch(raw_path: str) -> tuple:
     formatted_path = raw_path[1:] if raw_path[0] == "/" else raw_path
     formatted_attribute = mapper.get(formatted_path, formatted_path)
     if "/" in formatted_attribute:
-        formatted_attribute = formatted_attribute.replace('/', '_')
+        formatted_attribute = formatted_attribute.replace("/", "_")
 
     return formatted_path, formatted_attribute
