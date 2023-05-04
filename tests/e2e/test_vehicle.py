@@ -125,9 +125,9 @@ def test_set_charge_limit(ford_car):
 
 
 def test_batch_success(chevy_volt):
-    batch = chevy_volt.batch(["/odometer", "/location"])
+    batch = chevy_volt.batch(["/odometer", "/location", "/charge/limit"])
     assert batch is not None
-    assert batch._fields == ("odometer", "location", "meta")
+    assert batch._fields == ("odometer", "location", "get_charge_limit", "meta")
     assert isinstance(batch.meta, tuple)
     assert isinstance(batch.odometer().meta, tuple)
     assert batch.odometer().distance is not None
@@ -135,6 +135,7 @@ def test_batch_success(chevy_volt):
     assert batch.location().longitude is not None
     assert batch.location().latitude is not None
     assert batch.location().meta.request_id is not None
+    assert batch.get_charge_limit().limit is not None
 
 
 def test_batch_misspelled_permission(chevy_volt):

@@ -114,12 +114,15 @@ def format_path_and_attribute_for_batch(raw_path: str) -> tuple:
         2. "NORMAL" raw_path == '/odometer' -> ('odometer', 'odometer')
         3. "NESTED" raw_path == '/engine/oil' -> ('engine/oil', 'engine_oil')
     """
+    # mapper holds unique situations where the path does not exactly line up with the function to call
+    # we have a set_charge_limit but are not concerned with it in batch calls
     mapper = {
-        "battery/capacity": "battery_capacity",
-        "engine/oil": "engine_oil",
-        "tires/pressure": "tire_pressure",
+        "charge/limit": "get_charge_limit",
         "": "attributes",
     }
     formatted_path = raw_path[1:] if raw_path[0] == "/" else raw_path
     formatted_attribute = mapper.get(formatted_path, formatted_path)
+    if "/" in formatted_attribute:
+        formatted_attribute = formatted_attribute.replace('/', '_')
+
     return formatted_path, formatted_attribute
