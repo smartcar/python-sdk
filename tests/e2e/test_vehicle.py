@@ -125,9 +125,26 @@ def test_set_charge_limit(ford_car):
 
 
 def test_batch_success(chevy_volt):
-    batch = chevy_volt.batch(["/odometer", "/location", "/charge/limit", "/engine/oil", "/battery/capacity", "/tires/pressure"])
+    batch = chevy_volt.batch(
+        [
+            "/odometer",
+            "/location",
+            "/charge/limit",
+            "/engine/oil",
+            "/battery/capacity",
+            "/tires/pressure",
+        ]
+    )
     assert batch is not None
-    assert batch._fields == ("odometer", "location", "get_charge_limit", "engine_oil", "battery_capacity", "tire_pressure", "meta")
+    assert batch._fields == (
+        "odometer",
+        "location",
+        "get_charge_limit",
+        "engine_oil",
+        "battery_capacity",
+        "tire_pressure",
+        "meta",
+    )
     assert isinstance(batch.meta, tuple)
     assert isinstance(batch.odometer().meta, tuple)
     assert batch.odometer().distance is not None
@@ -142,7 +159,6 @@ def test_batch_success(chevy_volt):
     assert batch.tire_pressure().front_left is not None
     assert batch.tire_pressure().back_right is not None
     assert batch.tire_pressure().back_left is not None
-
 
 
 def test_batch_misspelled_permission(chevy_volt):
