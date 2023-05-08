@@ -116,6 +116,7 @@ def format_path_and_attribute_for_batch(raw_path: str) -> tuple:
     """
     mapper = {
         "battery/capacity": "battery_capacity",
+        "charge/limit": "charge_limit",
         "engine/oil": "engine_oil",
         "tires/pressure": "tire_pressure",
         "": "attributes",
