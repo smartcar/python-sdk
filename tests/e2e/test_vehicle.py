@@ -152,7 +152,7 @@ def test_batch_success(chevy_volt):
     assert batch.location().longitude is not None
     assert batch.location().latitude is not None
     assert batch.location().meta.request_id is not None
-    assert batch.get_charge_limit().limit is not None
+    assert batch.charge_limit().limit is not None
     assert batch.engine_oil().life_remaining is not None
     assert batch.battery_capacity().capacity is not None
     assert batch.tire_pressure().front_right is not None
