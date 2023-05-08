@@ -139,7 +139,7 @@ def test_batch_success(chevy_volt):
     assert batch._fields == (
         "odometer",
         "location",
-        "get_charge_limit",
+        "charge_limit",
         "engine_oil",
         "battery_capacity",
         "tire_pressure",
