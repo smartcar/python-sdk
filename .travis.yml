@@ -32,6 +32,9 @@ script:
   - make test
   - make format args='--check'
 
+after_success:
+ - codecov
+
 jobs:
   include:
     - stage: publish

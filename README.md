@@ -1,4 +1,4 @@
-# Smartcar Python Backend SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url]
+# Smartcar Python Backend SDK [![Build Status][ci-image]][ci-url] [![PyPI version][pypi-image]][pypi-url] [![Codecov][codecov-image]][codecov-url]
 
 Python package to quickly integrate Smartcar API
 
@@ -155,6 +155,8 @@ and [v2.0 Error Guides](https://smartcar.com/docs/errors/v2.0/billing) to learn 
 [ci-image]: https://travis-ci.com/smartcar/python-sdk.svg?token=FcsopC3DdDmqUpnZsrwg&branch=master
 [pypi-url]: https://badge.fury.io/py/smartcar
 [pypi-image]: https://badge.fury.io/py/smartcar.svg
+[codecov-url]: https://codecov.io/gh/smartcar/python-sdk
+[codecov-image]: https://codecov.io/gh/smartcar/python-sdk/branch/master/graph/badge.svg
 [smartcar-developer]: https://developer.smartcar.com
 [smartcar-docs-api]: https://smartcar.com/docs
 [smartcar-python-sdk-reference]: https://github.com/smartcar/python-sdk/blob/master/REFERENCE.md
