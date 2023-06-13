@@ -609,25 +609,6 @@ Sets the version of Smartcar API to use
 | None |
 
 ---
-
-### `smartcar.is_expired(expiration)`
-
-Check if an expiration is expired
-
-#### Arguments
-
-| Parameter    | Type     | Description         |
-|:-------------|:---------|:--------------------|
-| `expiration` | DateTime | expiration datetime |
-
-#### Returns
-
-| Type    | Description     |
-|:--------|:----------------|
-| Boolean | true if expired |
-
----
-
 ### `smartcar.get_vehicles(access_token, limit=10, offset=0)`
 
 Get a list of the user's vehicle ids

@@ -84,12 +84,7 @@ This access object will look like this:
 ```
 
 - To make any vehicle data request to the Smartcar API, you'll need to give the SDK a valid **access token**. Access
-  tokens will expire every 2 hours, so you'll need to constantly refresh them. To check if an access object is expired,
-  use `smartcar.is_expired(access['expiration'])`.
-
-```python
-smartcar.is_expired(access['expiration']) # True or False
-```
+  tokens will expire every 2 hours, so you'll need to constantly refresh them.
 
 - It was pretty hard getting that first access token, but from now on it's easy!
   Calling `client.exchange_refresh_token(refresh_token)` will return a new access object using a previous access
@@ -98,12 +93,10 @@ smartcar.is_expired(access['expiration']) # True or False
 ```python
 def get_fresh_access():
     access = load_access_from_database()
-    if smartcar.is_expired(access['expiration']):
-        new_access = client.exchange_refresh_token(access['refresh_token'])
-        put_access_into_database(new_access)
-        return new_access
-    else:
-        return access
+    new_access = client.exchange_refresh_token(access['refresh_token'])
+    put_access_into_database(new_access)
+    
+    return new_access
 
 
 fresh_access_token = get_fresh_access()['access_token']
