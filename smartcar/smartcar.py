@@ -215,22 +215,6 @@ def get_compatibility(
         raise Exception("Please use a valid API version (e.g. '1.0' or '2.0')")
 
 
-def is_expired(expiration: datetime) -> bool:
-    """
-    Check if an expiration is expired.
-    This helper method can be used on the 'expiration' or 'refresh_expiration'
-    values from the 'access object' received after going through Smartcar
-    Connect Auth flow.
-
-    Args:
-        expiration (datetime): expiration datetime
-
-    Returns:
-        bool: true if expired
-    """
-    return datetime.utcnow() > expiration
-
-
 # ===========================================
 # Webhook functions
 # ===========================================
