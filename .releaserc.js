@@ -5,7 +5,7 @@ module.exports = {
   plugins: [
     '@semantic-release/commit-analyzer',
     [
-      '@google/semantic-release-replace-plugin',
+      'semantic-release-replace-plugin',
       {
         replacements: [
           {
