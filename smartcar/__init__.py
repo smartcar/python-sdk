@@ -12,6 +12,8 @@ from smartcar.smartcar import (
     get_api_version,
     set_api_version,
     verify_payload,
+    get_connections,
+    delete_connections,
 )
 
 from smartcar.vehicle import Vehicle
