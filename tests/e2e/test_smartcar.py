@@ -1,4 +1,3 @@
-import os
 import smartcar.smartcar
 from smartcar import (
     get_user,
@@ -122,12 +121,20 @@ def test_get_connections(bmw_for_testing_management_api):
     connections = get_connections(
         str(amt), {"vehicle_id": bmw_for_testing_management_api}, {}
     )
+
     assert len(connections.connections) == 1
+    assert connections.connections[0].vehicle_id == bmw_for_testing_management_api
+    assert type(connections.connections[0].vehicle_id) == str
+    assert type(connections.connections[0].connected_at) == str
+    assert connections.paging.cursor is None
 
 
 def test_delete_connections(bmw_for_testing_management_api):
     amt = ah.APPLICATION_MANAGEMENT_TOKEN
-    connections = delete_connections(
+    deletions = delete_connections(
         str(amt), {"vehicle_id": bmw_for_testing_management_api}
     )
-    assert len(connections.connections) == 1
+    assert len(deletions.connections) == 1
+    assert deletions.connections[0].vehicle_id == bmw_for_testing_management_api
+    assert type(deletions.connections[0].vehicle_id) == str
+    assert deletions.connections[0].connected_at is None
