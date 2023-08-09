@@ -167,7 +167,7 @@ def get_compatibility(
         if api_version == "1.0":
             if options.get("test_mode") is not None:
                 warn(
-                    'The "testMode" parameter is deprecate-d, please use the "mode" parameter instead.',
+                    'The "testMode" parameter is deprecated, please use the "mode" parameter instead.',
                     DeprecationWarning,
                 )
                 params["mode"] = "test" if options.get("test_mode") else "live"
@@ -284,7 +284,7 @@ def get_connections(
 
     Returns:
         GetConnections = NamedTuple("GetConnections", [
-            ("connections", list),
+            ("connections", List[Connection]),
             ("paging", PagingCursor),
             ("meta", namedtuple)
             ],
@@ -304,10 +304,19 @@ def get_connections(
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("GET", url, headers=headers, params=params)
     data = response.json()
+    connections = [
+        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        for c in data["connections"]
+    ]
+
+    response_paging = data.get("paging", {})
+    response_paging = types.PagingCursor(
+        response_paging.get("count"), response_paging.get("cursor")
+    )
 
     return types.GetConnections(
-        data["connections"],
-        data["paging"],
+        connections,
+        response_paging,
         types.build_meta(response.headers),
     )
 
@@ -326,7 +335,7 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
 
     Returns:
         DeleteConnections = NamedTuple("DeleteConnections", [
-            ("connections", list),
+            ("connections", List[Connection]),
             ("meta", namedtuple)
             ],
         )
@@ -344,8 +353,12 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("DELETE", url, headers=headers, params=params)
     data = response.json()
+    connections = [
+        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        for c in data["connections"]
+    ]
 
     return types.DeleteConnections(
-        data["connections"],
+        connections,
         types.build_meta(response.headers),
     )
