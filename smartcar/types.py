@@ -118,6 +118,7 @@ def make_access_object(access: dict) -> Access:
 # ===========================================
 
 Paging = NamedTuple("Paging", [("count", int), ("offset", int)])
+PagingCursor = NamedTuple("Paging", [("count", int), ("cursor", str)])
 
 User = NamedTuple("User", [("id", str), ("meta", namedtuple)])
 
@@ -245,6 +246,16 @@ Permissions = NamedTuple(
 Subscribe = NamedTuple(
     "Subscribe",
     [("webhook_id", str), ("vehicle_id", str), ("meta", namedtuple)],
+)
+
+GetConnections = NamedTuple(
+    "GetConnections",
+    [("connections", list), ("paging", PagingCursor), ("meta", namedtuple)],
+)
+
+DeleteConnections = NamedTuple(
+    "DeleteConnections",
+    [("connections", list), ("meta", namedtuple)],
 )
 
 Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
