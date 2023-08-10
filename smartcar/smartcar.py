@@ -341,13 +341,16 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
         )
 
     """
-    if filter.get("user_id") and filter.get("vehicle_id"):
-        raise Exception("Filter can contain EITHER user_id OR vehicle_id")
+    user_id = filter.get("user_id")
+    vehicle_id = filter.get("vehicle_id")
+    if user_id and vehicle_id:
+        raise Exception("Filter can contain EITHER user_id OR vehicle_id, not both")
+
     params = {}
-    if filter.get("user_id"):
-        params["user_id"] = filter.get("user_id")
-    if filter.get("vehicle_id"):
-        params["vehicle_id"] = filter.get("vehicle_id")
+    if user_id:
+        params["user_id"] = user_id
+    elif vehicle_id:
+        params["vehicle_id"] = vehicle_id
 
     url = f"{config.MANAGEMENT_API_URL}/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
