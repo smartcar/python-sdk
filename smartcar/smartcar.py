@@ -323,8 +323,8 @@ def get_connections(
 
 def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
     """
-    Delete connections from an application.
-    Optionally delete connections by user id OR vehicle_id
+    Deletes all the connections by vehicle or user ID and returns a list
+    of all connections that were deleted.
 
     Args:
         amt (str): Application Management Token from Smartcar Dashboard
