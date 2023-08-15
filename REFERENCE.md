@@ -771,20 +771,19 @@ sorted in descending order by connection date.
 
 #### Return
 
-| Value                                     | Type              | Availability          | Description |
-|:------------------------------------------|:------------------|:----------------------|:------------|
-| `GetConnections`                          | typing.NamedTuple | **API v1.0 and v2.0** |             |
-| `GetConnections.connections`              | Boolean           | **API v1.0 and v2.0** |             |
-| `GetConnections.connections[].user_id`    | Boolean           | **API v1.0 and v2.0** |             |
-| `GetConnections.connections[].vehicle_id` | Boolean           | **API v1.0 and v2.0** |             |
-| `GetConnections.connections[].created_at` | Boolean           | **API v1.0 and v2.0** |             |
-| `Compatibility.paging`                    | String or None    | **API v1.0 and v2.0** |             |
-| `Compatibility.paging.cursor`             | List              | **API v1.0 and v2.0** |             |
+| Value                                       | Type              | Availability          | Description |
+|:--------------------------------------------|:------------------|:----------------------|:------------|
+| `GetConnections`                            | typing.NamedTuple | **API v1.0 and v2.0** |             |
+| `GetConnections.connections`                | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].user_id`      | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].vehicle_id`   | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].connected_at` | Boolean           | **API v1.0 and v2.0** |             |
+| `Compatibility.paging`                      | String or None    | **API v1.0 and v2.0** |             |
+| `Compatibility.paging.cursor`               | List              | **API v1.0 and v2.0** |             |
 
 ### `delete_connections(amt, filter)`
 
 Delete all the connections by vehicle or user ID and returns a list of all connections that were deleted.
-
 
 #### Arguments
 
