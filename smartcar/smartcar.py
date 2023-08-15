@@ -310,9 +310,7 @@ def get_connections(
     ]
 
     response_paging = data.get("paging", {})
-    response_paging = types.PagingCursor(
-        response_paging.get("count"), response_paging.get("cursor")
-    )
+    response_paging = types.PagingCursor(response_paging.get("cursor"))
 
     return types.GetConnections(
         connections,

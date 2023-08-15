@@ -780,7 +780,6 @@ sorted in descending order by connection date.
 | `GetConnections.connections[].created_at` | Boolean           | **API v1.0 and v2.0** |             |
 | `Compatibility.paging`                    | String or None    | **API v1.0 and v2.0** |             |
 | `Compatibility.paging.cursor`             | List              | **API v1.0 and v2.0** |             |
-| `Compatibility.paging.count`              | String            | **API v1.0 and v2.0** |             |
 
 ### `delete_connections(amt, filter)`
 
