@@ -300,7 +300,7 @@ def get_connections(
     if paging.get("limit"):
         params["limit"] = filter.get("limit")
 
-    url = f"{config.MANAGEMENT_API_URL}/connections"
+    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("GET", url, headers=headers, params=params)
     data = response.json()
@@ -350,7 +350,7 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
     elif vehicle_id:
         params["vehicle_id"] = vehicle_id
 
-    url = f"{config.MANAGEMENT_API_URL}/connections/"
+    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("DELETE", url, headers=headers, params=params)
     data = response.json()
