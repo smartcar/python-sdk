@@ -42,7 +42,7 @@ jobs:
         apt: []
       install:
         - nvm install 16
-        - npm install semantic-release@19.x.x @google/semantic-release-replace-plugin@1.x.x
+        - npm install semantic-release@19.x.x @google/semantic-release-replace-plugin@1.x.x --legacy-peer-deps
       script:
         - npx semantic-release
       deploy:
