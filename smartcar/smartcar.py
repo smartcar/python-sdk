@@ -3,7 +3,6 @@ import hmac
 import hashlib
 import os
 import re
-from datetime import datetime
 from typing import List, Union
 from warnings import warn
 
@@ -253,3 +252,114 @@ def verify_payload(amt: str, signature: str, body: str) -> bool:
         Boolean
     """
     return hash_challenge(amt, body) == signature
+
+
+# ===========================================
+# Management
+# ===========================================
+def get_management_token(amt: str, username: str = "default") -> str:
+    secret = f"{username}:{amt}"
+    encoded_secret = secret.encode("ascii")
+    base64_bytes = base64.b64encode(encoded_secret)
+    return base64_bytes.decode("ascii")
+
+
+def get_connections(
+    amt: str, filter: dict = {}, paging: dict = {}
+) -> types.GetConnections:
+    """
+    Returns a paged list of all the vehicles that are connected to the application
+    associated with the management API token used sorted in descending order by connection date.
+
+    Args:
+        amt (str): Application Management Token from Smartcar Dashboard
+
+        filter (dict, optional)
+            vehicle_id (str, optional)
+            user_id (str, optional)
+
+        paging (dict, optional)
+            limit (int, optional)
+            cursor_id (str, optional)
+
+    Returns:
+        GetConnections = NamedTuple("GetConnections", [
+            ("connections", List[Connection]),
+            ("paging", PagingCursor),
+            ("meta", namedtuple)
+            ],
+        )
+    """
+    params = {}
+    if filter.get("user_id"):
+        params["user_id"] = filter.get("user_id")
+    if filter.get("vehicle_id"):
+        params["vehicle_id"] = filter.get("vehicle_id")
+    if paging.get("cursor"):
+        params["cursor"] = filter.get("cursor")
+    if paging.get("limit"):
+        params["limit"] = filter.get("limit")
+
+    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    headers = {"Authorization": f"Basic {get_management_token(amt)}"}
+    response = helpers.requester("GET", url, headers=headers, params=params)
+    data = response.json()
+    connections = [
+        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        for c in data["connections"]
+    ]
+
+    response_paging = data.get("paging", {})
+    response_paging = types.PagingCursor(response_paging.get("cursor"))
+
+    return types.GetConnections(
+        connections,
+        response_paging,
+        types.build_meta(response.headers),
+    )
+
+
+def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
+    """
+    Deletes all the connections by vehicle or user ID and returns a list
+    of all connections that were deleted.
+
+    Args:
+        amt (str): Application Management Token from Smartcar Dashboard
+
+        filter (dict, optional): Can contain EITHER vehicle_id OR user_id
+            vehicle_id (str, optional)
+            user_id (str, optional)
+
+    Returns:
+        DeleteConnections = NamedTuple("DeleteConnections", [
+            ("connections", List[Connection]),
+            ("meta", namedtuple)
+            ],
+        )
+
+    """
+    user_id = filter.get("user_id")
+    vehicle_id = filter.get("vehicle_id")
+    if user_id and vehicle_id:
+        raise Exception("Filter can contain EITHER user_id OR vehicle_id, not both")
+
+    params = {}
+    if user_id:
+        params["user_id"] = user_id
+    elif vehicle_id:
+        params["vehicle_id"] = vehicle_id
+
+    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    headers = {"Authorization": f"Basic {get_management_token(amt)}"}
+    response = helpers.requester("DELETE", url, headers=headers, params=params)
+    data = response.json()
+    connections = [
+        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        for c in data["connections"]
+    ]
+
+    return types.DeleteConnections(
+        connections,
+        types.build_meta(response.headers),
+    )

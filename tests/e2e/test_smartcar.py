@@ -6,6 +6,8 @@ from smartcar import (
     hash_challenge,
     set_api_version,
     verify_payload,
+    get_connections,
+    delete_connections,
 )
 import smartcar.types as types
 import tests.auth_helpers as ah
@@ -112,3 +114,27 @@ def test_static_webhook_methods():
     amt = ah.APPLICATION_MANAGEMENT_TOKEN or "abc123abc123"
     hashed_challenge = hash_challenge(amt, "9c9c9c9c")
     assert verify_payload(amt, hashed_challenge, "9c9c9c9c")
+
+
+def test_get_connections(bmw_for_testing_management_api):
+    amt = ah.APPLICATION_MANAGEMENT_TOKEN
+    connections = get_connections(
+        str(amt), {"vehicle_id": bmw_for_testing_management_api}, {}
+    )
+
+    assert len(connections.connections) == 1
+    assert connections.connections[0].vehicle_id == bmw_for_testing_management_api
+    assert type(connections.connections[0].vehicle_id) == str
+    assert type(connections.connections[0].connected_at) == str
+    assert connections.paging.cursor is None
+
+
+def test_delete_connections(bmw_for_testing_management_api):
+    amt = ah.APPLICATION_MANAGEMENT_TOKEN
+    deletions = delete_connections(
+        str(amt), {"vehicle_id": bmw_for_testing_management_api}
+    )
+    assert len(deletions.connections) == 1
+    assert deletions.connections[0].vehicle_id == bmw_for_testing_management_api
+    assert type(deletions.connections[0].vehicle_id) == str
+    assert deletions.connections[0].connected_at is None

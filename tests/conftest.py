@@ -126,6 +126,23 @@ def chevy_volt_limited_scope(client):
     yield sc.Vehicle(volt_id, access.access_token)
 
 
+@pytest.fixture(scope="session")
+def bmw_for_testing_management_api(client):
+    """
+    Using the client fixture, go through Smartcar connect auth
+    flow and return a vehicle id for the sole purpose of testing
+    vehicle management api
+
+    Yields:
+        vehicle_id(str)
+    """
+    client = sc.AuthClient(*ah.get_auth_client_params())
+    code = ah.run_auth_flow(client.get_auth_url(["required:read_odometer"]), "BMW")
+    access = client.exchange_code(code)
+    vehicle_ids = sc.get_vehicles(access.access_token)
+    yield vehicle_ids.vehicles[0]
+
+
 # # Tesla
 @pytest.fixture(scope="session")
 def access_ford(client):

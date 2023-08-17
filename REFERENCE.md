@@ -6,12 +6,12 @@ A client for accessing the Smartcar API
 
 #### Arguments:
 
-| Parameter       | Type    | Required       | Description                                                                                                                       |
-|:----------------|:--------|:---------------|:----------------------------------------------------------------------------------------------------------------------------------|
-| `client_id`     | String  | **Optional**\* | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                   |
-| `client_secret` | String  | **Optional**\* | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                               |
-| `redirect_uri`  | String  | **Optional**\* | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
-| `mode`          | String  | **Optional**   | Determine what mode Smartcar Connect should be launched in. Should be one of test, live or simulated.  |
+| Parameter       | Type   | Required       | Description                                                                                                                       |
+|:----------------|:-------|:---------------|:----------------------------------------------------------------------------------------------------------------------------------|
+| `client_id`     | String | **Optional**\* | Application clientId obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                                   |
+| `client_secret` | String | **Optional**\* | Application clientSecret obtained from [Smartcar Developer Portal](https://dashboard.smartcar.com).                               |
+| `redirect_uri`  | String | **Optional**\* | RedirectURI set in [application settings](https://dashboard.smartcar.com/apps). Given URL must match URL in application settings. |
+| `mode`          | String | **Optional**   | Determine what mode Smartcar Connect should be launched in. Should be one of test, live or simulated.                             |
 
 ##### \***Environment Variables VS Passing Arguments:**
 
@@ -362,8 +362,8 @@ Returns a single vehicle object, containing identifying information.
 
 #### Return
 
-| Value        | Type                   | Description                                                                |
-|:-------------|:-----------------------|:---------------------------------------------------------------------------|
+| Value              | Type                   | Description                                                                |
+|:-------------------|:-----------------------|:---------------------------------------------------------------------------|
 | `Attributes`       | typing.NamedTuple      | The returned object with vehicle's info                                    |
 | `Attributes.id`    | String                 | A vehicle ID (UUID v4).                                                    |
 | `Attributes.make`  | String                 | The manufacturer of the vehicle.                                           |
@@ -609,6 +609,7 @@ Sets the version of Smartcar API to use
 | None |
 
 ---
+
 ### `smartcar.get_vehicles(access_token, limit=10, offset=0)`
 
 Get a list of the user's vehicle ids
@@ -690,17 +691,17 @@ A compatible vehicle is a vehicle that:
 
 #### Return
 
-| Value                                     | Type                    | Availability          | Description                                                                                                                                         |
-|:------------------------------------------|:------------------------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Compatibility`                           | typing.NamedTuple       | **API v1.0 and v2.0** |The returned object with vehicle's compatibility with the permissions (scope) checked                                                                |
-| `Compatibility.compatible`                | Boolean                 | **API v1.0 and v2.0** | Whether the vehicle is compatible with the permissions                                                                                              |
-| `Compatibility.reason`                    | String or None          | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "MAKE_NOT_COMPATIBLE"                          |
-| `Compatibility.capabilities`              | List                    | **API v2.0 only**     | A list containing the set of endpoints that the provided scope value can provide authorization for. This list will be empty if compatible is false. |
-| `Compatibility.capabilities[].permission` | String                  | **API v2.0 only**     | One of the permissions provided in the scope parameter.                                                                                             |
-| `Compatibility.capabilities[].endpoint`   | String                  | **API v2.0 only**     | One of the endpoints that the permission authorizes access to.                                                                                      |
-| `Compatibility.capabilities[].capable`    | Boolean                 | **API v2.0 only**     | True if the vehicle is likely capable of this feature, False otherwise.                                                                             |
-| `Compatibility.capabilities[].reason`     | String or None          | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "SMARTCAR_NOT_CAPABLE"                         |
-| `Compatibility.meta`                      | collections.namedtuple  | **API v1.0 and v2.0** | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                          |
+| Value                                     | Type                   | Availability          | Description                                                                                                                                         |
+|:------------------------------------------|:-----------------------|:----------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Compatibility`                           | typing.NamedTuple      | **API v1.0 and v2.0** | The returned object with vehicle's compatibility with the permissions (scope) checked                                                               |
+| `Compatibility.compatible`                | Boolean                | **API v1.0 and v2.0** | Whether the vehicle is compatible with the permissions                                                                                              |
+| `Compatibility.reason`                    | String or None         | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "MAKE_NOT_COMPATIBLE"                          |
+| `Compatibility.capabilities`              | List                   | **API v2.0 only**     | A list containing the set of endpoints that the provided scope value can provide authorization for. This list will be empty if compatible is false. |
+| `Compatibility.capabilities[].permission` | String                 | **API v2.0 only**     | One of the permissions provided in the scope parameter.                                                                                             |
+| `Compatibility.capabilities[].endpoint`   | String                 | **API v2.0 only**     | One of the endpoints that the permission authorizes access to.                                                                                      |
+| `Compatibility.capabilities[].capable`    | Boolean                | **API v2.0 only**     | True if the vehicle is likely capable of this feature, False otherwise.                                                                             |
+| `Compatibility.capabilities[].reason`     | String or None         | **API v2.0 only**     | One of the following string values if compatible is false, null otherwise: "VEHICLE_NOT_COMPATIBLE", "SMARTCAR_NOT_CAPABLE"                         |
+| `Compatibility.meta`                      | collections.namedtuple | **API v1.0 and v2.0** | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                                                          |
 
 #### Raises
 
@@ -713,7 +714,8 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 
 ### `hash_challenge(amt, challenge)`
 
-Take the random string received in the challenge request and use your Application Management Token (amt) to create an SHA-256 based HMAC. Return the hex-encoding of the resulting hash
+Take the random string received in the challenge request and use your Application Management Token (amt) to create an
+SHA-256 based HMAC. Return the hex-encoding of the resulting hash
 
 #### Arguments
 
@@ -747,3 +749,56 @@ Verify webhook payload against AMT and signature.
 | Type    | Description                            |
 |:--------|:---------------------------------------|
 | Boolean | Matching signature and response header |
+
+# Vehicle Management Static Methods
+
+### `get_connections(amt, filter, paging)`
+
+Get a paged list of all the vehicles that are connected to the application associated with the management API token used
+sorted in descending order by connection date.
+
+#### Arguments
+
+| Parameter           | Type       | Required     | Description                                                              |
+|:--------------------|:-----------|:-------------|:-------------------------------------------------------------------------|
+| `amt`               | String     | **Required** | Application Management Token (found in Smartcar dashboard).              |
+| `filter`            | Dictionary | **Optional** | The randomly generated string received after sending a challenge request |
+| `filter.user_id`    | String     | **Optional** | The randomly generated string received after sending a challenge request |
+| `filter.vehicle_id` | String     | **Optional** | The randomly generated string received after sending a challenge request |
+| `paging`            | String     | **Optional** | The randomly generated string received after sending a challenge request |
+| `paging.cursor`     | Integer    | **Optional** | The randomly generated string received after sending a challenge request |
+| `paging.limit`      | String     | **Optional** | The randomly generated string received after sending a challenge request |
+
+#### Return
+
+| Value                                       | Type              | Availability          | Description |
+|:--------------------------------------------|:------------------|:----------------------|:------------|
+| `GetConnections`                            | typing.NamedTuple | **API v1.0 and v2.0** |             |
+| `GetConnections.connections`                | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].user_id`      | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].vehicle_id`   | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].connected_at` | Boolean           | **API v1.0 and v2.0** |             |
+| `Compatibility.paging`                      | String or None    | **API v1.0 and v2.0** |             |
+| `Compatibility.paging.cursor`               | List              | **API v1.0 and v2.0** |             |
+
+### `delete_connections(amt, filter)`
+
+Delete all the connections by vehicle or user ID and returns a list of all connections that were deleted.
+
+#### Arguments
+
+| Parameter           | Type       | Required     | Description                                                              |
+|:--------------------|:-----------|:-------------|:-------------------------------------------------------------------------|
+| `amt`               | String     | **Required** | Application Management Token (found in Smartcar dashboard).              |
+| `filter`            | Dictionary | **Optional** | The randomly generated string received after sending a challenge request |
+| `filter.user_id`    | String     | **Optional** | The randomly generated string received after sending a challenge request |
+| `filter.vehicle_id` | String     | **Optional** | The randomly generated string received after sending a challenge request |
+
+#### Return
+
+| Value                                     | Type              | Availability          | Description |
+|:------------------------------------------|:------------------|:----------------------|:------------|
+| `GetConnections`                          | typing.NamedTuple | **API v1.0 and v2.0** |             |
+| `GetConnections.connections`              | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].user_id`    | Boolean           | **API v1.0 and v2.0** |             |
+| `GetConnections.connections[].vehicle_id` | Boolean           | **API v1.0 and v2.0** |             |
