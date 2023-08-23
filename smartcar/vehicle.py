@@ -264,6 +264,30 @@ class Vehicle(object):
         response = helpers.requester("GET", url, headers=headers)
         return types.select_named_tuple(path, response)
 
+    def lock_status(self) -> types.LockStatus:
+        """
+            GET Vehicle.lock_status
+
+            Returns:
+                LockStatus = NamedTuple("LockStatus", [
+                    ("is_locked", bool)
+                    ("doors", List[Door]),
+                    ("windows", List[Window]),
+                    ("sunroof", List[Sunroof]),
+                    ("storage", List[Storage]),
+                    ("charging_port", List[ChargingPort]),
+                    ("meta", namedtuple)
+                ]
+        )
+            Raises:
+                SmartcarException
+        """
+        path = "security"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+
     # ===========================================
     # Action (POST) Requests
     # ===========================================

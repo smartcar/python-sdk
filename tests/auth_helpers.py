@@ -38,6 +38,7 @@ DEFAULT_SCOPE = [
     "read_charge",
     "required:read_engine_oil",
     "required:read_tires",
+    "required:read_security",
 ]
 
 
