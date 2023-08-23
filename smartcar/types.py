@@ -267,6 +267,31 @@ DeleteConnections = NamedTuple(
 Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
 
 # ===========================================
+# Lock Status Tuples
+# ===========================================
+
+Door = NamedTuple("Door", [("type", str), ("status", str)])
+Window = NamedTuple("Window",[("type", str), ("status", str)])
+Sunroof = NamedTuple("Sunroof",[("type", str), ("status", str)])
+Storage = NamedTuple("Storage",[("type", str), ("status", str)])
+ChargingPort = NamedTuple("ChargingPort",[("type", str), ("status", str)])
+
+
+LockStatus = NamedTuple(
+    "LockStatus",
+    [
+        ("is_locked", bool),
+        ("doors", List[Door]),
+        ("windows", List[Window]),
+        ("sunroof", List[Sunroof]),
+        ("storage", List[Storage]),
+        ("charging_port", List[ChargingPort]),
+        ("meta", namedtuple),
+    ]
+)
+
+
+# ===========================================
 # Named Tuple Selector Function
 # ===========================================
 
@@ -378,7 +403,16 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
             Paging(data["paging"]["count"], data["paging"]["offset"]),
             headers,
         )
-
+    elif path == "security":
+        return LockStatus(
+            data["isLocked"],
+            data["doors"],
+            data["windows"],
+            data["sunroof"],
+            data["storage"],
+            data["chargingPort"],
+            headers,
+        )
     elif path == "subscribe":
         return Subscribe(data["webhookId"], data["vehicleId"], headers)
 
