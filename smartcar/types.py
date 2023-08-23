@@ -271,10 +271,10 @@ Response = NamedTuple("Response", [("body", dict), ("meta", namedtuple)])
 # ===========================================
 
 Door = NamedTuple("Door", [("type", str), ("status", str)])
-Window = NamedTuple("Window",[("type", str), ("status", str)])
-Sunroof = NamedTuple("Sunroof",[("type", str), ("status", str)])
-Storage = NamedTuple("Storage",[("type", str), ("status", str)])
-ChargingPort = NamedTuple("ChargingPort",[("type", str), ("status", str)])
+Window = NamedTuple("Window", [("type", str), ("status", str)])
+Sunroof = NamedTuple("Sunroof", [("type", str), ("status", str)])
+Storage = NamedTuple("Storage", [("type", str), ("status", str)])
+ChargingPort = NamedTuple("ChargingPort", [("type", str), ("status", str)])
 
 
 LockStatus = NamedTuple(
@@ -287,7 +287,7 @@ LockStatus = NamedTuple(
         ("storage", List[Storage]),
         ("charging_port", List[ChargingPort]),
         ("meta", namedtuple),
-    ]
+    ],
 )
 
 

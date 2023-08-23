@@ -266,21 +266,21 @@ class Vehicle(object):
 
     def lock_status(self) -> types.LockStatus:
         """
-        GET Vehicle.lock_status
+            GET Vehicle.lock_status
 
-        Returns:
-            LockStatus = NamedTuple("LockStatus", [
-                ("is_locked", bool)
-                ("doors", List[Door]),
-                ("windows", List[Window]),
-                ("sunroof", List[Sunroof]),
-                ("storage", List[Storage]),
-                ("charging_port", List[ChargingPort]),
-                ("meta", namedtuple)
-            ]
-    )
-        Raises:
-            SmartcarException
+            Returns:
+                LockStatus = NamedTuple("LockStatus", [
+                    ("is_locked", bool)
+                    ("doors", List[Door]),
+                    ("windows", List[Window]),
+                    ("sunroof", List[Sunroof]),
+                    ("storage", List[Storage]),
+                    ("charging_port", List[ChargingPort]),
+                    ("meta", namedtuple)
+                ]
+        )
+            Raises:
+                SmartcarException
         """
         path = "security"
         url = self._format_url(path)

@@ -88,11 +88,21 @@ def test_get_charge_limit(ford_car):
     assert type(charge_limit) == types.ChargeLimit
     assert charge_limit._fields == ("limit", "meta")
 
+
 def test_lock_status(chevy_volt):
     lock_status = chevy_volt.lock_status()
     assert lock_status is not None
     assert type(lock_status) == types.LockStatus
-    assert lock_status._fields == ("is_locked", "doors", "windows", "sunroof", "storage", "charging_port", "meta")
+    assert lock_status._fields == (
+        "is_locked",
+        "doors",
+        "windows",
+        "sunroof",
+        "storage",
+        "charging_port",
+        "meta",
+    )
+
 
 def test_lock(chevy_volt):
     response = chevy_volt.lock()
