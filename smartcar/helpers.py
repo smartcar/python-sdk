@@ -120,6 +120,7 @@ def format_path_and_attribute_for_batch(raw_path: str) -> tuple:
         "charge/limit": "get_charge_limit",
         "tires/pressure": "tire_pressure",
         "": "attributes",
+        "security": "lock_status",
     }
     formatted_path = raw_path[1:] if raw_path[0] == "/" else raw_path
     formatted_attribute = mapper.get(formatted_path, formatted_path)
