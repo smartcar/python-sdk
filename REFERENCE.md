@@ -469,6 +469,25 @@ Returns the `Permissions` NamedTuple, paged list of all permissions currently as
 
 ---
 
+### `lock_status(self)`
+
+Returns the lock status for a vehicle and the open status of its doors, windows, storage units, sunroof and charging port where available. The open status array(s) will be empty if a vehicle has partial support. The request will error if lock status can not be retrieved from the vehicle or the brand is not supported.
+
+#### Return
+
+| Value                     | Type                   | Description                                                                |
+|:--------------------------|:-----------------------|:---------------------------------------------------------------------------|
+| `isLocked`             | bool      |  Indicates whether the vehicle is locked.                     |
+| `doors` | typing.NamedTuple               | An array of the open status of the vehicle's doors. Array length will vary depending on the number of doors.                           |
+| `windows` | typing.NamedTuple               | An array of the open status of the vehicle's windows. Array length will vary depending on the number of windows.                                                             |
+| `sunroof` | typing.NamedTuple               | An array of the open status of the vehicle's sunroofs.                                                  |
+| `storage` | typing.NamedTuple               |  An array of the open status of the vehicle's storages. For internal combustion and plug-in hybrid vehicles, front refers to the engine hood. For battery vehicles, this will be the front trunk.                                                   |
+| `chargingPort` | typing.NamedTuple               | An array of the open status of the vehicle's charging port          |
+| `LockStatus.meta`        | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
+
+
+---
+
 ### `batch(self, paths)`
 
 Make a batch request to the vehicle. WARNING: This feature is exclusive to [Smartcar Pro](https://smartcar.com/pricing/)
