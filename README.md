@@ -131,6 +131,10 @@ print(odometer.distance)
 info = vehicle.info()
 print(info.make)
 print(info.model)
+
+batch = vehicle.batch(paths=['/location'])
+location = batch.location()
+print(location)
 ```
 
 - For a lot more examples on everything you can do with a car, see
