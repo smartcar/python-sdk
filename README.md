@@ -51,10 +51,10 @@ client = smartcar.AuthClient()
 scopes = ['read_vehicle_info', 'read_odometer', <scope3>...]
 
 # Generate auth url for User OAuth flow
-auth_url = client.get_auth_url(scope)
+auth_url = client.get_auth_url(scopes)
 ```
 
-- The user will login, and then accept or deny the permissions in your `scope`
+- The user will login, and then accept or deny the permissions in your `scopes`
 
   - If the user is already connected to your application, they will not be shown the accept or deny dialog. However
     the application can force this dialog to be shown with `client.get_auth_url(options={"force_prompt"=True})`
