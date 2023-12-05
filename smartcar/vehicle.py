@@ -376,8 +376,7 @@ class Vehicle(object):
             "POST", url, headers=headers, json={"limit": limit}
         )
         return types.select_named_tuple("set_charge_limit", response)
-    
-    
+
     def send_destination(self, latitude, longitude) -> types.Action:
         """
         POST Vehicle.send_destination
@@ -391,7 +390,10 @@ class Vehicle(object):
         url = self._format_url("navigation/destination")
         headers = self._get_headers(need_unit_system=False)
         response = helpers.requester(
-            "POST", url, headers=headers, json={"latitude": latitude, "longitude": longitude}
+            "POST",
+            url,
+            headers=headers,
+            json={"latitude": latitude, "longitude": longitude},
         )
         return types.select_named_tuple("send_destination", response)
 

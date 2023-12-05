@@ -74,6 +74,7 @@ def test_location(chevy_volt):
     assert type(location) == types.Location
     assert location._fields == ("latitude", "longitude", "meta")
 
+
 def test_attributes(chevy_volt):
     attributes = chevy_volt.attributes()
     assert attributes is not None
@@ -136,6 +137,7 @@ def test_set_charge_limit(ford_car):
     assert response.status == "success"
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
+
 
 def test_send_destination(ford_car):
     # The latitude and longitude of the Empire State Building in New York, USA.

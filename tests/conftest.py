@@ -157,7 +157,10 @@ def access_ford(client):
     """
     client = sc.AuthClient(*ah.get_auth_client_params())
     code = ah.run_auth_flow(
-        client.get_auth_url(["required:read_charge", "required:control_charge", "control_navigation"]), "FORD"
+        client.get_auth_url(
+            ["required:read_charge", "required:control_charge", "control_navigation"]
+        ),
+        "FORD",
     )
     access = client.exchange_code(code)
     yield access
