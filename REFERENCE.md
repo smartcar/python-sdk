@@ -436,9 +436,17 @@ Start charging the vehicle.
 
 ---
 
-### `send_destination(self)`
+### `send_destination(self, latitude, longitude)`
 
 Send destination to the vehicle.
+
+#### Arguments
+
+| Name        | Type  | Description                   |
+| :---------- | :---- | :---------------------------- |
+| `latitude`  | Float | Latitude of the destination.  |
+| `longitude` | Float | Longitude of the destination. |
+
 
 #### Return
 
