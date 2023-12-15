@@ -424,6 +424,7 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         or path == "start_charge"
         or path == "stop_charge"
         or path == "set_charge_limit"
+        or path == "send_destination"
     ):
         return Action(data["status"], data["message"], headers)
 

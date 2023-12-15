@@ -143,7 +143,7 @@ def bmw_for_testing_management_api(client):
     yield vehicle_ids.vehicles[0]
 
 
-# # Tesla
+# # Ford
 @pytest.fixture(scope="session")
 def access_ford(client):
     """
@@ -157,7 +157,10 @@ def access_ford(client):
     """
     client = sc.AuthClient(*ah.get_auth_client_params())
     code = ah.run_auth_flow(
-        client.get_auth_url(["required:read_charge", "required:control_charge"]), "FORD"
+        client.get_auth_url(
+            ["required:read_charge", "required:control_charge", "control_navigation"]
+        ),
+        "FORD",
     )
     access = client.exchange_code(code)
     yield access
@@ -168,10 +171,10 @@ def ford_car(access_ford):
     """
     Using a separate instance of smartcar.AuthClient,
     run the Smartcar connect auth flow with different scope of permissions and
-    a different brand. This time, get the first vehicle acquired for Tesla
+    a different brand. This time, get the first vehicle acquired for Ford
     Yields:
-        tesla(smartcar.Vehicle)
+        ford(smartcar.Vehicle)
     """
     vehicle_ids = sc.get_vehicles(access_ford.access_token)
-    tesla_id = vehicle_ids.vehicles[0]
-    yield sc.Vehicle(tesla_id, access_ford.access_token)
+    vehicle_id = vehicle_ids.vehicles[0]
+    yield sc.Vehicle(vehicle_id, access_ford.access_token)
