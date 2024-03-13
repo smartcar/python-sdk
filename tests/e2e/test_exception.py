@@ -149,12 +149,17 @@ from smartcar.exception import SmartcarException, exception_factory
 #         assert e.status_code == 900
 #         assert e.type == "SDK_ERROR"
 
+
 def test_retry_after_found():
     """
     test that we can get the retry_after amount
     """
     try:
-        raise exception_factory(429, {"Retry-After": 5000, "Content-Type": "application/json"},'{"statusCode":429,"type":"RATE_LIMIT","code":"Vehicle","resolution":{"type":"RETRY_LATER"},"requestId":"e0027f5f-4411-4247-a54d-e34c157d84c1"}')
+        raise exception_factory(
+            429,
+            {"Retry-After": 5000, "Content-Type": "application/json"},
+            '{"statusCode":429,"type":"RATE_LIMIT","code":"Vehicle","resolution":{"type":"RETRY_LATER"},"requestId":"e0027f5f-4411-4247-a54d-e34c157d84c1"}',
+        )
     except Exception as e:
         assert isinstance(e, SmartcarException)
         assert e.retry_after == 5000
