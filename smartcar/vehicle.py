@@ -443,9 +443,7 @@ class Vehicle(object):
                     "sc-request-id"
                 )
                 # use lambda default args to avoid issues with closures
-                batch_dict[
-                    attribute
-                ] = (
+                batch_dict[attribute] = (
                     lambda p=path, r=res_dict: types.select_named_tuple(p, r)
                 )
             else:
@@ -457,9 +455,7 @@ class Vehicle(object):
                 headers = response.headers
                 body = json.dumps(res_dict.get("body"))
                 sc_exception = sce.exception_factory(code, headers, body)
-                batch_dict[
-                    attribute
-                ] = (
+                batch_dict[attribute] = (
                     lambda e=sc_exception: _attribute_raise_exception(e)
                 )
 
