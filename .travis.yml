@@ -36,7 +36,7 @@ script:
 jobs:
   include:
     - stage: publish
-      python: '3.9'
+      python: '3.11'
       services: []
       addons:
         firefox: 'skip'
