@@ -77,7 +77,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
     # v2.0
     elif response.get("type"):
         # Set retry_after only for Vehicle Rate Limit errors
-        if headers.get("retry-after") is not None:
+        if headers.get("Retry-After") is not None:
             return SmartcarException(
                 status_code=response.get("statusCode"),
                 request_id=response.get("requestId"),
@@ -87,7 +87,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
                 doc_url=response.get("docURL"),
                 resolution=response.get("resolution"),
                 detail=response.get("detail"),
-                retry_after=headers.get("retry-after"),
+                retry_after=headers.get("Retry-After"),
             )
         else:
             return SmartcarException(
