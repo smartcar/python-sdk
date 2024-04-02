@@ -9,6 +9,7 @@ def test_get_auth_url_with_options(client):
         "make_bypass": "Ford",
         "single_select": {"enabled": True, "vin": "abcdefghi12345678"},
         "flags": {"flag_1": "Yay", "flag_2": True, "flag_3": 123},
+        "user": "3ee54ada-54d8-40a3-a315-150beb578a3f",
     }
 
     test_url = client.get_auth_url(["read_odometer", "read_vehicle_info"], options)
@@ -24,6 +25,7 @@ def test_get_auth_url_with_options(client):
     assert query_params["single_select"][0] == "true"
     assert query_params["single_select_vin"][0] == "abcdefghi12345678"
     assert query_params["flags"][0] == "flag_1:Yay flag_2:true flag_3:123"
+    assert query_params["user"][0] == "3ee54ada-54d8-40a3-a315-150beb578a3f"
 
 
 def test_get_auth_url_without_options(client):

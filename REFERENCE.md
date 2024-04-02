@@ -48,13 +48,15 @@ Generate Connect URL
 | `options.make_bypass`   | String     | **Optional** | Allows users to bypass the car brand selection screen. For a complete list of supported makes, please see our [API Reference](https://smartcar.com/docs/api#authorization) documentation. Makes are case-insensitive.                                                                                           |
 | `options.single_select` | Dictionary | **Optional** | Keys of `enabled` (bool) and/or `vin` (string). Sets the behavior of the grant dialog displayed to the user. If `enabled` is set to `true`, `single_select` limits the user to selecting only one vehicle. See the [Single Select guide](https://smartcar.com/docs/guides/single-select/) for more information. |
 | `options.flags`         | Dictionary | **Optional** | Dictionary of feature flags that your application has early access to.                                                                                                                                                                                                                                          |
+| `options.user`          | String     | **Optional** | An optional developer-defined unique identifier for a vehicle owner. This ID is used to track and aggregate analytics across Connect sessions for each vehicle owner.                                                                                                                                           |
+
 
 #### Return
 
 | Type   | Description          |
 | :----- | :------------------- |
 | String | Smartcar Connect URL |
-
+~
 #### Raises
 
 <code>SmartcarException</code> - See
