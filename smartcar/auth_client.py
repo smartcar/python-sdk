@@ -109,6 +109,10 @@ class AuthClient(object):
                 flags: dictionary(str, bool): An optional list of feature flags that your
                     application has early access to.
 
+                user: (str, optional): An optional developer-defined unique identifier for a vehicle owner.
+                    This ID is used to track and aggregate analytics across Connect sessions for each
+                    vehicle owner.
+
         Returns:
             str: authorization url
 
@@ -150,6 +154,9 @@ class AuthClient(object):
             if options.get("flags"):
                 flags_str = helpers.format_flag_query(options["flags"])
                 query["flags"] = flags_str
+
+            if options.get("user"):
+                query["user"] = options["user"]
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
