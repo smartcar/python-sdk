@@ -154,7 +154,7 @@ class AuthClient(object):
             if options.get("flags"):
                 flags_str = helpers.format_flag_query(options["flags"])
                 query["flags"] = flags_str
-            
+
             if options.get("user"):
                 query["user"] = options["user"]
 
