@@ -71,8 +71,8 @@ def test_out_of_permission_scope(ford_car):
     except Exception as e:
         assert isinstance(e, SmartcarException)
 
-        # 8 fields stated in exception.py + 'message'
-        assert len(e.__dict__.keys()) == 9
+        # 9 fields stated in exception.py + 'message'
+        assert len(e.__dict__.keys()) == 10
         assert e.status_code == 403
         assert e.code is None
 
