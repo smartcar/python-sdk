@@ -164,6 +164,7 @@ def test_retry_after_found():
         assert isinstance(e, SmartcarException)
         assert e.retry_after == 5000
 
+
 def test_suggested_user_message():
     """
     test that we can get the retry_after amount
