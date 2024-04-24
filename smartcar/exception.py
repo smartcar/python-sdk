@@ -88,6 +88,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
                 resolution=response.get("resolution"),
                 detail=response.get("detail"),
                 retry_after=headers.get("Retry-After"),
+                suggested_user_message=response.get("suggestedUserMessage"),
             )
         else:
             return SmartcarException(
@@ -99,6 +100,7 @@ def exception_factory(status_code: int, headers: dict, body: str):
                 doc_url=response.get("docURL"),
                 resolution=response.get("resolution"),
                 detail=response.get("detail"),
+                suggested_user_message=response.get("suggestedUserMessage"),
             )
 
     # Weird...

@@ -71,8 +71,8 @@ def test_out_of_permission_scope(ford_car):
     except Exception as e:
         assert isinstance(e, SmartcarException)
 
-        # 8 fields stated in exception.py + 'message'
-        assert len(e.__dict__.keys()) == 9
+        # 9 fields stated in exception.py + 'message'
+        assert len(e.__dict__.keys()) == 10
         assert e.status_code == 403
         assert e.code is None
 
@@ -163,3 +163,18 @@ def test_retry_after_found():
     except Exception as e:
         assert isinstance(e, SmartcarException)
         assert e.retry_after == 5000
+
+
+def test_suggested_user_message():
+    """
+    test that we can get the retry_after amount
+    """
+    try:
+        raise exception_factory(
+            429,
+            {"Retry-After": 5000, "Content-Type": "application/json"},
+            '{"statusCode":429,"type":"RATE_LIMIT","code":"Vehicle","resolution":{"type":"RETRY_LATER"},"requestId":"e0027f5f-4411-4247-a54d-e34c157d84c1", "suggestedUserMessage": "Please try again later."}',
+        )
+    except Exception as e:
+        assert isinstance(e, SmartcarException)
+        assert e.suggested_user_message == "Please try again later."
