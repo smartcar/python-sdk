@@ -6,8 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from distutils.util import strtobool
-from selenium.webdriver.chrome.service import Service as ChromeService   
-from selenium.webdriver.chrome.options import Options as ChromeOptions   
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import smartcar.helpers as helpers
 
@@ -60,6 +60,7 @@ def get_code_from_url(url):
 
     return search_params["code"]
 
+
 def get_driver(browser_name, headless=False):
     if browser_name.lower() == "chrome":
         chrome_options = ChromeOptions()
@@ -71,7 +72,7 @@ def get_driver(browser_name, headless=False):
         driver = webdriver.Firefox(options=firefox_options)
     else:
         raise ValueError("Unsupported browser: {}".format(browser_name))
-    
+
     return driver
 
 

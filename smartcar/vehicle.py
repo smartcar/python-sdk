@@ -443,9 +443,9 @@ class Vehicle(object):
                     "sc-request-id"
                 )
                 # use lambda default args to avoid issues with closures
-                batch_dict[attribute] = (
-                    lambda p=path, r=res_dict: types.select_named_tuple(p, r)
-                )
+                batch_dict[
+                    attribute
+                ] = lambda p=path, r=res_dict: types.select_named_tuple(p, r)
             else:
                 # if individual response is erroneous, attach a lambda that returns a SmartcarException
                 def _attribute_raise_exception(smartcar_exception):
@@ -455,9 +455,9 @@ class Vehicle(object):
                 headers = response.headers
                 body = json.dumps(res_dict.get("body"))
                 sc_exception = sce.exception_factory(code, headers, body)
-                batch_dict[attribute] = (
-                    lambda e=sc_exception: _attribute_raise_exception(e)
-                )
+                batch_dict[
+                    attribute
+                ] = lambda e=sc_exception: _attribute_raise_exception(e)
 
         # STEP 3 - Attach Meta to batch_dict
         batch_dict["meta"] = types.build_meta(response.headers)
