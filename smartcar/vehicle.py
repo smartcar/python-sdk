@@ -183,8 +183,10 @@ class Vehicle(object):
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
         return types.select_named_tuple(path, response)
-    
-    def service_history(self, start_date: Optional[str] = None, end_date: Optional[str] = None) -> types.ServiceHistory:
+
+    def service_history(
+        self, start_date: Optional[str] = None, end_date: Optional[str] = None
+    ) -> types.ServiceHistory:
         """
         Returns a list of all the service records performed on the vehicle,
         filtered by the optional date range. If no dates are specified, records from the
@@ -210,9 +212,9 @@ class Vehicle(object):
         headers = self._get_headers()
         params = {}
         if start_date:
-            params['startDate'] = start_date
+            params["startDate"] = start_date
         if end_date:
-            params['endDate'] = end_date
+            params["endDate"] = end_date
 
         response = helpers.requester("GET", url, headers=headers, params=params)
         return types.select_named_tuple(path, response)

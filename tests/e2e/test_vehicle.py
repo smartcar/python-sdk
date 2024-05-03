@@ -146,6 +146,7 @@ def test_send_destination(ford_car):
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
+
 def test_service_history(ford_car):
     response = ford_car.service_history("2023-05-20", "2024-02-10")
     assert response.status == "success"
