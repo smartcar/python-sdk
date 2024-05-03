@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from distutils.util import strtobool
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import smartcar.helpers as helpers
 
@@ -15,6 +17,7 @@ helpers.validate_env(mode="test")
 # Smartcar client environment variables (Required)
 CLIENT_ID = os.environ["E2E_SMARTCAR_CLIENT_ID"]
 CLIENT_SECRET = os.environ["E2E_SMARTCAR_CLIENT_SECRET"]
+BROWSER = os.environ.get("BROWSER", "firefox")
 REDIRECT_URI = "https://example.com/auth"
 
 # Variables for testing webhooks (Optional):
@@ -58,10 +61,23 @@ def get_code_from_url(url):
     return search_params["code"]
 
 
+def get_driver(browser_name, headless=False):
+    if browser_name.lower() == "chrome":
+        chrome_options = ChromeOptions()
+        chrome_options.headless = headless
+        driver = webdriver.Chrome(options=chrome_options)
+    elif browser_name.lower() == "firefox":
+        firefox_options = webdriver.FirefoxOptions()
+        firefox_options.headless = headless
+        driver = webdriver.Firefox(options=firefox_options)
+    else:
+        raise ValueError("Unsupported browser: {}".format(browser_name))
+
+    return driver
+
+
 def run_auth_flow(auth_url, brand="CHEVROLET"):
-    firefox_options = webdriver.FirefoxOptions()
-    firefox_options.headless = HEADLESS
-    driver = webdriver.Firefox(options=firefox_options)
+    driver = get_driver(BROWSER, headless=True)
 
     driver.get(auth_url)
     # Preamble

@@ -13,7 +13,12 @@ Please be sure to read the contribution guidelines before making or requesting a
 
 #### Requirements:
 
-You will need [geckodriver](https://github.com/mozilla/geckodriver/releases) (and subsequently, Firefox) to run tests
+To run tests, you will need the appropriate WebDriver for your chosen browser. This guide assumes you are using either Firefox or Chrome:
+
+- For Firefox, download [geckodriver](https://github.com/mozilla/geckodriver/releases).
+- For Chrome, download [chromedriver](https://chromedriver.chromium.org/downloads).
+
+Ensure that the chosen driver is in your system's PATH, or you can specify the path directly in your test scripts.
 
 The tests make requests to the Smartcar API, so you'll need to create an application on Smartcar and get your client id
 and client secret. You'll also need to add the testing redirect URI to your application.
@@ -54,6 +59,16 @@ pytest tests/e2e/test_vehicle.py::test_vehicle
 pytest -s tests/e2e/test_vehicle.py::test_odometer
 
 # Refer to pytest docs for more about pytest!
+```
+
+#### Configuring the Browser for Testing:
+
+You can specify which browser to use for running the tests by setting the `BROWSER` environment variable. If not set, it defaults to Firefox:
+
+```bash
+export BROWSER='firefox'  # Use Firefox
+# or
+export BROWSER='chrome'   # Use Chrome
 ```
 
 ## Formatting
