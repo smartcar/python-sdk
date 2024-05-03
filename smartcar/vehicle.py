@@ -1,6 +1,6 @@
 from collections import namedtuple
 import json
-from typing import Callable, List
+from typing import Callable, List, Optional
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.smartcar
@@ -182,6 +182,39 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+    
+    def service_history(self, start_date: Optional[str] = None, end_date: Optional[str] = None) -> types.ServiceHistory:
+        """
+        Returns a list of all the service records performed on the vehicle,
+        filtered by the optional date range. If no dates are specified, records from the
+        last year are returned.
+
+        Args:
+            start_date (Optional[str]): The start date for the record filter, either in 'YYYY-MM-DD' or
+                                        'YYYY-MM-DDTHH:MM:SS.SSSZ' format.
+            end_date (Optional[str]): The end date for the record filter, similar format to start_date.
+
+        Returns:
+            ServiceHistory: NamedTuple("ServiceHistory", [("items", List[ServiceRecord]), ("meta", namedtuple)])
+
+        Raises:
+            SmartcarException: If an error occurs during the API call.
+
+        See Also:
+            Smartcar API Documentation for Vehicle Service History:
+            https://smartcar.com/docs/api#get-vehicle-service-history
+        """
+        path = "service/history"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        params = {}
+        if start_date:
+            params['startDate'] = start_date
+        if end_date:
+            params['endDate'] = end_date
+
+        response = helpers.requester("GET", url, headers=headers, params=params)
         return types.select_named_tuple(path, response)
 
     def location(self) -> types.Location:

@@ -1,6 +1,6 @@
 import datetime
 from collections import namedtuple
-from typing import List, NamedTuple, Union
+from typing import List, Optional, NamedTuple, Union
 import re
 import requests.structures as rs
 import enum
@@ -133,7 +133,6 @@ class Reason(enum.Enum):
     VEHICLE_NOT_COMPATIBLE = "VEHICLE_NOT_COMPATIBLE"
     MAKE_NOT_COMPATIBLE = "MAKE_NOT_COMPATIBLE"
 
-
 Capability = NamedTuple(
     "Capability",
     [
@@ -143,7 +142,6 @@ Capability = NamedTuple(
         ("reason", Union[Reason, None]),
     ],
 )
-
 
 def format_capabilities(capabilities_list: List[dict]) -> List[Capability]:
     typed_capabilities_map = map(
@@ -185,6 +183,28 @@ Charge = NamedTuple(
 )
 
 ChargeLimit = NamedTuple("ChargeLimit", [("limit", float), ("meta", namedtuple)])
+
+class ServiceCost:
+    total_cost: Optional[float] = None
+    currency: Optional[str] = None
+
+class ServiceDetail:
+    type: str
+    value: Union[None, str, float] = None
+
+class ServiceTask:
+    task_id: Optional[str] = None
+    task_description: Optional[str] = None
+
+class ServiceRecord:
+    odometer_distance: float
+    service_date: datetime
+    service_id: Optional[str] = None
+    service_tasks: List[ServiceTask]
+    service_details: List[ServiceDetail]
+    service_cost: ServiceCost
+
+ServiceHistory = NamedTuple("ServiceHistory", [("items", List[ServiceRecord]), ("meta", namedtuple)])
 
 Battery = NamedTuple(
     "Battery",
@@ -398,6 +418,9 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     elif path == "charge/limit":
         return ChargeLimit(data["limit"], headers)
+    
+    elif path == "service/history":
+        return ServiceHistory(data, headers)
 
     elif path == "permissions":
         return Permissions(
