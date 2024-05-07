@@ -39,7 +39,9 @@ class SmartcarException(Exception):
         super().__init__(self.message)
 
 
-def exception_factory(status_code: int, headers: dict, body: str, check_content_type = True):
+def exception_factory(
+    status_code: int, headers: dict, body: str, check_content_type=True
+):
     # v1.0 Exception: Content type other than application/json
     if check_content_type and "application/json" not in headers["Content-Type"]:
         return SmartcarException(status_code=status_code, message=body)

@@ -416,7 +416,9 @@ class Vehicle(object):
         path_status_code = path_response.get("code")
         path_headers = path_response.get("headers", {})
         path_body = json.dumps(path_response.get("body"))
-        sc_exception = sce.exception_factory(path_status_code, path_headers, path_body, False)
+        sc_exception = sce.exception_factory(
+            path_status_code, path_headers, path_body, False
+        )
         return lambda e=sc_exception: _attribute_raise_exception(e)
 
     def batch(self, paths: List[str]) -> namedtuple:
