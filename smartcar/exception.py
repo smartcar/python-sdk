@@ -39,9 +39,11 @@ class SmartcarException(Exception):
         super().__init__(self.message)
 
 
-def exception_factory(status_code: int, headers: dict, body: str):
+def exception_factory(
+    status_code: int, headers: dict, body: str, check_content_type=True
+):
     # v1.0 Exception: Content type other than application/json
-    if "application/json" not in headers["Content-Type"]:
+    if check_content_type and "application/json" not in headers["Content-Type"]:
         return SmartcarException(status_code=status_code, message=body)
 
     # Parse body into JSON. Throw SDK error if this fails.
@@ -103,7 +105,6 @@ def exception_factory(status_code: int, headers: dict, body: str):
                 suggested_user_message=response.get("suggestedUserMessage"),
             )
 
-    # Weird...
     else:
         return SmartcarException(
             status_code=status_code,

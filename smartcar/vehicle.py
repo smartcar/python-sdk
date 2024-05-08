@@ -1,6 +1,6 @@
 from collections import namedtuple
 import json
-from typing import List
+from typing import Callable, List
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.smartcar
@@ -397,6 +397,30 @@ class Vehicle(object):
         )
         return types.select_named_tuple("send_destination", response)
 
+    @staticmethod
+    def _batch_path_response(
+        path: str, path_response: dict, top_response: dict
+    ) -> Callable[[], namedtuple]:
+        if path_response.get("code") == 200:
+            # attach top-level sc-request-id to res_dict
+            path_response["headers"]["sc-request-id"] = top_response.headers.get(
+                "sc-request-id"
+            )
+            # use lambda default args to avoid issues with closures
+            return lambda p=path, r=path_response: types.select_named_tuple(p, r)
+
+        # if individual response is erroneous, attach a lambda that returns a SmartcarException
+        def _attribute_raise_exception(smartcar_exception):
+            raise smartcar_exception
+
+        path_status_code = path_response.get("code")
+        path_headers = path_response.get("headers", {})
+        path_body = json.dumps(path_response.get("body"))
+        sc_exception = sce.exception_factory(
+            path_status_code, path_headers, path_body, False
+        )
+        return lambda e=sc_exception: _attribute_raise_exception(e)
+
     def batch(self, paths: List[str]) -> namedtuple:
         """
         POST Vehicle.batch
@@ -432,32 +456,13 @@ class Vehicle(object):
         # success of the request.
         batch_dict = dict()
         path_responses = response.json()["responses"]
-        for res_dict in path_responses:
+        for path_response in path_responses:
             path, attribute = helpers.format_path_and_attribute_for_batch(
-                res_dict["path"]
+                path_response["path"]
             )
-
-            if res_dict.get("code") == 200:
-                # attach top-level sc-request-id to res_dict
-                res_dict["headers"]["sc-request-id"] = response.headers.get(
-                    "sc-request-id"
-                )
-                # use lambda default args to avoid issues with closures
-                batch_dict[attribute] = (
-                    lambda p=path, r=res_dict: types.select_named_tuple(p, r)
-                )
-            else:
-                # if individual response is erroneous, attach a lambda that returns a SmartcarException
-                def _attribute_raise_exception(smartcar_exception):
-                    raise smartcar_exception
-
-                code = res_dict.get("code")
-                headers = response.headers
-                body = json.dumps(res_dict.get("body"))
-                sc_exception = sce.exception_factory(code, headers, body)
-                batch_dict[attribute] = (
-                    lambda e=sc_exception: _attribute_raise_exception(e)
-                )
+            batch_dict[attribute] = Vehicle._batch_path_response(
+                path, path_response, response
+            )
 
         # STEP 3 - Attach Meta to batch_dict
         batch_dict["meta"] = types.build_meta(response.headers)
