@@ -158,7 +158,12 @@ def access_ford(client):
     client = sc.AuthClient(*ah.get_auth_client_params())
     code = ah.run_auth_flow(
         client.get_auth_url(
-            ["required:read_charge", "required:control_charge", "control_navigation"]
+            [
+                "required:read_charge",
+                "required:control_charge",
+                "control_navigation",
+                "read_service_history",
+            ]
         ),
         "FORD",
     )

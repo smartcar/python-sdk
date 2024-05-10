@@ -358,6 +358,31 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 
 ---
 
+### `service_history(self, start_date: Optional[str] = None, end_date: Optional[str] = None)`
+
+Returns a list of all the service records performed on the vehicle, filtered by the optional date range. If no dates are specified, records from the last year are returned.
+
+#### Args
+
+| Argument     | Type          | Description                                                                                 |
+| :----------- | :------------ | :------------------------------------------------------------------------------------------ |
+| `start_date` | Optional[str] | The start date for the record filter, in 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS.SSSZ' format. |
+| `end_date`   | Optional[str] | The end date for the record filter, similar format to start_date.                           |
+
+#### Return
+
+| Value                  | Type                   | Description                                                                |
+| :--------------------- | :--------------------- | :------------------------------------------------------------------------- |
+| `ServiceHistory`       | typing.NamedTuple      | The returned object with a list of service entries.                        |
+| `ServiceHistory.items` | List[ServiceRecord]    | List of service records describing maintenance activities.                 |
+| `ServiceHistory.meta`  | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
+
+#### Raises
+
+`SmartcarException` - See the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+---
+
 ### `attributes(self)`
 
 Returns a single vehicle object, containing identifying information.
