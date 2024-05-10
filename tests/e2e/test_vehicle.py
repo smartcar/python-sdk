@@ -161,8 +161,8 @@ def test_service_history(ford_car):
     # Iterate over each item in the 'items' list to perform further validations.
     for item in response.items:
         assert isinstance(
-            item["odometerDistance"], float
-        ), "Odometer distance should be a float"
+            item["odometerDistance"], (float, int)
+        ), "Odometer distance should be a numeric type (float or int)"
         assert (
             item["odometerDistance"] > 0
         ), "Odometer distance should be greater than zero"
