@@ -149,18 +149,24 @@ def test_send_destination(ford_car):
 
 def test_service_history(ford_car):
     response = ford_car.service_history("2023-05-20", "2024-02-10")
-    assert isinstance(response, types.ServiceHistory), "Response should be an instance of ServiceHistory"
-    assert hasattr(response, '_fields'), "Response should have '_fields' attribute"
-    assert 'items' in response._fields, "'items' should be a key in the response fields"
-    
+    assert isinstance(
+        response, types.ServiceHistory
+    ), "Response should be an instance of ServiceHistory"
+    assert hasattr(response, "_fields"), "Response should have '_fields' attribute"
+    assert "items" in response._fields, "'items' should be a key in the response fields"
+
     # Check the 'items' array.
     assert isinstance(response.items, list), "Items should be a list"
-    
+
     # Iterate over each item in the 'items' list to perform further validations.
     for item in response.items:
-        assert isinstance(item['odometerDistance'], float), "Odometer distance should be a float"
-        assert item['odometerDistance'] > 0, "Odometer distance should be greater than zero"
-   
+        assert isinstance(
+            item["odometerDistance"], float
+        ), "Odometer distance should be a float"
+        assert (
+            item["odometerDistance"] > 0
+        ), "Odometer distance should be greater than zero"
+
     assert response._fields == ("items", "meta")
 
 
