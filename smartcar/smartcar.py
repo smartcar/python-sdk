@@ -265,7 +265,9 @@ def get_management_token(amt: str, username: str = "default") -> str:
 
 
 def get_connections(
-    amt: str, filter: Optional[Dict[str, str]] = None, paging: Optional[Dict[str, Optional[int]]] = None
+    amt: str,
+    filter: Optional[Dict[str, str]] = None,
+    paging: Optional[Dict[str, Optional[int]]] = None,
 ) -> types.GetConnections:
     """
     Returns a paged list of all the vehicles that are connected to the application
@@ -273,10 +275,10 @@ def get_connections(
 
     Args:
         amt (str): Application Management Token from Smartcar Dashboard
-        filter (dict, optional): 
+        filter (dict, optional):
             vehicle_id (str, optional): If provided, filters connections to a specific vehicle.
             user_id (str, optional): If provided, filters connections to a specific user.
-        paging (dict, optional): 
+        paging (dict, optional):
             limit (int, optional): The maximum number of connections to return.
             cursor (str, optional): The cursor ID for pagination to retrieve the next set of results.
 
