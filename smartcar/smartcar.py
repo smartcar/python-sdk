@@ -3,7 +3,7 @@ import hmac
 import hashlib
 import os
 import re
-from typing import List, Union
+from typing import NamedTuple, List, Dict, Optional, Union
 from warnings import warn
 
 import smartcar.config as config
@@ -265,40 +265,38 @@ def get_management_token(amt: str, username: str = "default") -> str:
 
 
 def get_connections(
-    amt: str, filter: dict = {}, paging: dict = {}
+    amt: str, filter: Optional[Dict[str, str]] = None, paging: Optional[Dict[str, Optional[int]]] = None
 ) -> types.GetConnections:
     """
     Returns a paged list of all the vehicles that are connected to the application
-    associated with the management API token used sorted in descending order by connection date.
+    associated with the management API token used, sorted in descending order by connection date.
 
     Args:
         amt (str): Application Management Token from Smartcar Dashboard
-
-        filter (dict, optional)
-            vehicle_id (str, optional)
-            user_id (str, optional)
-
-        paging (dict, optional)
-            limit (int, optional)
-            cursor_id (str, optional)
+        filter (dict, optional): 
+            vehicle_id (str, optional): If provided, filters connections to a specific vehicle.
+            user_id (str, optional): If provided, filters connections to a specific user.
+        paging (dict, optional): 
+            limit (int, optional): The maximum number of connections to return.
+            cursor (str, optional): The cursor ID for pagination to retrieve the next set of results.
 
     Returns:
-        GetConnections = NamedTuple("GetConnections", [
-            ("connections", List[Connection]),
-            ("paging", PagingCursor),
-            ("meta", namedtuple)
-            ],
-        )
+        GetConnections: A named tuple containing connections, paging information, and meta data.
     """
+    if filter is None:
+        filter = {}
+    if paging is None:
+        paging = {}
+
     params = {}
-    if filter.get("user_id"):
-        params["user_id"] = filter.get("user_id")
-    if filter.get("vehicle_id"):
-        params["vehicle_id"] = filter.get("vehicle_id")
-    if paging.get("cursor"):
-        params["cursor"] = filter.get("cursor")
-    if paging.get("limit"):
-        params["limit"] = filter.get("limit")
+    if "user_id" in filter:
+        params["user_id"] = filter["user_id"]
+    if "vehicle_id" in filter:
+        params["vehicle_id"] = filter["vehicle_id"]
+    if "cursor" in paging:
+        params["cursor"] = paging["cursor"]
+    if "limit" in paging:
+        params["limit"] = paging["limit"]
 
     url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
