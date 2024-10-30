@@ -186,22 +186,24 @@ Charge = NamedTuple(
 
 ChargeLimit = NamedTuple("ChargeLimit", [("limit", float), ("meta", namedtuple)])
 
-class DiagnosticSystem:
-    system_id: str
-    status: str
-    description: Optional[str] = None
+DiagnosticSystem = NamedTuple(
+    "DiagnosticSystem",
+    [("system_id", str), ("status", str), ("description", Optional[str])]
+)
 
 DiagnosticSystemStatus = NamedTuple(
     "DiagnosticSystemStatus",
-    [("systems", List[DiagnosticSystem]), ("meta", namedtuple)],
+    [("systems", List[DiagnosticSystem]), ("meta", namedtuple)]
 )
 
-class DiagnosticTroubleCode:
-    code: str  #
-    timestamp: Optional[datetime.datetime] = None
+DiagnosticTroubleCode = NamedTuple(
+    "DiagnosticTroubleCode",
+    [("code", str), ("timestamp", Optional[datetime.datetime])]
+)
 
 DiagnosticTroubleCodes = NamedTuple(
-    "DiagnosticTroubleCodes", [("active_codes", List[DiagnosticTroubleCode]), ("meta", namedtuple)]
+    "DiagnosticTroubleCodes",
+    [("active_codes", List[DiagnosticTroubleCode]), ("meta", namedtuple)]
 )
 
 
@@ -450,10 +452,18 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
         return ServiceHistory(data, headers)
     
     elif path == "diagnostics/system_status":
-        return DiagnosticSystemStatus(data, headers)
-    
+        systems = [
+            DiagnosticSystem(system_id=item["systemId"], status=item["status"], description=item.get("description"))
+            for item in data["systems"]
+        ]
+        return DiagnosticSystemStatus(systems=systems, meta=headers)
+
     elif path == "diagnostics/dtcs":
-        return DiagnosticTroubleCodes(data, headers)
+        active_codes = [
+            DiagnosticTroubleCode(code=item["code"], timestamp=item.get("timestamp"))
+            for item in data["activeCodes"]
+        ]
+        return DiagnosticTroubleCodes(active_codes=active_codes, meta=headers)
 
     elif path == "permissions":
         return Permissions(
