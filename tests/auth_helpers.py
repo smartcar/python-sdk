@@ -42,7 +42,6 @@ DEFAULT_SCOPE = [
     "required:read_engine_oil",
     "required:read_tires",
     "required:read_security",
-    "required:read_diagnostics",
 ]
 
 

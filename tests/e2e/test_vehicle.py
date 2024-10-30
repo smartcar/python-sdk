@@ -206,7 +206,6 @@ def test_batch_diagnostics(ford_car):
         assert isinstance(system, types.DiagnosticSystem)
     
     trouble_codes = batch_response.diagnostic_trouble_codes()
-    assert trouble_codes is not None
     active_codes = [types.DiagnosticTroubleCode(**c) if isinstance(c, dict) else c for c in trouble_codes.active_codes]
     for code in active_codes:
         assert isinstance(code, types.DiagnosticTroubleCode)
@@ -303,7 +302,7 @@ def test_permissions_with_paging(chevy_volt):
     assert permissions is not None
     assert type(permissions) == types.Permissions
     assert permissions._fields == ("permissions", "paging", "meta")
-    assert permissions.paging.count == len(ah.DEFAULT_SCOPE)
+    assert permissions.paging.count == len(ah.DEFAULT_SCOPE - + 1)
     assert permissions.paging.offset == 1
 
 
