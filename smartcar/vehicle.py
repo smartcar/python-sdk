@@ -219,6 +219,44 @@ class Vehicle(object):
         response = helpers.requester("GET", url, headers=headers, params=params)
         return types.select_named_tuple(path, response)
 
+    def diagnostic_system_status(self) -> types.DiagnosticSystemStatus:
+        """
+        GET Vehicle.diagnostic_system_status
+
+        Returns:
+            DiagnosticSystemStatus: NamedTuple("DiagnosticSystemStatus", [
+                ("systems", List[DiagnosticSystem]),
+                ("meta", namedtuple)
+            ])
+
+        Raises:
+            SmartcarException
+        """
+        path = "diagnostics/system_status"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+
+    def diagnostic_trouble_codes(self) -> types.DiagnosticTroubleCodes:
+        """
+        GET Vehicle.diagnostic_trouble_codes
+
+        Returns:
+            DiagnosticTroubleCodes: NamedTuple("DiagnosticTroubleCodes", [
+                ("active_codes", List[DiagnosticTroubleCode]),
+                ("meta", namedtuple)
+            ])
+
+        Raises:
+            SmartcarException
+        """
+        path = "diagnostics/dtcs"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+
     def location(self) -> types.Location:
         """
         GET Vehicle.location

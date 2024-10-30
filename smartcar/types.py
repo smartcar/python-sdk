@@ -186,6 +186,24 @@ Charge = NamedTuple(
 
 ChargeLimit = NamedTuple("ChargeLimit", [("limit", float), ("meta", namedtuple)])
 
+class DiagnosticSystem:
+    system_id: str
+    status: str
+    description: Optional[str] = None
+
+DiagnosticSystemStatus = NamedTuple(
+    "DiagnosticSystemStatus",
+    [("systems", List[DiagnosticSystem]), ("meta", namedtuple)],
+)
+
+class DiagnosticTroubleCode:
+    code: str  #
+    timestamp: Optional[datetime.datetime] = None
+
+DiagnosticTroubleCodes = NamedTuple(
+    "DiagnosticTroubleCodes", [("active_codes", List[DiagnosticTroubleCode]), ("meta", namedtuple)]
+)
+
 
 class ServiceCost:
     total_cost: Optional[float] = None
