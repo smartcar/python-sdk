@@ -448,6 +448,12 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     elif path == "service/history":
         return ServiceHistory(data, headers)
+    
+    elif path == "diagnostics/system_status":
+        return DiagnosticSystemStatus(data, headers)
+    
+    elif path == "diagnostics/dtcs":
+        return DiagnosticTroubleCodes(data, headers)
 
     elif path == "permissions":
         return Permissions(
