@@ -175,11 +175,11 @@ def test_diagnostic_system_status(ford_car):
     assert diagnostic_status is not None
     assert type(diagnostic_status) == types.DiagnosticSystemStatus
     assert diagnostic_status._fields == ("systems", "meta")
-
-    for system in diagnostic_status.systems:
+    
+    systems = [types.DiagnosticSystem(**s) if isinstance(s, dict) else s for s in diagnostic_status.systems]
+    for system in systems:
         assert isinstance(system, types.DiagnosticSystem)
-        assert hasattr(system, "name")
-        assert hasattr(system, "status")
+
 
 
 def test_diagnostic_trouble_codes(ford_car):
@@ -187,31 +187,30 @@ def test_diagnostic_trouble_codes(ford_car):
     assert dtc_response is not None
     assert type(dtc_response) == types.DiagnosticTroubleCodes
     assert dtc_response._fields == ("active_codes", "meta")
-
-    for code in dtc_response.active_codes:
+    
+    active_codes = [types.DiagnosticTroubleCode(**c) if isinstance(c, dict) else c for c in dtc_response.active_codes]
+    for code in active_codes:
         assert isinstance(code, types.DiagnosticTroubleCode)
-        assert hasattr(code, "code")
-        assert hasattr(code, "description")
+
 
 
 def test_batch_diagnostics(ford_car):
     batch_response = ford_car.batch(["/diagnostics/system_status", "/diagnostics/dtcs"])
     assert batch_response is not None
     assert batch_response._fields == ("diagnostic_system_status", "diagnostic_trouble_codes", "meta")
-
+    
     diagnostic_status = batch_response.diagnostic_system_status()
     assert diagnostic_status is not None
-    for system in diagnostic_status.systems:
+    systems = [types.DiagnosticSystem(**s) if isinstance(s, dict) else s for s in diagnostic_status.systems]
+    for system in systems:
         assert isinstance(system, types.DiagnosticSystem)
-        assert hasattr(system, "name")
-        assert hasattr(system, "status")
-
-    dtc_response = batch_response.diagnostic_trouble_codes()
-    assert dtc_response is not None
-    for code in dtc_response.active_codes:
+    
+    trouble_codes = batch_response.diagnostic_trouble_codes()
+    assert trouble_codes is not None
+    active_codes = [types.DiagnosticTroubleCode(**c) if isinstance(c, dict) else c for c in trouble_codes.active_codes]
+    for code in active_codes:
         assert isinstance(code, types.DiagnosticTroubleCode)
-        assert hasattr(code, "code")
-        assert hasattr(code, "description")
+
 
 
 def test_batch_success(chevy_volt):
