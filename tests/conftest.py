@@ -163,6 +163,7 @@ def access_ford(client):
                 "required:control_charge",
                 "control_navigation",
                 "read_service_history",
+                "read_diagnostics",
             ]
         ),
         "FORD",
