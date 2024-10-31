@@ -138,15 +138,12 @@ def test_set_charge_limit(ford_car):
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
-# Send destination tests are not working following a simulated mode merge project
-# skipping for now
-
-# def test_send_destination(ford_car):
-#     # The latitude and longitude of the Empire State Building in New York, USA.
-#     response = ford_car.send_destination(40.748817, -73.985428)
-#     assert response.status == "success"
-#     assert type(response) == types.Action
-#     assert response._fields == ("status", "message", "meta")
+def test_send_destination(ford_car):
+    # The latitude and longitude of the Empire State Building in New York, USA.
+    response = ford_car.send_destination(40.748817, -73.985428)
+    assert response.status == "success"
+    assert type(response) == types.Action
+    assert response._fields == ("status", "message", "meta")
 
 
 def test_service_history(ford_car):
