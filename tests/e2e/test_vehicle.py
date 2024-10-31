@@ -297,7 +297,7 @@ def test_permissions_with_paging(chevy_volt):
     assert permissions is not None
     assert type(permissions) == types.Permissions
     assert permissions._fields == ("permissions", "paging", "meta")
-    assert permissions.paging.count == len(ah.DEFAULT_SCOPE) + 1
+    assert permissions.paging.count == len(ah.DEFAULT_SCOPE)
     assert permissions.paging.offset == 1
 
 
