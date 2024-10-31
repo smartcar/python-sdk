@@ -138,6 +138,7 @@ def test_set_charge_limit(ford_car):
     assert type(response) == types.Action
     assert response._fields == ("status", "message", "meta")
 
+
 def test_send_destination(ford_car):
     # The latitude and longitude of the Empire State Building in New York, USA.
     response = ford_car.send_destination(40.748817, -73.985428)
@@ -192,7 +193,11 @@ def test_diagnostic_trouble_codes(ford_car):
 def test_batch_diagnostics(ford_car):
     batch_response = ford_car.batch(["/diagnostics/system_status", "/diagnostics/dtcs"])
     assert batch_response is not None
-    assert batch_response._fields == ("diagnostic_system_status", "diagnostic_trouble_codes", "meta")
+    assert batch_response._fields == (
+        "diagnostic_system_status",
+        "diagnostic_trouble_codes",
+        "meta",
+    )
 
     diagnostic_status = batch_response.diagnostic_system_status()
     assert diagnostic_status is not None
@@ -203,7 +208,6 @@ def test_batch_diagnostics(ford_car):
     assert dtc_response is not None
     for code in dtc_response.active_codes:
         assert isinstance(code, types.DiagnosticTroubleCode)
-
 
 
 def test_batch_success(chevy_volt):
