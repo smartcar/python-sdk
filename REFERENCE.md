@@ -383,6 +383,42 @@ Returns a list of all the service records performed on the vehicle, filtered by 
 
 ---
 
+### `diagnostic_system_status(self)`
+
+Retrieve the status of various diagnostic systems in the vehicle.
+
+#### Return
+
+| Value                         | Type                   | Description                                                          |
+| :---------------------------- | :--------------------- | :------------------------------------------------------------------- |
+| `DiagnosticSystemStatus`      | typing.NamedTuple      | The returned object with diagnostic system statuses data             |
+| `DiagnosticSystemStatus.systems` | List[Dict]         | List of system statuses, each with `system_id`, `status`, and `description` |
+| `DiagnosticSystemStatus.meta` | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
+
+Each system entry contains:
+- `system_id` (String): Unique identifier for the system.
+- `status` (String): Status of the system, either "OK" or "ALERT".
+- `description` (String, optional): Additional context or description for the status, if any.
+
+---
+
+### `diagnostic_trouble_codes(self)`
+
+Retrieve active diagnostic trouble codes (DTCs) for the vehicle.
+
+#### Return
+
+| Value                      | Type                   | Description                                              |
+| :------------------------- | :--------------------- | :------------------------------------------------------- |
+| `DiagnosticTroubleCodes`   | typing.NamedTuple      | The returned object with active diagnostic trouble codes  |
+| `DiagnosticTroubleCodes.active_codes` | List[Dict]     | List of active DTCs, each with `code` and `timestamp`    |
+| `DiagnosticTroubleCodes.meta` | collections.namedtuple | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`) |
+
+Each trouble code entry contains:
+- `code` (String): The DTC code representing the issue.
+- `timestamp` (String, optional): ISO 8601 timestamp when the code was triggered. May be `null` if unavailable.
+
+---
 ### `attributes(self)`
 
 Returns a single vehicle object, containing identifying information.

@@ -170,6 +170,46 @@ def test_service_history(ford_car):
     assert response._fields == ("items", "meta")
 
 
+def test_diagnostic_system_status(ford_car):
+    diagnostic_status = ford_car.diagnostic_system_status()
+    assert diagnostic_status is not None
+    assert isinstance(diagnostic_status, types.DiagnosticSystemStatus)
+    assert diagnostic_status._fields == ("systems", "meta")
+
+    for system in diagnostic_status.systems:
+        assert isinstance(system, types.DiagnosticSystem)
+
+
+def test_diagnostic_trouble_codes(ford_car):
+    dtc_response = ford_car.diagnostic_trouble_codes()
+    assert dtc_response is not None
+    assert isinstance(dtc_response, types.DiagnosticTroubleCodes)
+    assert dtc_response._fields == ("active_codes", "meta")
+
+    for code in dtc_response.active_codes:
+        assert isinstance(code, types.DiagnosticTroubleCode)
+
+
+def test_batch_diagnostics(ford_car):
+    batch_response = ford_car.batch(["/diagnostics/system_status", "/diagnostics/dtcs"])
+    assert batch_response is not None
+    assert batch_response._fields == (
+        "diagnostic_system_status",
+        "diagnostic_trouble_codes",
+        "meta",
+    )
+
+    diagnostic_status = batch_response.diagnostic_system_status()
+    assert diagnostic_status is not None
+    for system in diagnostic_status.systems:
+        assert isinstance(system, types.DiagnosticSystem)
+
+    dtc_response = batch_response.diagnostic_trouble_codes()
+    assert dtc_response is not None
+    for code in dtc_response.active_codes:
+        assert isinstance(code, types.DiagnosticTroubleCode)
+
+
 def test_batch_success(chevy_volt):
     batch = chevy_volt.batch(
         [
