@@ -243,6 +243,23 @@ BatteryCapacity = NamedTuple(
     "BatteryCapacity", [("capacity", float), ("meta", namedtuple)]
 )
 
+AvailableCapacity = NamedTuple(
+    "AvailableCapacity", [("capacity", float), ("description", Optional[str])]
+)
+
+SelectedCapacity = NamedTuple("SelectedCapacity", [("nominal", float), ("source", str)])
+
+NominalCapcity = NamedTuple(
+    "NominalCapcity",
+    [
+        ("availableCapacities", List[AvailableCapacity]),
+        ("capacity", SelectedCapacity),
+        ("url", Optional[str]),
+        ("meta", namedtuple),
+    ],
+)
+
+
 Fuel = NamedTuple(
     "Fuel",
     [
@@ -417,6 +434,15 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     elif path == "battery/capacity":
         return BatteryCapacity(data["capacity"], headers)
+
+    elif path == "battery/nominal_capacity":
+        available_capacities = [
+            AvailableCapacity(item["capacity"], item["description"])
+            for item in data["availableCapacities"]
+        ]
+        return NominalCapcity(
+            available_capacities, data["capacity"], data["url"], headers
+        )
 
     elif path == "fuel":
         return Fuel(
