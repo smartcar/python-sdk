@@ -253,7 +253,7 @@ NominalCapcity = NamedTuple(
     "NominalCapcity",
     [
         ("availableCapacities", List[AvailableCapacity]),
-        ("capacity", SelectedCapacity),
+        ("capacity", Optional[SelectedCapacity]),
         ("url", Optional[str]),
         ("meta", namedtuple),
     ],
