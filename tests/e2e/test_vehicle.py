@@ -34,6 +34,18 @@ def test_battery_capacity(chevy_volt):
     assert battery_capacity._fields == ("capacity", "meta")
 
 
+def test_nominal_capacity(chevy_volt):
+    nominal_capacity = chevy_volt.nominal_capacity()
+    assert nominal_capacity is not None
+    assert type(nominal_capacity) == types.NominalCapcity
+    assert nominal_capacity._fields == (
+        "availableCapacities",
+        "capacity",
+        "url",
+        "meta",
+    )
+
+
 def test_fuel(chevy_volt):
     fuel = chevy_volt.fuel()
     assert fuel is not None
@@ -149,9 +161,9 @@ def test_send_destination(ford_car):
 
 def test_service_history(ford_car):
     response = ford_car.service_history("2023-05-20", "2024-02-10")
-    assert isinstance(
-        response, types.ServiceHistory
-    ), "Response should be an instance of ServiceHistory"
+    assert isinstance(response, types.ServiceHistory), (
+        "Response should be an instance of ServiceHistory"
+    )
     assert hasattr(response, "_fields"), "Response should have '_fields' attribute"
     assert "items" in response._fields, "'items' should be a key in the response fields"
 
@@ -160,12 +172,12 @@ def test_service_history(ford_car):
 
     # Iterate over each item in the 'items' list to perform further validations.
     for item in response.items:
-        assert isinstance(
-            item["odometerDistance"], (float, int)
-        ), "Odometer distance should be a numeric type (float or int)"
-        assert (
-            item["odometerDistance"] > 0
-        ), "Odometer distance should be greater than zero"
+        assert isinstance(item["odometerDistance"], (float, int)), (
+            "Odometer distance should be a numeric type (float or int)"
+        )
+        assert item["odometerDistance"] > 0, (
+            "Odometer distance should be greater than zero"
+        )
 
     assert response._fields == ("items", "meta")
 
@@ -211,16 +223,14 @@ def test_batch_diagnostics(ford_car):
 
 
 def test_batch_success(chevy_volt):
-    batch = chevy_volt.batch(
-        [
-            "/odometer",
-            "/location",
-            "/charge/limit",
-            "/engine/oil",
-            "/battery/capacity",
-            "/tires/pressure",
-        ]
-    )
+    batch = chevy_volt.batch([
+        "/odometer",
+        "/location",
+        "/charge/limit",
+        "/engine/oil",
+        "/battery/capacity",
+        "/tires/pressure",
+    ])
     assert batch is not None
     assert batch._fields == (
         "odometer",
@@ -263,9 +273,12 @@ def test_batch_unauthorized_permission(chevy_volt_limited_scope):
     In scope: "/", "/odometer", "/engine/oil"
     Out of scope: "/location
     """
-    batch = chevy_volt_limited_scope.batch(
-        ["/", "/odometer", "/engine/oil", "/location"]
-    )
+    batch = chevy_volt_limited_scope.batch([
+        "/",
+        "/odometer",
+        "/engine/oil",
+        "/location",
+    ])
     assert batch.attributes().make is not None
     assert batch.odometer().distance is not None
     assert batch.engine_oil().life_remaining is not None
