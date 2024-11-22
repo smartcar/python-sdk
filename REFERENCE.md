@@ -257,6 +257,36 @@ the [exceptions section](https://github.com/smartcar/python-sdk#handling-excepti
 
 ---
 
+### `nominal_capacity(self)`
+
+Returns a list of nominal rated battery capacities for a vehicle.
+
+
+#### Return
+
+| Value                                 | Type                       | Description                                                                                               |
+| :------------------------------------ | :------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| `NominalCapacity`                     | typing.NamedTuple          | The returned object data regarding the nominal rated battery capacities for a vehicle                     |
+| `NominalCapacity.availableCapacities` | List[AvailableCapacity]    | A list of the rated nominal capacities available for a vehicle                                            |
+| `NominalCapacity.capacity`            | Optional[SelectedCapacity] | The rated nominal capacity for the vehicle's battery                                                      |
+| `NominalCapacity.url`                 | Optional[String]           | A URL that will launch the flow for a vehicle owner to specify the correct battery capacity for a vehicle |
+| `BatteryCapacity.meta`                | collections.namedtuple     | Smartcar response headers (`request_id`, `data_age`, and/or `unit_system`)                                |
+
+
+Each AvailableCapacity entry contains:
+- `capacity` (float): The rated nominal capacity for the vehicle’s battery 
+- `description` (String, optional): A a description of the uniquness for the nominal capacity and engine type 
+
+Each SelectedCapacity entry contains:
+- `capacity` (float): The rated nominal capacity for the vehicle’s battery 
+- `source` (String): Indicates if this capacity was determined by a user or Smartcar
+
+#### Raises
+
+<code>SmartcarException</code> - See
+the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+---
+
 ### `fuel(self)`
 
 Returns the vehicle's fuel status.
