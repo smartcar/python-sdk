@@ -285,6 +285,7 @@ Each SelectedCapacity entry contains:
 
 <code>SmartcarException</code> - See
 the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
 ---
 
 ### `fuel(self)`
