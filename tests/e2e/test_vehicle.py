@@ -34,6 +34,18 @@ def test_battery_capacity(chevy_volt):
     assert battery_capacity._fields == ("capacity", "meta")
 
 
+def test_nominal_capacity(chevy_volt):
+    nominal_capacity = chevy_volt.nominal_capacity()
+    assert nominal_capacity is not None
+    assert type(nominal_capacity) == types.NominalCapcity
+    assert nominal_capacity._fields == (
+        "availableCapacities",
+        "capacity",
+        "url",
+        "meta",
+    )
+
+
 def test_fuel(chevy_volt):
     fuel = chevy_volt.fuel()
     assert fuel is not None
@@ -264,7 +276,12 @@ def test_batch_unauthorized_permission(chevy_volt_limited_scope):
     Out of scope: "/location
     """
     batch = chevy_volt_limited_scope.batch(
-        ["/", "/odometer", "/engine/oil", "/location"]
+        [
+            "/",
+            "/odometer",
+            "/engine/oil",
+            "/location",
+        ]
     )
     assert batch.attributes().make is not None
     assert batch.odometer().distance is not None

@@ -116,6 +116,28 @@ class Vehicle(object):
         response = helpers.requester("GET", url, headers=headers)
         return types.select_named_tuple(path, response)
 
+    def nominal_capacity(self) -> types.NominalCapcity:
+        """
+        GET Vehicle.nominal_capacity
+        Returns:
+            NamedTuple(
+                "NominalCapcity",
+                [
+                    ("availableCapacities", List[AvailableCapacity]),
+                    ("capacity", Optional[SelectedCapacity]),
+                    ("url", Optional[str]),
+                    ("meta", namedtuple),
+                ],
+            )
+        Raises:
+            SmartcarException
+        """
+        path = "battery/nominal_capacity"
+        url = self._format_url(path)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+        return types.select_named_tuple(path, response)
+
     def fuel(self) -> types.Fuel:
         """
         GET Vehicle.fuel
