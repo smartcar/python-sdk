@@ -75,6 +75,7 @@ def build_meta(response_headers: rs.CaseInsensitiveDict) -> namedtuple:
         "sc-data-age": "data_age",
         "sc-unit-system": "unit_system",
         "sc-request-id": "request_id",
+        "sc-fetched-at": "fetched_at",
     }
 
     meta_dict = {}
