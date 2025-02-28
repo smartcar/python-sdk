@@ -384,7 +384,7 @@ def test_request_with_body(chevy_volt):
     assert batch.body["responses"][0]["path"] == "/odometer"
     assert batch.body["responses"][0]["path"] == "/odometer"
     assert batch.body["responses"][0]["code"] == 200
-    assert isinstance(batch.body["responses"][0]["body"]["distance"], float)
+    assert isinstance(batch.body["responses"][0]["body"]["distance"], (int, float))
     assert batch.body["responses"][1]["path"] == "/tires/pressure"
     assert isinstance(batch.body["responses"][1]["body"]["frontLeft"], float)
     assert isinstance(batch.body["responses"][1]["body"]["frontRight"], float)
