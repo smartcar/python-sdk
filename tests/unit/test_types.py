@@ -33,13 +33,15 @@ def test_select_named_tuple_on_dict():
 
 
 def test_build_meta():
-    headers = rs.CaseInsensitiveDict({
-        "sc-request-id": "36ab27d0-fd9d-4455-823a-ce30af709ffc",
-        "sc-data-age": "2023-05-04T07:20:50.844Z",
-        "sc-unit-system": "metric",
-        "sc-fetched-at": "2023-05-04T07:20:51.844Z",
-        "content-type": "application/json"
-    })
+    headers = rs.CaseInsensitiveDict(
+        {
+            "sc-request-id": "36ab27d0-fd9d-4455-823a-ce30af709ffc",
+            "sc-data-age": "2023-05-04T07:20:50.844Z",
+            "sc-unit-system": "metric",
+            "sc-fetched-at": "2023-05-04T07:20:51.844Z",
+            "content-type": "application/json",
+        }
+    )
 
     meta = types.build_meta(headers)
 
@@ -47,5 +49,5 @@ def test_build_meta():
     assert meta.data_age == "2023-05-04T07:20:50.844Z"
     assert meta.unit_system == "metric"
     assert meta.fetched_at == "2023-05-04T07:20:51.844Z"
-    
+
     assert not hasattr(meta, "content_type")
