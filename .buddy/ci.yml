@@ -1,0 +1,283 @@
+- pipeline: ci
+  name: CI
+  refs:
+  - refs/heads/*
+  events:
+  - type: PUSH
+  actions:
+  - action: Python 3.8.x - Tests
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.8.20
+    execute_commands:
+    - "# Set Firefox environment variables to help with headless operation"
+    - Xvfb :99 -screen 0 1280x1024x24 &
+    - export DISPLAY=:99.0
+    - export MOZ_HEADLESS=1
+    - export MOZ_NO_REMOTE=1
+    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - firefox --version
+    - firefox -headless &
+    - ""
+    - "# Run Tests"
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - ""
+    - make test
+    - ""
+    setup_commands:
+    - apt-get update
+    - apt-get install -y \
+    - '  libgtk-3-0 \'
+    - '  libasound2 \'
+    - '  libdbus-glib-1-2 \'
+    - '  libx11-xcb1 \'
+    - '  libxt6 \'
+    - '  libnss3 \'
+    - '  libxtst6 \'
+    - '  libxss1 \'
+    - '  libpci3 \'
+    - '  libatk1.0-0 \'
+    - '  libatk-bridge2.0-0 \'
+    - '  libcups2 \'
+    - '  libdrm2 \'
+    - '  libxcomposite1 \'
+    - '  libxdamage1 \'
+    - '  libxfixes3 \'
+    - '  libxkbcommon0 \'
+    - '  libxrandr2 \'
+    - '  xvfb'
+    - ""
+    - ""
+    - "# Download the latest Firefox"
+    - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+    - "mkdir -p ${HOME}/firefox-latest"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
+    run_next: IN_SOFT_PARALLEL
+  - action: Python 3.9.x - Tests
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.9.23
+    execute_commands:
+    - "# Set Firefox environment variables to help with headless operation"
+    - Xvfb :99 -screen 0 1280x1024x24 &
+    - export DISPLAY=:99.0
+    - export MOZ_HEADLESS=1
+    - export MOZ_NO_REMOTE=1
+    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - firefox --version
+    - firefox -headless &
+    - ""
+    - "# Run Tests"
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - ""
+    - make test
+    - ""
+    setup_commands:
+    - apt-get update
+    - apt-get install -y \
+    - '  libgtk-3-0 \'
+    - '  libasound2 \'
+    - '  libdbus-glib-1-2 \'
+    - '  libx11-xcb1 \'
+    - '  libxt6 \'
+    - '  libnss3 \'
+    - '  libxtst6 \'
+    - '  libxss1 \'
+    - '  libpci3 \'
+    - '  libatk1.0-0 \'
+    - '  libatk-bridge2.0-0 \'
+    - '  libcups2 \'
+    - '  libdrm2 \'
+    - '  libxcomposite1 \'
+    - '  libxdamage1 \'
+    - '  libxfixes3 \'
+    - '  libxkbcommon0 \'
+    - '  libxrandr2 \'
+    - '  xvfb'
+    - ""
+    - ""
+    - "# Download the latest Firefox"
+    - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+    - "mkdir -p ${HOME}/firefox-latest"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
+    run_next: IN_SOFT_PARALLEL
+  - action: Python 3.10.x - Tests
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.10.18
+    execute_commands:
+    - "# Set Firefox environment variables to help with headless operation"
+    - Xvfb :99 -screen 0 1280x1024x24 &
+    - export DISPLAY=:99.0
+    - export MOZ_HEADLESS=1
+    - export MOZ_NO_REMOTE=1
+    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - firefox --version
+    - firefox -headless &
+    - ""
+    - "# Run Tests"
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - ""
+    - make test
+    - ""
+    setup_commands:
+    - apt-get update
+    - apt-get install -y \
+    - '  libgtk-3-0 \'
+    - '  libasound2 \'
+    - '  libdbus-glib-1-2 \'
+    - '  libx11-xcb1 \'
+    - '  libxt6 \'
+    - '  libnss3 \'
+    - '  libxtst6 \'
+    - '  libxss1 \'
+    - '  libpci3 \'
+    - '  libatk1.0-0 \'
+    - '  libatk-bridge2.0-0 \'
+    - '  libcups2 \'
+    - '  libdrm2 \'
+    - '  libxcomposite1 \'
+    - '  libxdamage1 \'
+    - '  libxfixes3 \'
+    - '  libxkbcommon0 \'
+    - '  libxrandr2 \'
+    - '  xvfb'
+    - ""
+    - ""
+    - "# Download the latest Firefox"
+    - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+    - "mkdir -p ${HOME}/firefox-latest"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
+    run_next: IN_SOFT_PARALLEL
+  - action: Python 3.11.x - Tests
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.11.13
+    execute_commands:
+    - "# Set Firefox environment variables to help with headless operation"
+    - Xvfb :99 -screen 0 1280x1024x24 &
+    - export DISPLAY=:99.0
+    - export MOZ_HEADLESS=1
+    - export MOZ_NO_REMOTE=1
+    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - firefox --version
+    - firefox -headless &
+    - ""
+    - "# Run Tests"
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - ""
+    - make test
+    - ""
+    setup_commands:
+    - apt-get update
+    - apt-get install -y \
+    - '  libgtk-3-0 \'
+    - '  libasound2 \'
+    - '  libdbus-glib-1-2 \'
+    - '  libx11-xcb1 \'
+    - '  libxt6 \'
+    - '  libnss3 \'
+    - '  libxtst6 \'
+    - '  libxss1 \'
+    - '  libpci3 \'
+    - '  libatk1.0-0 \'
+    - '  libatk-bridge2.0-0 \'
+    - '  libcups2 \'
+    - '  libdrm2 \'
+    - '  libxcomposite1 \'
+    - '  libxdamage1 \'
+    - '  libxfixes3 \'
+    - '  libxkbcommon0 \'
+    - '  libxrandr2 \'
+    - '  xvfb'
+    - ""
+    - ""
+    - "# Download the latest Firefox"
+    - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+    - "mkdir -p ${HOME}/firefox-latest"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
+    run_next: IN_SOFT_PARALLEL
+  - action: Python 3.12.x - Tests
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.12.11
+    execute_commands:
+    - "# Set Firefox environment variables to help with headless operation"
+    - Xvfb :99 -screen 0 1280x1024x24 &
+    - export DISPLAY=:99.0
+    - export MOZ_HEADLESS=1
+    - export MOZ_NO_REMOTE=1
+    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - firefox --version
+    - firefox -headless &
+    - ""
+    - "# Run Tests"
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - ""
+    - make test
+    - ""
+    setup_commands:
+    - apt-get update
+    - apt-get install -y \
+    - '  libgtk-3-0 \'
+    - '  libasound2 \'
+    - '  libdbus-glib-1-2 \'
+    - '  libx11-xcb1 \'
+    - '  libxt6 \'
+    - '  libnss3 \'
+    - '  libxtst6 \'
+    - '  libxss1 \'
+    - '  libpci3 \'
+    - '  libatk1.0-0 \'
+    - '  libatk-bridge2.0-0 \'
+    - '  libcups2 \'
+    - '  libdrm2 \'
+    - '  libxcomposite1 \'
+    - '  libxdamage1 \'
+    - '  libxfixes3 \'
+    - '  libxkbcommon0 \'
+    - '  libxrandr2 \'
+    - '  xvfb'
+    - ""
+    - ""
+    - "# Download the latest Firefox"
+    - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+    - "mkdir -p ${HOME}/firefox-latest"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
+  - action: Linting
+    type: BUILD
+    docker_image_name: library/python
+    docker_image_tag: 3.13
+    execute_commands:
+    - python -m venv venv
+    - source venv/bin/activate
+    - "pip install -e '.[dev]'"
+    - make format args='--check'
+    cached_dirs:
+    - /root/.cache/pip
+    shell: BASH
