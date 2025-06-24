@@ -43,8 +43,9 @@ DEFAULT_SCOPE = [
     "required:read_security",
 ]
 
+
 def strtobool(val):
-    return val.lower() in ("y", "yes", "t", "true", "on", "1")    
+    return val.lower() in ("y", "yes", "t", "true", "on", "1")
 
 
 def get_auth_client_params():
