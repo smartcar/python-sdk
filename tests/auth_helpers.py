@@ -23,6 +23,11 @@ REDIRECT_URI = "https://example.com/auth"
 APPLICATION_MANAGEMENT_TOKEN = os.environ.get("E2E_SMARTCAR_AMT")
 WEBHOOK_ID = os.environ.get("E2E_SMARTCAR_WEBHOOK_ID")
 
+
+def strtobool(val):
+    return str(val).lower() in ("y", "yes", "t", "true", "on", "1")
+
+
 # Variables for Geckodriver
 HEADLESS = "CI" in os.environ or (
     "HEADLESS" in os.environ and strtobool(os.environ["HEADLESS"])
