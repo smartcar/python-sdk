@@ -62,7 +62,9 @@ def get_user(access_token: str) -> types.User:
     return types.select_named_tuple("user", response)
 
 
-def get_compatibility_by_region_and_make(region: str, make: str, options: dict = None) -> types.CompatibilityMatrix:
+def get_compatibility_matrix(
+    region: str, make: str, options: dict = None
+) -> types.CompatibilityMatrix:
     """
     Retrieve compatibility matrix for a given region and make.
     This API is for reference purposes only and does not guarantee compatibility for a specific vehicle.
@@ -85,7 +87,9 @@ def get_compatibility_by_region_and_make(region: str, make: str, options: dict =
     if not client_secret:
         client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")
     if client_id is None or client_secret is None:
-        raise Exception("SMARTCAR_CLIENT_ID and SMARTCAR_CLIENT_SECRET must be set in environment variables or passed in options.")
+        raise Exception(
+            "SMARTCAR_CLIENT_ID and SMARTCAR_CLIENT_SECRET must be set in environment variables or passed in options."
+        )
 
     # Build query params
     params = {"region": region}
@@ -117,7 +121,8 @@ def get_compatibility_by_region_and_make(region: str, make: str, options: dict =
                 type=m["type"],
                 endpoints=m["endpoints"],
                 permissions=m["permissions"],
-            ) for m in models
+            )
+            for m in models
         ]
     return matrix
 
@@ -272,7 +277,6 @@ def get_compatibility(
         return types.select_named_tuple("compatibility_v2", response)
     else:
         raise Exception("Please use a valid API version (e.g. '1.0' or '2.0')")
-
 
 
 # ===========================================

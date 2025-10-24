@@ -41,19 +41,19 @@ def test_get_vehicles_with_paging(access):
     # ...existing code...
 
 
-
-def test_e2e_get_compatibility_by_region_and_make():
+def test_e2e_get_compatibility_matrix():
     # This test will call the real API. Requires valid SMARTCAR_CLIENT_ID and SMARTCAR_CLIENT_SECRET in env.
     region = "US"
     make = "TESLA"
     options = {
-        "type": "BEV", "scope": ["read_battery", "read_charge"],
+        "type": "BEV",
+        "scope": ["read_battery", "read_charge"],
         "client_id": ah.CLIENT_ID,
         "client_secret": ah.CLIENT_SECRET,
         "mode": "test",
     }
 
-    matrix = smartcar.smartcar.get_compatibility_by_region_and_make(region, make, options)
+    matrix = smartcar.smartcar.get_compatibility_matrix(region, make, options)
     assert isinstance(matrix, dict)
     assert make.upper() in matrix
     assert isinstance(matrix[make.upper()], list)
