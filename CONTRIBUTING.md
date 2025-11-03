@@ -15,7 +15,20 @@ Please be sure to read the contribution guidelines before making or requesting a
 
 To run tests, you will need the appropriate WebDriver for your chosen browser. This guide assumes you are using either Firefox or Chrome:
 
+### Firefox
 - For Firefox, download [geckodriver](https://github.com/mozilla/geckodriver/releases).
+
+#### Set up a local firefox specifically for testing
+
+```
+# Create a firefox binary for smartcar tests in home directory
+wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
+mkdir -p ${HOME}/firefox-latest-smartcar
+tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest-smartcar
+rm /tmp/firefox-latest.tar.xz
+```
+
+### Chrome
 - For Chrome, download [chromedriver](https://chromedriver.chromium.org/downloads).
 
 Ensure that the chosen driver is in your system's PATH, or you can specify the path directly in your test scripts.
