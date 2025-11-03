@@ -27,7 +27,7 @@
     - export DISPLAY=:99.0
     - export MOZ_HEADLESS=1
     - export MOZ_NO_REMOTE=1
-    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - "export PATH=${HOME}/firefox-latest-smartcar/firefox:$PATH"
     - firefox --version
     - firefox -headless &
     - ""
@@ -64,8 +64,9 @@
     - ""
     - "# Download the latest Firefox"
     - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
-    - "mkdir -p ${HOME}/firefox-latest"
-    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    - "mkdir -p ${HOME}/firefox-latest-smartcar"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest-smartcar"
+    - rm /tmp/firefox-latest.tar.xz
     cached_dirs:
     - /root/.cache/pip
     shell: BASH
@@ -79,7 +80,7 @@
     - export DISPLAY=:99.0
     - export MOZ_HEADLESS=1
     - export MOZ_NO_REMOTE=1
-    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - "export PATH=${HOME}/firefox-latest-smartcar/firefox:$PATH"
     - firefox --version
     - firefox -headless &
     - ""
@@ -116,8 +117,9 @@
     - ""
     - "# Download the latest Firefox"
     - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
-    - "mkdir -p ${HOME}/firefox-latest"
-    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    - "mkdir -p ${HOME}/firefox-latest-smartcar"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest-smartcar"
+    - rm /tmp/firefox-latest.tar.xz
     cached_dirs:
     - /root/.cache/pip
     shell: BASH
@@ -131,7 +133,7 @@
     - export DISPLAY=:99.0
     - export MOZ_HEADLESS=1
     - export MOZ_NO_REMOTE=1
-    - "export PATH=${HOME}/firefox-latest/firefox:$PATH"
+    - "export PATH=${HOME}/firefox-latest-smartcar/firefox:$PATH"
     - firefox --version
     - firefox -headless &
     - ""
@@ -168,8 +170,9 @@
     - ""
     - "# Download the latest Firefox"
     - wget -O /tmp/firefox-latest.tar.xz 'https://download.mozilla.org/?product=firefox-latest&lang=en-US&os=linux64'
-    - "mkdir -p ${HOME}/firefox-latest"
-    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest"
+    - "mkdir -p ${HOME}/firefox-latest-smartcar"
+    - "tar -xJf /tmp/firefox-latest.tar.xz -C ${HOME}/firefox-latest-smartcar"
+    - rm /tmp/firefox-latest.tar.xz
     cached_dirs:
     - /root/.cache/pip
     shell: BASH
