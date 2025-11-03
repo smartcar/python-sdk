@@ -112,14 +112,14 @@ def get_driver(browser_name, headless=False):
         options = Options()
 
         # Set Firefox binary location to our local installation
-        firefox_path = os.path.expanduser("~/firefox-latest-smartcar/firefox/firefox")
-        if not os.path.exists(firefox_path):
-            raise FileNotFoundError(
-                f"Firefox not found at {firefox_path}. "
-                "Please run the setup script first."
-            )
+        # firefox_path = os.path.expanduser("~/firefox-latest-smartcar/firefox/firefox")
+        # if not os.path.exists(firefox_path):
+        #     raise FileNotFoundError(
+        #         f"Firefox not found at {firefox_path}. "
+        #         "Please run the setup script first."
+        #     )
 
-        options.binary_location = firefox_path
+        # options.binary_location = firefox_path
 
         # Basic Firefox configuration
         options.set_preference("browser.shell.checkDefaultBrowser", False)
