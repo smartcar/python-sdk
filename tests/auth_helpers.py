@@ -14,8 +14,7 @@ import smartcar.helpers as helpers
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 # Verify all E2E variables are present ('E2E_<CLIENT VARIABLE>')
@@ -113,7 +112,7 @@ def get_driver(browser_name, headless=False):
         options = Options()
 
         # Set Firefox binary location to our local installation
-        firefox_path = os.path.expanduser('~/firefox-latest-smartcar/firefox/firefox')
+        firefox_path = os.path.expanduser("~/firefox-latest-smartcar/firefox/firefox")
         if not os.path.exists(firefox_path):
             raise FileNotFoundError(
                 f"Firefox not found at {firefox_path}. "
@@ -129,24 +128,19 @@ def get_driver(browser_name, headless=False):
         options.set_preference("browser.sessionstore.resume_from_crash", False)
         options.set_preference("browser.cache.disk.enable", False)
         options.set_preference("browser.cache.memory.enable", False)
-        options.add_argument('--no-remote')
+        options.add_argument("--no-remote")
 
         # Set up Firefox service with logging
-        service = Service(
-            log_path='/tmp/geckodriver.log'
-        )
+        service = Service(log_path="/tmp/geckodriver.log")
 
         try:
-            driver = webdriver.Firefox(
-                options=options,
-                service=service
-            )
+            driver = webdriver.Firefox(options=options, service=service)
             logger.info("Firefox driver initialized successfully")
             return driver
         except Exception as e:
             logger.error(f"Firefox driver error: {str(e)}")
             try:
-                version = subprocess.check_output([firefox_path, '--version'])
+                version = subprocess.check_output([firefox_path, "--version"])
                 logger.info(f"Firefox version: {version.decode().strip()}")
             except Exception as fe:
                 logger.error(f"Error checking Firefox version: {str(fe)}")
