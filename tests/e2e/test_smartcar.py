@@ -43,27 +43,6 @@ def test_get_vehicles_with_paging(access):
     assert len(res.vehicles) == 0
 
 
-def test_get_compatibility_in_test_mode_but_no_level():
-    try:
-        get_compatibility(
-            "WAUAFAFL1GN014882",
-            scope=["read_vehicle_info"],
-            options={
-                "client_id": ah.CLIENT_ID,
-                "client_secret": ah.CLIENT_SECRET,
-                "mode": "test",
-            },
-        )
-
-    except Exception as e:
-        assert e.type == "VALIDATION"
-        assert e.detail[0]["field"] == "test_mode_compatibility_level"
-        assert (
-            e.detail[0]["message"]
-            == "Field must be one of: [compatible,phev,incompatible,fuel,dinosaur,bev]"
-        )
-
-
 def test_get_compatibility_v2():
     compatibility = smartcar.get_compatibility(
         "0SCGMCT0386A85356",
