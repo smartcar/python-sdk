@@ -1,14 +1,24 @@
 - pipeline: cd
   name: CD
-  refs:
-    - refs/heads/master
   events:
     - type: PUSH
+      refs:
+        - master
   fail_on_prepare_env_warning: true
   description_required: true
   variables:
     - key: GH_TOKEN
       value: $GH_TOKEN_PUBLIC_PACKAGES
+    - key: PYPI_PASSWORD
+      value: "!encrypted 4RTMLoqO6EKL3rlQQ/0VCNhiBtnQTn9nRiRCSAYzzh0=.1qbcLnWM6PLSKnJ6ANB3Mg=="
+      encrypted: true
+      settable: ENABLED
+    - key: PYPI_TOKEN
+      value: "!encrypted wGa887vsez3Vznx6G3FMIlcSpPwXiH+KiYNcorxWgueeXKN8At1IGCsi669uvSCpXkScQ1Txy6Z2dt3U0SLXpmozRLhtxacFsu6JG3yHYcymKFCGlfLES4ppfq6rOAr0b97cdZJr3YsQ29lhvu5ovj3nL/CIj4Pwayq+oZo9Bwe0kaXmm9pJO4IftM2Q4PMR0jiVMI2Q2FRl27LS2x2Z8LftNG8+gPEClnfLdTRpB3Am0wZFpk75vas1ntYSQRQ/Lt//OozWg37IC6AJmRSE9g==.dxTBAldJlNKdVcea+wJ2gA=="
+      encrypted: true
+      settable: ENABLED
+    - key: PYPI_USERNAME
+      value: smartcar
   actions:
     - action: Semantic Release
       type: BUILD
@@ -23,13 +33,12 @@
       shell: BASH
     - action: Publish to PyPI
       type: BUILD
-      disabled: true
       docker_image_name: library/python
       docker_image_tag: 3.13
       execute_commands:
         - pip install build twine
         - python -m build
-        - twine upload dist/* -u __token__ -p $PYPI_PASSWORD
+        - twine upload --non-interactive dist/* -u __token__ -p $PYPI_TOKEN
       cached_dirs:
         - /root/.cache/pip
       shell: BASH
