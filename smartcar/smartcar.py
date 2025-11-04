@@ -71,7 +71,7 @@ def get_compatibility_matrix(
 
     Args:
         region (str): One of US, CA, EUROPE
-        make (str): Vehicle make (e.g. 'NISSAN', 'TESLA'). If empty, all makes returned.
+        make (str): Vehicle make (e.g. 'TESLA', 'NISSAN'). If empty, all makes returned.
         options (dict, optional): Can include 'type' (ICE, BEV, PHEV, HEV), 'scope' (list of permissions)
 
     Returns:
