@@ -9,7 +9,6 @@ addons:
 language: python
 
 python:
-  - '3.8'
   - '3.9'
   - '3.10'
   - '3.11'
@@ -33,23 +32,3 @@ script:
   - make test
   - make format args='--check'
 
-jobs:
-  include:
-    - stage: publish
-      python: '3.11'
-      services: []
-      addons:
-        firefox: 'skip'
-        apt: []
-      install:
-        - nvm install 18
-        - npm install semantic-release@20.x.x semantic-release-replace-plugin@1.x.x
-      script:
-        - npx semantic-release
-      deploy:
-        provider: pypi
-        skip_cleanup: true
-        username: $PYPI_USERNAME
-        password: $PYPI_PASSWORD
-        on:
-          branch: master
