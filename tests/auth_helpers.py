@@ -13,6 +13,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import smartcar.helpers as helpers
 
+
 # Pure Python strtobool implementation (compatible with Python 3.9+)
 def strtobool(val):
     val = str(val).lower()
@@ -22,6 +23,7 @@ def strtobool(val):
         return False
     else:
         raise ValueError(f"invalid truth value {val}")
+
 
 # Configure logging
 logging.basicConfig(

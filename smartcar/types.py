@@ -545,11 +545,13 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
     else:
         return data
 
+
 # ===========================================
 # compatibility matrix response
 # ===========================================
 
 from typing import Dict
+
 
 class CompatibilityMatrixModel(NamedTuple):
     model: str
@@ -558,6 +560,7 @@ class CompatibilityMatrixModel(NamedTuple):
     type: str
     endpoints: List[str]
     permissions: List[str]
+
 
 # Dict[str, List[CompatibilityMatrixModel]]
 CompatibilityMatrix = Dict[str, List[CompatibilityMatrixModel]]

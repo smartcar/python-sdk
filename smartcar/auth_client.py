@@ -62,10 +62,7 @@ class AuthClient(object):
 
         self.auth = (self.client_id, self.client_secret)
 
-        if (
-            self.client_id is None
-            or self.client_secret is None
-        ):
+        if self.client_id is None or self.client_secret is None:
             raise Exception(
                 "AuthClient MUST have client_id and client_secret attributes."
                 "Either set these as environment variables, OR pass them in as arguments when instantiating "

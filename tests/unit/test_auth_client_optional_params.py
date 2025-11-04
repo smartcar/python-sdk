@@ -16,9 +16,7 @@ def test_auth_client_without_redirect_uri():
 
         # Create client without redirect_uri
         client = AuthClient(
-            client_id=ah.CLIENT_ID,
-            client_secret=ah.CLIENT_SECRET,
-            mode="test"
+            client_id=ah.CLIENT_ID, client_secret=ah.CLIENT_SECRET, mode="test"
         )
 
         # Should not raise exception
@@ -64,9 +62,7 @@ def test_auth_url_with_all_optional_params():
 
         # Create client without redirect_uri
         client = AuthClient(
-            client_id=ah.CLIENT_ID,
-            client_secret=ah.CLIENT_SECRET,
-            mode="test"
+            client_id=ah.CLIENT_ID, client_secret=ah.CLIENT_SECRET, mode="test"
         )
 
         # Call get_auth_url without scope or redirect_uri
