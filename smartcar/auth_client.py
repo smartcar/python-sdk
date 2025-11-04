@@ -21,13 +21,14 @@ class AuthClient(object):
         """
         A client for accessing the Smartcar API.
 
-        NOTE: It is recommended that you set environment variables with your client id, secret, and redirect URI.
+        NOTE: It is recommended that you set environment variables with your client id and secret.
         AuthClient by default will search for environment variables "SMARTCAR_CLIENT_ID",
         "SMARTCAR_CLIENT_SECRET", and "SMARTCAR_REDIRECT_URL" and set those as attributes.
         These CAN be passed as arguments as you instantiate AuthClient. Any arguments passed in will override
         and take precedence over the corresponding environment variable.
 
-        However, if neither an environment variable nor an argument is passed in, an exception will be raised.
+        Client ID and Client Secret are required, either via arguments or environment variables.
+        However, redirect_uri is now optional due to Vehicle Access in the dashboard.
 
         Args:
             client_id (str, optional): The application id, provided in the application
@@ -38,7 +39,8 @@ class AuthClient(object):
 
             redirect_uri (str, optional): The URL to redirect to after the user accepts
                 or declines the application's permissions. This URL must also be
-                present in the Redirect URIs field in the application dashboard
+                present in the Redirect URIs field in the application dashboard.
+                Now optional with Vehicle Access in the dashboard.
 
             test_mode (bool, optional): Deprecated, please use `mode` instead.
                 Launch Smartcar Connect in [test mode](https://smartcar.com/docs/guides/testing/).
@@ -60,29 +62,26 @@ class AuthClient(object):
 
         self.auth = (self.client_id, self.client_secret)
 
-        if (
-            self.client_id is None
-            or self.client_secret is None
-            or self.redirect_uri is None
-        ):
+        if self.client_id is None or self.client_secret is None:
             raise Exception(
-                "AuthClient MUST have client_id, client_secret, and redirect_uri attributes."
+                "AuthClient MUST have client_id and client_secret attributes."
                 "Either set these as environment variables, OR pass them in as arguments when instantiating "
                 "AuthClient. The recommended course of action is to set up environment variables "
                 "with your client credentials. i.e.: "
-                "'SMARTCAR_CLIENT_ID', 'SMARTCAR_CLIENT_SECRET', and 'SMARTCAR_REDIRECT_URI'"
+                "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
             )
         if self.mode not in ["test", "live", "simulated"]:
             raise Exception(
                 "The \"mode\" parameter MUST be one of the following: 'test', 'live', 'simulated'",
             )
 
-    def get_auth_url(self, scope: List[str], options: dict = None) -> str:
+    def get_auth_url(self, scope: List[str] = None, options: dict = None) -> str:
         """
         Generate the Connect URL
 
         Args:
-            scope (str[], required): A list of permissions requested by the application
+            scope (str[], optional): A list of permissions requested by the application.
+                Now optional with Vehicle Access in the dashboard.
 
             options (dict, optional): Can have the following keys:
 
@@ -124,11 +123,16 @@ class AuthClient(object):
         query = {
             "response_type": "code",
             "client_id": self.client_id,
-            "redirect_uri": self.redirect_uri,
             "approval_prompt": "auto",
-            "scope": " ".join(scope),
             "mode": self.mode,
         }
+
+        # Add optional parameters if they exist
+        if self.redirect_uri:
+            query["redirect_uri"] = self.redirect_uri
+
+        if scope:
+            query["scope"] = " ".join(scope)
 
         if options:
             if options.get("force_prompt"):
@@ -184,8 +188,11 @@ class AuthClient(object):
         data = {
             "grant_type": "authorization_code",
             "code": code,
-            "redirect_uri": self.redirect_uri,
         }
+
+        # Add redirect_uri if it exists
+        if self.redirect_uri:
+            data["redirect_uri"] = self.redirect_uri
         params = {}
 
         if options:

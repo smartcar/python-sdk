@@ -1,6 +1,6 @@
 import datetime
 from collections import namedtuple
-from typing import List, Optional, NamedTuple, Union
+from typing import List, Optional, NamedTuple, Union, Dict, Any
 import re
 import requests.structures as rs
 import enum
@@ -544,3 +544,23 @@ def select_named_tuple(path: str, response_or_dict) -> NamedTuple:
 
     else:
         return data
+
+
+# ===========================================
+# compatibility matrix response
+# ===========================================
+
+from typing import Dict
+
+
+class CompatibilityMatrixModel(NamedTuple):
+    model: str
+    startYear: int
+    endYear: int
+    type: str
+    endpoints: List[str]
+    permissions: List[str]
+
+
+# Dict[str, List[CompatibilityMatrixModel]]
+CompatibilityMatrix = Dict[str, List[CompatibilityMatrixModel]]

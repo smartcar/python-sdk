@@ -43,6 +43,34 @@ def test_get_vehicles_with_paging(access):
     assert len(res.vehicles) == 0
 
 
+def test_e2e_get_compatibility_matrix():
+    # This test will call the real API. Requires valid SMARTCAR_CLIENT_ID and SMARTCAR_CLIENT_SECRET in env.
+    region = "US"
+    make = "TESLA"
+    options = {
+        "type": "BEV",
+        "scope": ["read_battery", "read_charge"],
+        "client_id": ah.CLIENT_ID,
+        "client_secret": ah.CLIENT_SECRET,
+        "mode": "test",
+    }
+
+    matrix = smartcar.smartcar.get_compatibility_matrix(region, make, options)
+    assert isinstance(matrix, dict)
+    assert make.upper() in matrix
+    assert isinstance(matrix[make.upper()], list)
+    # Check at least one model exists for the make
+    assert len(matrix[make.upper()]) > 0
+    # Check required fields in the first model
+    first_model = matrix[make.upper()][0]
+    assert hasattr(first_model, "model")
+    assert hasattr(first_model, "startYear")
+    assert hasattr(first_model, "endYear")
+    assert hasattr(first_model, "type")
+    assert hasattr(first_model, "endpoints")
+    assert hasattr(first_model, "permissions")
+
+
 def test_get_compatibility_v2():
     compatibility = smartcar.get_compatibility(
         "0SCGMCT0386A85356",

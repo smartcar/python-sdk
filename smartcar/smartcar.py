@@ -62,6 +62,71 @@ def get_user(access_token: str) -> types.User:
     return types.select_named_tuple("user", response)
 
 
+def get_compatibility_matrix(
+    region: str, make: str, options: dict = None
+) -> types.CompatibilityMatrix:
+    """
+    Retrieve compatibility matrix for a given region and make.
+    This API is for reference purposes only and does not guarantee compatibility for a specific vehicle.
+
+    Args:
+        region (str): One of US, CA, EUROPE
+        make (str): Vehicle make (e.g. 'tesla', 'nissan'). If empty, all makes returned.
+        options (dict, optional): Can include 'type' (ICE, BEV, PHEV, HEV), 'scope' (list of permissions)
+
+    Returns:
+        CompatibilityMatrix: Dict[str, List[CompatibilityMatrixModel]]
+    """
+    client_id = None
+    client_secret = None
+    if options:
+        client_id = options.get("client_id")
+        client_secret = options.get("client_secret")
+    if not client_id:
+        client_id = os.environ.get("SMARTCAR_CLIENT_ID")
+    if not client_secret:
+        client_secret = os.environ.get("SMARTCAR_CLIENT_SECRET")
+    if client_id is None or client_secret is None:
+        raise Exception(
+            "SMARTCAR_CLIENT_ID and SMARTCAR_CLIENT_SECRET must be set in environment variables or passed in options."
+        )
+
+    # Build query params
+    params = {"region": region}
+    if make:
+        params["make"] = make
+    if options:
+        if "type" in options:
+            params["type"] = options["type"]
+        if "scope" in options and options["scope"]:
+            params["scope"] = " ".join(options["scope"])
+
+    # Auth header
+    id_secret = f"{client_id}:{client_secret}"
+    base64_id_secret = base64.b64encode(id_secret.encode("ascii")).decode("ascii")
+    headers = {"Authorization": f"Basic {base64_id_secret}"}
+
+    url = f"{config.API_URL}/v{API_VERSION}/compatibility/matrix"
+    response = helpers.requester("GET", url, headers=headers, params=params)
+
+    # Parse response into types.CompatibilityMatrix
+    data = response.json() or {}
+    matrix = {}
+    for make_key, models in data.items():
+        matrix[make_key] = [
+            types.CompatibilityMatrixModel(
+                model=m["model"],
+                startYear=m["startYear"],
+                endYear=m["endYear"],
+                type=m["type"],
+                endpoints=m["endpoints"],
+                permissions=m["permissions"],
+            )
+            for m in models
+        ]
+    return matrix
+
+
 def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
     """
     Get a list of the user's vehicle ids
