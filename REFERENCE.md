@@ -275,10 +275,10 @@ Returns a list of nominal rated battery capacities for a vehicle.
 
 Each AvailableCapacity entry contains:
 - `capacity` (float): The rated nominal capacity for the vehicle's battery in kWh
-- `description` (String, optional): A a description of the uniquness for the nominal capacity and engine type 
+- `description` (String, optional): A a description of the uniquness for the nominal capacity and engine type
 
 Each SelectedCapacity entry contains:
-- `capacity` (float): The rated nominal capacity for the vehicle's battery kWh 
+- `capacity` (float): The rated nominal capacity for the vehicle's battery kWh
 - `source` (String): Indicates if this capacity was determined by a user or Smartcar
 
 #### Raises
@@ -890,6 +890,60 @@ Verify webhook payload against AMT and signature.
 | Boolean | Matching signature and response header |
 
 # Vehicle Management Static Methods
+
+### `smartcar.get_compatibility_matrix(region, make, options=None)`
+
+Retrieve compatibility matrix for a given region and vehicle make. Returns detailed compatibility information
+about vehicle models, their supported years, and the available Smartcar features.
+
+#### Arguments
+
+| Parameter | Type | Required | Description |
+| :-------- | :--- | :------- | :---------- |
+| `region` | String | **Required** | Region to check compatibility for. Must be one of: 'US', 'CA', 'EUROPE' |
+| `make` | String | **Required** | Vehicle make to check (e.g. 'TESLA', 'NISSAN'). If empty, returns data for all makes |
+| `options` | Dictionary | **Optional** | Additional options for the request |
+| `options.type` | String | **Optional** | Filter by vehicle type: 'ICE' (Internal Combustion Engine), 'BEV' (Battery Electric Vehicle), 'PHEV' (Plug-in Hybrid), 'HEV' (Hybrid) |
+| `options.scope` | List[String] | **Optional** | List of permissions to check compatibility for |
+| `options.client_id` | String | **Optional** | Application client ID. Will use SMARTCAR_CLIENT_ID environment variable if not provided |
+| `options.client_secret` | String | **Optional** | Application client secret. Will use SMARTCAR_CLIENT_SECRET environment variable if not provided |
+
+#### Return
+
+| Value | Type | Description |
+| :---- | :--- | :---------- |
+| `CompatibilityMatrix` | Dict[str, List[CompatibilityMatrixModel]] | Dictionary mapping make names to lists of compatible models |
+
+Each CompatibilityMatrixModel contains:
+- `model` (String): The model name
+- `startYear` (Int): First model year supported
+- `endYear` (Int): Last model year supported
+
+#### Raises
+
+`SmartcarException` - If client credentials are missing or invalid, or if the request fails. See
+the [exceptions section](https://github.com/smartcar/python-sdk#handling-exceptions) for all possible exceptions.
+
+#### Example
+
+```python
+# Get compatibility matrix for Tesla vehicles in the US
+matrix = smartcar.get_compatibility_matrix(
+    region="US",
+    make="TESLA",
+    options={
+        "type": "BEV",
+        "scope": ["read_battery", "read_charge"]
+    }
+)
+
+# Access model information
+for model in matrix["TESLA"]:
+    print(f"Model: {model.model}")
+    print(f"Supported years: {model.startYear}-{model.endYear}")
+```
+
+---
 
 ### `get_connections(amt, filter, paging)`
 
