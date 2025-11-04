@@ -38,7 +38,9 @@ def test_get_vehicles(access):
 
 def test_get_vehicles_with_paging(access):
     paging = {"limit": 1, "offset": 1}
-    # ...existing code...
+    res = get_vehicles(access.access_token, paging)
+    assert res.paging.offset == 1
+    assert len(res.vehicles) == 0
 
 
 def test_e2e_get_compatibility_matrix():
