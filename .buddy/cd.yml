@@ -15,6 +15,7 @@
       docker_image_name: library/node
       docker_image_tag: 18.20.8
       execute_commands:
+        - git remote set-url origin https://${GH_TOKEN}@github.com/smartcar/python-sdk.git
         - npm install semantic-release@20.x.x semantic-release-replace-plugin@1.x.x
         - npx semantic-release
       cached_dirs:
