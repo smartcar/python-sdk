@@ -118,7 +118,7 @@ class AuthClient(object):
         Raises:
             SmartcarException
         """
-        base_url = config.CONNECT_URL
+        base_url = config.CONNECT_ORIGIN
 
         query = {
             "response_type": "code",
@@ -184,7 +184,7 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = config.AUTH_URL
+        url = config.AUTH_ORIGIN
         data = {
             "grant_type": "authorization_code",
             "code": code,
@@ -228,7 +228,7 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = config.AUTH_URL
+        url = config.AUTH_ORIGIN
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
         params = {}
 

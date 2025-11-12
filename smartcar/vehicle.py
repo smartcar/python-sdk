@@ -694,12 +694,14 @@ class Vehicle(object):
             return f"?flags={helpers.format_flag_query(self._flags)}"
         return ""
 
-    def _format_url(self, path: str) -> str:
+    def _format_url(self, path: str, **kwargs) -> str:
         """
         Returns (str): Base url with current API version.
         User can change api_version attribute at will.
         """
-        return f"{config.API_URL}/v{self._api_version}/vehicles/{self.vehicle_id}/{path}{self._format_query_params()}"
+        origin = kwargs.get("origin") or config.API_ORIGIN
+        api_version = kwargs.get("api_version") or self._api_version
+        return f"{origin}/v{api_version}/vehicles/{self.vehicle_id}/{path}{self._format_query_params()}"
 
     def _get_headers(self, need_unit_system: bool = True) -> dict:
         """

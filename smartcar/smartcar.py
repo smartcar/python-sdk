@@ -55,7 +55,7 @@ def get_user(access_token: str) -> types.User:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{API_VERSION}/user"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/user"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = helpers.requester("GET", url, headers=headers)
 
@@ -106,7 +106,7 @@ def get_compatibility_matrix(
     base64_id_secret = base64.b64encode(id_secret.encode("ascii")).decode("ascii")
     headers = {"Authorization": f"Basic {base64_id_secret}"}
 
-    url = f"{config.API_URL}/v{API_VERSION}/compatibility/matrix"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/compatibility/matrix"
     response = helpers.requester("GET", url, headers=headers, params=params)
 
     # Parse response into types.CompatibilityMatrix
@@ -146,7 +146,7 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{API_VERSION}/vehicles"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/vehicles"
     headers = {"Authorization": f"Bearer {access_token}"}
     params = paging if paging is not None else None
     response = helpers.requester("GET", url, headers=headers, params=params)
@@ -260,7 +260,7 @@ def get_compatibility(
             "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
         )
 
-    url = f"{config.API_URL}/v{api_version}/compatibility"
+    url = f"{config.API_ORIGIN}/v{api_version}/compatibility"
 
     # Configuring for compatibility endpoint
     id_secret = f"{client_id}:{client_secret}"
@@ -365,7 +365,7 @@ def get_connections(
     if "limit" in paging:
         params["limit"] = paging["limit"]
 
-    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    url = f"{config.MANAGEMENT_API_ORIGIN}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("GET", url, headers=headers, params=params)
     data = response.json()
@@ -415,7 +415,7 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
     elif vehicle_id:
         params["vehicle_id"] = vehicle_id
 
-    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    url = f"{config.MANAGEMENT_API_ORIGIN}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("DELETE", url, headers=headers, params=params)
     data = response.json()
