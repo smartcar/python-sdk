@@ -12,6 +12,7 @@ def test_get_signals(v3_vehicle):
     assert "headers" in response
     assert "data" in response["body"]
 
+
 def test_get_signal(v3_vehicle):
     signal_code = "odometer-traveleddistance"
     response = v3_vehicle.get_signal(signal_code)

@@ -796,6 +796,32 @@ Sets the version of Smartcar API to use
 
 ---
 
+### `get_vehicle(access_token, vehicle_id)`
+
+Retrieves information for a specific vehicle using Smartcar API v3.
+
+#### Arguments
+
+| Parameter      | Type   | Required     | Description                                               |
+| :------------  | :----- | :----------- | :-------------------------------------------------------- |
+| `access_token` | String | **Required** | A valid access token for the vehicle.                     |
+| `vehicle_id`   | String | **Required** | The unique identifier of the vehicle to retrieve.         |
+
+#### Returns
+
+| Type       | Description                                                                 |
+| :--------- | :-------------------------------------------------------------------------- |
+| Dictionary | A dictionary with keys `body` and `headers`. `body` contains the vehicle data, and `headers` contains the response headers. |
+
+The returned dictionary provides access to all vehicle data in the `body` and the HTTP response headers in `headers`.
+
+#### Example
+
+```python
+vehicle_response = smartcar.get_vehicle(access_token, vehicle_id)
+print(vehicle_response.get("body"))
+```
+
 ### `smartcar.get_vehicles(access_token, limit=10, offset=0)`
 
 Get a list of the user's vehicle ids

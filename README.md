@@ -113,6 +113,10 @@ print(vehicles.vehicles)
 
 # Vehicle ID of first vehicle
 vehicle_id = vehicle.vehicles[0]
+
+# Get attributes of the first vehicle
+vehicle_response = smartcar.get_vehicle(access_token, vehicle_id)
+print(vehicle_response.get("body"))
 ```
 
 

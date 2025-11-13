@@ -9,6 +9,7 @@ from warnings import warn
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.response.v2 as v2
+import smartcar.response.v3 as v3
 
 API_VERSION = "2.0"
 
@@ -125,6 +126,28 @@ def get_compatibility_matrix(
             for m in models
         ]
     return matrix
+
+
+def get_vehicle(access_token: str, vehicle_id: str) -> v3.Response:
+    """
+    GET vehicle/{vehicle_id} endpoint to retrieve vehicle information.
+
+    Args:
+        access_token (str): A valid access token from a previously retrieved
+            access object
+
+        vehicle_id (str): The vehicle ID of the vehicle to retrieve information for.
+
+    Returns:
+        Response: smartcar.response.v3.Response
+    """
+    url = f"{config.VEHICLE_API_ORIGIN}/v3/vehicles/{vehicle_id}"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = helpers.requester("GET", url, headers=headers)
+    return {
+        "body": response.json(),
+        "headers": response.headers,
+    }
 
 
 def get_vehicles(access_token: str, paging: dict = None) -> v2.Vehicles:
