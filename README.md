@@ -133,7 +133,7 @@ signals_response = vehicle.get_signals()
 print(signals_response.body)
 
 # Calling GET signals/{signal_code} endpoint
-odometer_response = signals.get("odometer-travelleddistance")
+odometer_response = vehicle.get_signal("odometer-travelleddistance")
 print(odometer_response.body)
 ```
 
