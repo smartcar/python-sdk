@@ -152,6 +152,53 @@ Initializes a new Vehicle to use for making requests to the Smartcar API.
 | `options.version`     | String     | **Optional** | the version of Smartcar API that the instance of the vehicle will send requests to (e.g. '1.0' or '2.0') |
 
 ---
+### `get_signals(self)`
+
+Retrieves all available signals for the vehicle using Smartcar API v3.
+
+#### Arguments
+
+None
+
+#### Returns
+
+| Type       | Description                                                                 |
+| :--------- | :-------------------------------------------------------------------------- |
+| Dictionary | A dictionary with keys `body` and `headers`. `body` contains the signals data, and `headers` contains the response headers. |
+
+The returned dictionary provides access to all signals in the `body` and the HTTP response headers in `headers`.
+
+#### Example
+
+```python
+signals_response = vehicle.get_signals()
+print(signals_response.get("body"))
+```
+
+### `get_signal(self, signal_code)`
+
+Retrieves a specific signal for the vehicle using Smartcar API v3.
+
+#### Arguments
+
+| Parameter     | Type   | Required     | Description                                 |
+| :------------ | :----- | :----------- | :------------------------------------------ |
+| signal_code   | String | **Required** | The code of the signal to retrieve.         |
+
+#### Returns
+
+| Type       | Description                                                                 |
+| :--------- | :-------------------------------------------------------------------------- |
+| Dictionary | A dictionary with keys `body` and `headers`. `body` contains the signals data, and `headers` contains the response headers. |
+
+The returned dictionary provides access to all signals in the `body` and the HTTP response headers in `headers`.
+
+#### Example
+
+```python
+odometer_response = vehicle.get_signal("odometer-traveleddistance")
+print(odometer_response.get("body"))
+```
 
 ### `set_unit_system(self, unit_system)`
 

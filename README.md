@@ -95,7 +95,6 @@ def get_fresh_access():
     access = load_access_from_database()
     new_access = client.exchange_refresh_token(access['refresh_token'])
     put_access_into_database(new_access)
-    
     return new_access
 
 
@@ -125,16 +124,13 @@ vehicle_id = vehicle.vehicles[0]
 ```python
 vehicle = smartcar.Vehicle(vehicle_id, access_token)
 
-odometer = vehicle.odometer()
-print(odometer.distance)
+# Calling GET signals endpoint
+signals_response = vehicle.get_signals()
+print(signals_response.body)
 
-info = vehicle.info()
-print(info.make)
-print(info.model)
-
-batch = vehicle.batch(paths=['/location'])
-location = batch.location()
-print(location)
+# Calling GET signals/{signal_code} endpoint
+odometer_response = signals.get("odometer-travelleddistance")
+print(odometer_response.body)
 ```
 
 - For a lot more examples on everything you can do with a car, see

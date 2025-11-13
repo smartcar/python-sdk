@@ -4,7 +4,8 @@ from typing import Callable, List, Optional
 import smartcar.config as config
 import smartcar.helpers as helpers
 import smartcar.smartcar
-import smartcar.types as types
+import smartcar.response.v2 as v2
+import smartcar.response.v3 as v3
 import smartcar.exception as sce
 
 
@@ -50,7 +51,49 @@ class Vehicle(object):
             if options.get("flags"):
                 self._flags = options["flags"]
 
-    def vin(self) -> types.Vin:
+    def get_signals(self) -> v3.Response:
+        """
+        GET Vehicle.signals
+
+        Returns:
+            Response: smartcar.response.v3.Response
+        """
+        origin = config.VEHICLE_API_ORIGIN
+        api_version = "3"
+        path = "signals"
+        url = self._format_url(path, origin=origin, api_version=api_version)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+
+        return {
+            "body": response.json(),
+            "headers": response.headers,
+        }
+
+    def get_signal(self, signal_code: str) -> v3.Response:
+        """
+        GET Vehicle.signals/{signal_code}
+
+        Args:
+            signal_code (str): The code of the signal to retrieve.
+            e.g. "odometer-travelleddistance"
+
+        Returns:
+            Response: smartcar.response.v3.Response
+        """
+        origin = config.VEHICLE_API_ORIGIN
+        api_version = "3"
+        path = f"signals/{signal_code}"
+        url = self._format_url(path, origin=origin, api_version=api_version)
+        headers = self._get_headers()
+        response = helpers.requester("GET", url, headers=headers)
+
+        return {
+            "body": response.json(),
+            "headers": response.headers,
+        }
+
+    def vin(self) -> v2.Vin:
         """
         GET Vehicle.vin
 
@@ -64,9 +107,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def charge(self) -> types.Charge:
+    def charge(self) -> v2.Charge:
         """
         GET Vehicle.charge
 
@@ -80,9 +123,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def battery(self) -> types.Battery:
+    def battery(self) -> v2.Battery:
         """
         GET Vehicle.battery
 
@@ -98,9 +141,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def battery_capacity(self) -> types.BatteryCapacity:
+    def battery_capacity(self) -> v2.BatteryCapacity:
         """
         GET Vehicle.battery_capacity
 
@@ -114,9 +157,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def nominal_capacity(self) -> types.NominalCapcity:
+    def nominal_capacity(self) -> v2.NominalCapcity:
         """
         GET Vehicle.nominal_capacity
         Returns:
@@ -136,9 +179,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def fuel(self) -> types.Fuel:
+    def fuel(self) -> v2.Fuel:
         """
         GET Vehicle.fuel
 
@@ -153,9 +196,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def tire_pressure(self) -> types.TirePressure:
+    def tire_pressure(self) -> v2.TirePressure:
         """
         GET Vehicle.tire_pressure
 
@@ -172,9 +215,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def engine_oil(self) -> types.EngineOil:
+    def engine_oil(self) -> v2.EngineOil:
         """
         GET Vehicle.engine_oil
 
@@ -188,9 +231,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def odometer(self) -> types.Odometer:
+    def odometer(self) -> v2.Odometer:
         """
         GET Vehicle.odometer
 
@@ -204,11 +247,11 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
     def service_history(
         self, start_date: Optional[str] = None, end_date: Optional[str] = None
-    ) -> types.ServiceHistory:
+    ) -> v2.ServiceHistory:
         """
         Returns a list of all the service records performed on the vehicle,
         filtered by the optional date range. If no dates are specified, records from the
@@ -239,9 +282,9 @@ class Vehicle(object):
             params["endDate"] = end_date
 
         response = helpers.requester("GET", url, headers=headers, params=params)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def diagnostic_system_status(self) -> types.DiagnosticSystemStatus:
+    def diagnostic_system_status(self) -> v2.DiagnosticSystemStatus:
         """
         GET Vehicle.diagnostic_system_status
 
@@ -258,9 +301,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def diagnostic_trouble_codes(self) -> types.DiagnosticTroubleCodes:
+    def diagnostic_trouble_codes(self) -> v2.DiagnosticTroubleCodes:
         """
         GET Vehicle.diagnostic_trouble_codes
 
@@ -277,9 +320,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def location(self) -> types.Location:
+    def location(self) -> v2.Location:
         """
         GET Vehicle.location
 
@@ -293,7 +336,7 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
     def permissions(self, paging: dict = None):
         """
@@ -324,9 +367,9 @@ class Vehicle(object):
                 "GET", url, headers=headers, params={"limit": limit, "offset": offset}
             )
 
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def attributes(self) -> types.Attributes:
+    def attributes(self) -> v2.Attributes:
         """
         GET Vehicle.attributes
 
@@ -341,9 +384,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def get_charge_limit(self) -> types.ChargeLimit:
+    def get_charge_limit(self) -> v2.ChargeLimit:
         """
         GET Vehicle.get_charge_limit
 
@@ -357,9 +400,9 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
-    def lock_status(self) -> types.LockStatus:
+    def lock_status(self) -> v2.LockStatus:
         """
             GET Vehicle.lock_status
 
@@ -381,13 +424,13 @@ class Vehicle(object):
         url = self._format_url(path)
         headers = self._get_headers()
         response = helpers.requester("GET", url, headers=headers)
-        return types.select_named_tuple(path, response)
+        return v2.select_named_tuple(path, response)
 
     # ===========================================
     # Action (POST) Requests
     # ===========================================
 
-    def lock(self) -> types.Status:
+    def lock(self) -> v2.Status:
         """
         POST Vehicle.lock
 
@@ -402,9 +445,9 @@ class Vehicle(object):
         response = helpers.requester(
             "POST", url, headers=headers, json={"action": "LOCK"}
         )
-        return types.select_named_tuple("lock", response)
+        return v2.select_named_tuple("lock", response)
 
-    def unlock(self) -> types.Status:
+    def unlock(self) -> v2.Status:
         """
         POST Vehicle.unlock
 
@@ -419,9 +462,9 @@ class Vehicle(object):
         response = helpers.requester(
             "POST", url, headers=headers, json={"action": "UNLOCK"}
         )
-        return types.select_named_tuple("unlock", response)
+        return v2.select_named_tuple("unlock", response)
 
-    def start_charge(self) -> types.Status:
+    def start_charge(self) -> v2.Status:
         """
         POST Vehicle.start_charge
 
@@ -436,9 +479,9 @@ class Vehicle(object):
         response = helpers.requester(
             "POST", url, headers=headers, json={"action": "START"}
         )
-        return types.select_named_tuple("start_charge", response)
+        return v2.select_named_tuple("start_charge", response)
 
-    def stop_charge(self) -> types.Status:
+    def stop_charge(self) -> v2.Status:
         """
         POST Vehicle.stop_charge
 
@@ -453,9 +496,9 @@ class Vehicle(object):
         response = helpers.requester(
             "POST", url, headers=headers, json={"action": "STOP"}
         )
-        return types.select_named_tuple("stop_charge", response)
+        return v2.select_named_tuple("stop_charge", response)
 
-    def set_charge_limit(self, limit) -> types.Status:
+    def set_charge_limit(self, limit) -> v2.Status:
         """
         POST Vehicle.set_charge_limit
 
@@ -470,9 +513,9 @@ class Vehicle(object):
         response = helpers.requester(
             "POST", url, headers=headers, json={"limit": limit}
         )
-        return types.select_named_tuple("set_charge_limit", response)
+        return v2.select_named_tuple("set_charge_limit", response)
 
-    def send_destination(self, latitude, longitude) -> types.Action:
+    def send_destination(self, latitude, longitude) -> v2.Action:
         """
         POST Vehicle.send_destination
 
@@ -490,7 +533,7 @@ class Vehicle(object):
             headers=headers,
             json={"latitude": latitude, "longitude": longitude},
         )
-        return types.select_named_tuple("send_destination", response)
+        return v2.select_named_tuple("send_destination", response)
 
     @staticmethod
     def _batch_path_response(
@@ -502,7 +545,7 @@ class Vehicle(object):
                 "sc-request-id"
             )
             # use lambda default args to avoid issues with closures
-            return lambda p=path, r=path_response: types.select_named_tuple(p, r)
+            return lambda p=path, r=path_response: v2.select_named_tuple(p, r)
 
         # if individual response is erroneous, attach a lambda that returns a SmartcarException
         def _attribute_raise_exception(smartcar_exception):
@@ -560,16 +603,16 @@ class Vehicle(object):
             )
 
         # STEP 3 - Attach Meta to batch_dict
-        batch_dict["meta"] = types.build_meta(response.headers)
+        batch_dict["meta"] = v2.build_meta(response.headers)
 
         # STEP 4 - Transform batch_dict into a namedtuple
-        return types.generate_named_tuple(batch_dict, "batch")
+        return v2.generate_named_tuple(batch_dict, "batch")
 
     # ===========================================
     # DELETE requests
     # ===========================================
 
-    def disconnect(self) -> types.Status:
+    def disconnect(self) -> v2.Status:
         """
         Disconnect this vehicle from the connected application.
 
@@ -586,13 +629,13 @@ class Vehicle(object):
         url = self._format_url("application")
         headers = self._get_headers(need_unit_system=False)
         response = helpers.requester("DELETE", url, headers=headers)
-        return types.select_named_tuple("disconnect", response)
+        return v2.select_named_tuple("disconnect", response)
 
     # ===========================================
     # Webhook requests
     # ===========================================
 
-    def subscribe(self, webhook_id: str) -> types.Subscribe:
+    def subscribe(self, webhook_id: str) -> v2.Subscribe:
         """
         Subscribe a vehicle to a webhook
 
@@ -605,9 +648,9 @@ class Vehicle(object):
         url = self._format_url(f"webhooks/{webhook_id}")
         headers = self._get_headers(need_unit_system=False)
         response = helpers.requester("POST", url, headers=headers)
-        return types.select_named_tuple("subscribe", response)
+        return v2.select_named_tuple("subscribe", response)
 
-    def unsubscribe(self, amt: str, webhook_id: str) -> types.Status:
+    def unsubscribe(self, amt: str, webhook_id: str) -> v2.Status:
         """
         Subscribe a vehicle to a webhook
 
@@ -623,7 +666,7 @@ class Vehicle(object):
         # Note: Authorization header is different, compared to the other methods
         headers = {"Authorization": f"Bearer {amt}"}
         response = helpers.requester("DELETE", url, headers=headers)
-        return types.select_named_tuple("unsubscribe", response)
+        return v2.select_named_tuple("unsubscribe", response)
 
     # ===========================================
     # General Purpose Request Method
@@ -631,7 +674,7 @@ class Vehicle(object):
 
     def request(
         self, method: str, path: str, body: dict = {}, headers: dict = {}
-    ) -> types.Response:
+    ) -> v2.Response:
         """
         Utility method to make a request to a Smartcar endpoint - can be used
         to make requests to brand specific endpoints.
@@ -660,7 +703,7 @@ class Vehicle(object):
 
         response = helpers.requester(method, url, headers=headers, json=body)
 
-        return types.select_named_tuple("request", response)
+        return v2.select_named_tuple("request", response)
 
     # ===========================================
     # Utility
