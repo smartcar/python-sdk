@@ -76,7 +76,7 @@ class Vehicle(object):
 
         Args:
             signal_code (str): The code of the signal to retrieve.
-            e.g. "odometer-travelleddistance"
+            e.g. "odometer-traveleddistance"
 
         Returns:
             Response: smartcar.response.v3.Response
