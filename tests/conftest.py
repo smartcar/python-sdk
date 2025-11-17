@@ -28,8 +28,12 @@ def client():
 # V3 vehicle fixture
 @pytest.fixture(scope="session")
 def v3_vehicle():
-    vehicle_id = os.environ.get("E2E_SMARTCAR_V3_TEST_VEHICLE_ID")
-    access_token = os.environ.get("E2E_SMARTCAR_V3_TEST_ACCESS_TOKEN")
+    vehicle_id = os.environ.get(
+        "E2E_SMARTCAR_V3_TEST_VEHICLE_ID", "tst2e255-d3c8-4f90-9fec-e6e68b98e9cb"
+    )
+    access_token = os.environ.get(
+        "E2E_SMARTCAR_V3_TEST_ACCESS_TOKEN", "test-data-token"
+    )
     yield sc.Vehicle(vehicle_id, access_token)
 
 
