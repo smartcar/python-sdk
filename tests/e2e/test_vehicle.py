@@ -1,13 +1,39 @@
-import smartcar.types as types
+import smartcar.response.v2 as v2
+import smartcar.response.v3 as v3
 from smartcar.exception import SmartcarException
 import tests.auth_helpers as ah
 
 
-# Tests
+def test_get_signals(v3_vehicle):
+    response = v3_vehicle.get_signals()
+    assert response is not None
+    assert type(response) == dict
+    assert "body" in response
+    assert "headers" in response
+    assert "data" in response["body"]
+
+
+def test_get_signal(v3_vehicle):
+    signal_code = "odometer-traveleddistance"
+    response = v3_vehicle.get_signal(signal_code)
+    assert type(response) == dict
+    assert "body" in response
+    assert "headers" in response
+
+    for key in [
+        "id",
+        "type",
+        "attributes",
+        "meta",
+        "links",
+    ]:
+        assert key in response["body"]
+
+
 def test_vin_and_meta(chevy_volt):
     vin = chevy_volt.vin()
     assert vin is not None
-    assert type(vin) == types.Vin
+    assert type(vin) == v2.Vin
     assert vin._fields == ("vin", "meta")
     assert isinstance(vin.meta, tuple)
 
@@ -15,7 +41,7 @@ def test_vin_and_meta(chevy_volt):
 def test_charge(chevy_volt):
     charge = chevy_volt.charge()
     assert charge is not None
-    assert type(charge) == types.Charge
+    assert type(charge) == v2.Charge
     assert charge._fields == ("is_plugged_in", "state", "meta")
     assert charge.is_plugged_in is not None
 
@@ -23,21 +49,21 @@ def test_charge(chevy_volt):
 def test_battery(chevy_volt):
     battery = chevy_volt.battery()
     assert battery is not None
-    assert type(battery) == types.Battery
+    assert type(battery) == v2.Battery
     assert battery._fields == ("percent_remaining", "range", "meta")
 
 
 def test_battery_capacity(chevy_volt):
     battery_capacity = chevy_volt.battery_capacity()
     assert battery_capacity is not None
-    assert type(battery_capacity) == types.BatteryCapacity
+    assert type(battery_capacity) == v2.BatteryCapacity
     assert battery_capacity._fields == ("capacity", "meta")
 
 
 def test_nominal_capacity(chevy_volt):
     nominal_capacity = chevy_volt.nominal_capacity()
     assert nominal_capacity is not None
-    assert type(nominal_capacity) == types.NominalCapcity
+    assert type(nominal_capacity) == v2.NominalCapcity
     assert nominal_capacity._fields == (
         "availableCapacities",
         "capacity",
@@ -49,14 +75,14 @@ def test_nominal_capacity(chevy_volt):
 def test_fuel(chevy_volt):
     fuel = chevy_volt.fuel()
     assert fuel is not None
-    assert type(fuel) == types.Fuel
+    assert type(fuel) == v2.Fuel
     assert fuel._fields == ("range", "percent_remaining", "amount_remaining", "meta")
 
 
 def test_tire_pressure(chevy_volt):
     tire_pressure = chevy_volt.tire_pressure()
     assert tire_pressure is not None
-    assert type(tire_pressure) == types.TirePressure
+    assert type(tire_pressure) == v2.TirePressure
     assert tire_pressure._fields == (
         "front_left",
         "front_right",
@@ -69,42 +95,42 @@ def test_tire_pressure(chevy_volt):
 def test_engine_oil(chevy_volt):
     engine_oil = chevy_volt.engine_oil()
     assert engine_oil is not None
-    assert type(engine_oil) == types.EngineOil
+    assert type(engine_oil) == v2.EngineOil
     assert engine_oil._fields == ("life_remaining", "meta")
 
 
 def test_odometer(chevy_volt):
     odometer = chevy_volt.odometer()
     assert odometer is not None
-    assert type(odometer) == types.Odometer
+    assert type(odometer) == v2.Odometer
     assert odometer._fields == ("distance", "meta")
 
 
 def test_location(chevy_volt):
     location = chevy_volt.location()
     assert location is not None
-    assert type(location) == types.Location
+    assert type(location) == v2.Location
     assert location._fields == ("latitude", "longitude", "meta")
 
 
 def test_attributes(chevy_volt):
     attributes = chevy_volt.attributes()
     assert attributes is not None
-    assert type(attributes) == types.Attributes
+    assert type(attributes) == v2.Attributes
     assert attributes._fields == ("id", "make", "model", "year", "meta")
 
 
 def test_get_charge_limit(ford_car):
     charge_limit = ford_car.get_charge_limit()
     assert charge_limit is not None
-    assert type(charge_limit) == types.ChargeLimit
+    assert type(charge_limit) == v2.ChargeLimit
     assert charge_limit._fields == ("limit", "meta")
 
 
 def test_lock_status(chevy_volt):
     lock_status = chevy_volt.lock_status()
     assert lock_status is not None
-    assert type(lock_status) == types.LockStatus
+    assert type(lock_status) == v2.LockStatus
     assert lock_status._fields == (
         "is_locked",
         "doors",
@@ -119,35 +145,35 @@ def test_lock_status(chevy_volt):
 def test_lock(chevy_volt):
     response = chevy_volt.lock()
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_unlock(chevy_volt):
     response = chevy_volt.unlock()
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_start_charge(ford_car):
     response = ford_car.start_charge()
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_stop_charge(ford_car):
     response = ford_car.stop_charge()
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_set_charge_limit(ford_car):
     response = ford_car.set_charge_limit(0.7)
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
@@ -155,14 +181,14 @@ def test_send_destination(ford_car):
     # The latitude and longitude of the Empire State Building in New York, USA.
     response = ford_car.send_destination(40.748817, -73.985428)
     assert response.status == "success"
-    assert type(response) == types.Action
+    assert type(response) == v2.Action
     assert response._fields == ("status", "message", "meta")
 
 
 def test_service_history(ford_car):
     response = ford_car.service_history("2023-05-20", "2024-02-10")
     assert isinstance(
-        response, types.ServiceHistory
+        response, v2.ServiceHistory
     ), "Response should be an instance of ServiceHistory"
     assert hasattr(response, "_fields"), "Response should have '_fields' attribute"
     assert "items" in response._fields, "'items' should be a key in the response fields"
@@ -185,21 +211,21 @@ def test_service_history(ford_car):
 def test_diagnostic_system_status(ford_car):
     diagnostic_status = ford_car.diagnostic_system_status()
     assert diagnostic_status is not None
-    assert isinstance(diagnostic_status, types.DiagnosticSystemStatus)
+    assert isinstance(diagnostic_status, v2.DiagnosticSystemStatus)
     assert diagnostic_status._fields == ("systems", "meta")
 
     for system in diagnostic_status.systems:
-        assert isinstance(system, types.DiagnosticSystem)
+        assert isinstance(system, v2.DiagnosticSystem)
 
 
 def test_diagnostic_trouble_codes(ford_car):
     dtc_response = ford_car.diagnostic_trouble_codes()
     assert dtc_response is not None
-    assert isinstance(dtc_response, types.DiagnosticTroubleCodes)
+    assert isinstance(dtc_response, v2.DiagnosticTroubleCodes)
     assert dtc_response._fields == ("active_codes", "meta")
 
     for code in dtc_response.active_codes:
-        assert isinstance(code, types.DiagnosticTroubleCode)
+        assert isinstance(code, v2.DiagnosticTroubleCode)
 
 
 def test_batch_diagnostics(ford_car):
@@ -214,12 +240,12 @@ def test_batch_diagnostics(ford_car):
     diagnostic_status = batch_response.diagnostic_system_status()
     assert diagnostic_status is not None
     for system in diagnostic_status.systems:
-        assert isinstance(system, types.DiagnosticSystem)
+        assert isinstance(system, v2.DiagnosticSystem)
 
     dtc_response = batch_response.diagnostic_trouble_codes()
     assert dtc_response is not None
     for code in dtc_response.active_codes:
-        assert isinstance(code, types.DiagnosticTroubleCode)
+        assert isinstance(code, v2.DiagnosticTroubleCode)
 
 
 def test_batch_success(chevy_volt):
@@ -296,14 +322,14 @@ def test_batch_unauthorized_permission(chevy_volt_limited_scope):
 def test_permissions(chevy_volt):
     permissions = chevy_volt.permissions()
     assert permissions is not None
-    assert type(permissions) == types.Permissions
+    assert type(permissions) == v2.Permissions
     assert permissions._fields == ("permissions", "paging", "meta")
 
 
 def test_permissions_with_paging(chevy_volt):
     permissions = chevy_volt.permissions({"limit": 1, "offset": 1})
     assert permissions is not None
-    assert type(permissions) == types.Permissions
+    assert type(permissions) == v2.Permissions
     assert permissions._fields == ("permissions", "paging", "meta")
     assert permissions.paging.count == len(ah.DEFAULT_SCOPE)
     assert permissions.paging.offset == 1
@@ -320,14 +346,14 @@ def test_webhooks(chevy_volt):
         subscribe = chevy_volt.subscribe(ah.WEBHOOK_ID)
 
         assert subscribe is not None
-        assert type(subscribe) == types.Subscribe
+        assert type(subscribe) == v2.Subscribe
         assert subscribe._fields == ("webhook_id", "vehicle_id", "meta")
 
         unsubscribe = chevy_volt.unsubscribe(
             ah.APPLICATION_MANAGEMENT_TOKEN, ah.WEBHOOK_ID
         )
         assert unsubscribe is not None
-        assert type(unsubscribe) == types.Status
+        assert type(unsubscribe) == v2.Status
         assert unsubscribe._fields == ("status", "meta")
 
 
@@ -335,7 +361,7 @@ def test_request(chevy_volt):
     odometer = chevy_volt.request(
         "GET", "odometer", None, {"sc-unit-system": "imperial"}
     )
-    assert type(odometer) == types.Response
+    assert type(odometer) == v2.Response
     assert odometer.body is not None
     assert isinstance(odometer.meta, tuple)
     assert odometer._fields == ("body", "meta")
@@ -366,7 +392,7 @@ def test_request_with_body(chevy_volt):
         "batch",
         {"requests": [{"path": "/odometer"}, {"path": "/tires/pressure"}]},
     )
-    assert type(batch) is types.Response
+    assert type(batch) is v2.Response
     assert batch.body is not None
     assert isinstance(batch.meta, tuple)
     assert batch.body["responses"][0]["path"] == "/odometer"
@@ -395,5 +421,5 @@ def test_setting_unit_system(chevy_volt):
 def test_disconnect(chevy_volt):
     disconnected = chevy_volt.disconnect()
     assert disconnected is not None
-    assert type(disconnected) == types.Status
+    assert type(disconnected) == v2.Status
     assert disconnected._fields == ("status", "meta")

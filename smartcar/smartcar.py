@@ -8,7 +8,8 @@ from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.types as types
+import smartcar.response.v2 as v2
+import smartcar.response.v3 as v3
 
 API_VERSION = "2.0"
 
@@ -42,7 +43,7 @@ def get_api_version() -> str:
     return API_VERSION
 
 
-def get_user(access_token: str) -> types.User:
+def get_user(access_token: str) -> v2.User:
     """
     Retrieve the userId associated with the access_token
 
@@ -55,16 +56,16 @@ def get_user(access_token: str) -> types.User:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{API_VERSION}/user"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/user"
     headers = {"Authorization": f"Bearer {access_token}"}
     response = helpers.requester("GET", url, headers=headers)
 
-    return types.select_named_tuple("user", response)
+    return v2.select_named_tuple("user", response)
 
 
 def get_compatibility_matrix(
     region: str, make: str, options: dict = None
-) -> types.CompatibilityMatrix:
+) -> v2.CompatibilityMatrix:
     """
     Retrieve compatibility matrix for a given region and make.
     This API is for reference purposes only and does not guarantee compatibility for a specific vehicle.
@@ -106,7 +107,7 @@ def get_compatibility_matrix(
     base64_id_secret = base64.b64encode(id_secret.encode("ascii")).decode("ascii")
     headers = {"Authorization": f"Basic {base64_id_secret}"}
 
-    url = f"{config.API_URL}/v{API_VERSION}/compatibility/matrix"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/compatibility/matrix"
     response = helpers.requester("GET", url, headers=headers, params=params)
 
     # Parse response into types.CompatibilityMatrix
@@ -114,7 +115,7 @@ def get_compatibility_matrix(
     matrix = {}
     for make_key, models in data.items():
         matrix[make_key] = [
-            types.CompatibilityMatrixModel(
+            v2.CompatibilityMatrixModel(
                 model=m["model"],
                 startYear=m["startYear"],
                 endYear=m["endYear"],
@@ -127,7 +128,29 @@ def get_compatibility_matrix(
     return matrix
 
 
-def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
+def get_vehicle(access_token: str, vehicle_id: str) -> v3.Response:
+    """
+    GET vehicle/{vehicle_id} endpoint to retrieve vehicle information.
+
+    Args:
+        access_token (str): A valid access token from a previously retrieved
+            access object
+
+        vehicle_id (str): The vehicle ID of the vehicle to retrieve information for.
+
+    Returns:
+        Response: smartcar.response.v3.Response
+    """
+    url = f"{config.VEHICLE_API_ORIGIN}/v3/vehicles/{vehicle_id}"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = helpers.requester("GET", url, headers=headers)
+    return {
+        "body": response.json(),
+        "headers": response.headers,
+    }
+
+
+def get_vehicles(access_token: str, paging: dict = None) -> v2.Vehicles:
     """
     Get a list of the user's vehicle ids
 
@@ -146,17 +169,17 @@ def get_vehicles(access_token: str, paging: dict = None) -> types.Vehicles:
     Raises:
         SmartcarException
     """
-    url = f"{config.API_URL}/v{API_VERSION}/vehicles"
+    url = f"{config.API_ORIGIN}/v{API_VERSION}/vehicles"
     headers = {"Authorization": f"Bearer {access_token}"}
     params = paging if paging is not None else None
     response = helpers.requester("GET", url, headers=headers, params=params)
 
-    return types.select_named_tuple("vehicles", response)
+    return v2.select_named_tuple("vehicles", response)
 
 
 def get_compatibility(
     vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> Union[types.CompatibilityV1, types.CompatibilityV2]:
+) -> Union[v2.CompatibilityV1, v2.CompatibilityV2]:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -260,7 +283,7 @@ def get_compatibility(
             "'SMARTCAR_CLIENT_ID' and 'SMARTCAR_CLIENT_SECRET'"
         )
 
-    url = f"{config.API_URL}/v{api_version}/compatibility"
+    url = f"{config.API_ORIGIN}/v{api_version}/compatibility"
 
     # Configuring for compatibility endpoint
     id_secret = f"{client_id}:{client_secret}"
@@ -272,9 +295,9 @@ def get_compatibility(
     response = helpers.requester("GET", url, headers=headers, params=params)
 
     if api_version == "1.0":
-        return types.select_named_tuple("compatibility_v1", response)
+        return v2.select_named_tuple("compatibility_v1", response)
     elif api_version == "2.0":
-        return types.select_named_tuple("compatibility_v2", response)
+        return v2.select_named_tuple("compatibility_v2", response)
     else:
         raise Exception("Please use a valid API version (e.g. '1.0' or '2.0')")
 
@@ -333,7 +356,7 @@ def get_connections(
     amt: str,
     filter: Optional[Dict[str, str]] = None,
     paging: Optional[Dict[str, Optional[int]]] = None,
-) -> types.GetConnections:
+) -> v2.GetConnections:
     """
     Returns a paged list of all the vehicles that are connected to the application
     associated with the management API token used, sorted in descending order by connection date.
@@ -365,26 +388,26 @@ def get_connections(
     if "limit" in paging:
         params["limit"] = paging["limit"]
 
-    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    url = f"{config.MANAGEMENT_API_ORIGIN}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("GET", url, headers=headers, params=params)
     data = response.json()
     connections = [
-        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        v2.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
         for c in data["connections"]
     ]
 
     response_paging = data.get("paging", {})
-    response_paging = types.PagingCursor(response_paging.get("cursor"))
+    response_paging = v2.PagingCursor(response_paging.get("cursor"))
 
-    return types.GetConnections(
+    return v2.GetConnections(
         connections,
         response_paging,
-        types.build_meta(response.headers),
+        v2.build_meta(response.headers),
     )
 
 
-def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
+def delete_connections(amt: str, filter: dict = {}) -> v2.DeleteConnections:
     """
     Deletes all the connections by vehicle or user ID and returns a list
     of all connections that were deleted.
@@ -415,16 +438,16 @@ def delete_connections(amt: str, filter: dict = {}) -> types.DeleteConnections:
     elif vehicle_id:
         params["vehicle_id"] = vehicle_id
 
-    url = f"{config.MANAGEMENT_API_URL}/v{get_api_version()}/management/connections/"
+    url = f"{config.MANAGEMENT_API_ORIGIN}/v{get_api_version()}/management/connections/"
     headers = {"Authorization": f"Basic {get_management_token(amt)}"}
     response = helpers.requester("DELETE", url, headers=headers, params=params)
     data = response.json()
     connections = [
-        types.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        v2.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
         for c in data["connections"]
     ]
 
-    return types.DeleteConnections(
+    return v2.DeleteConnections(
         connections,
-        types.build_meta(response.headers),
+        v2.build_meta(response.headers),
     )

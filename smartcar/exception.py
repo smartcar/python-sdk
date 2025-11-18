@@ -108,7 +108,7 @@ def exception_factory(
     else:
         return SmartcarException(
             status_code=status_code,
-            request_id=headers["SC-Request-Id"],
+            request_id=headers.get("SC-Request-Id"),
             type="SDK_ERROR",
             message=body,
         )

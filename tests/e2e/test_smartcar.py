@@ -9,7 +9,7 @@ from smartcar import (
     get_connections,
     delete_connections,
 )
-import smartcar.types as types
+import smartcar.response.v2 as v2
 import tests.auth_helpers as ah
 
 
@@ -29,11 +29,23 @@ def test_get_user_and_meta_request_id(access):
     assert res.meta.request_id is not None
 
 
+def test_get_vehicle_v3_endpoint(v3_vehicle):
+    response = smartcar.smartcar.get_vehicle(
+        v3_vehicle.access_token, v3_vehicle.vehicle_id
+    )
+    assert response is not None
+    assert type(response) == dict
+    assert "body" in response
+    assert "headers" in response
+    assert "id" in response["body"]
+    assert "attributes" in response["body"]
+
+
 def test_get_vehicles(access):
     res = get_vehicles(access.access_token)
     assert res.vehicles is not None
     assert res.paging is not None
-    assert type(res.paging) == types.Paging
+    assert type(res.paging) == v2.Paging
 
 
 def test_get_vehicles_with_paging(access):

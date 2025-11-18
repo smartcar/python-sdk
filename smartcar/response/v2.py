@@ -80,8 +80,9 @@ def build_meta(response_headers: rs.CaseInsensitiveDict) -> namedtuple:
 
     meta_dict = {}
     for key, value in smartcar_headers.items():
-        if key in response_headers:
-            meta_dict[value] = response_headers[key]
+        header = response_headers.get(key)
+        if header:
+            meta_dict[value] = header
 
     return generate_named_tuple(meta_dict, "Meta", True)
 

@@ -6,7 +6,7 @@ from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.types as types
+import smartcar.response.v2 as v2
 
 
 class AuthClient(object):
@@ -118,7 +118,7 @@ class AuthClient(object):
         Raises:
             SmartcarException
         """
-        base_url = config.CONNECT_URL
+        base_url = config.CONNECT_ORIGIN
 
         query = {
             "response_type": "code",
@@ -164,7 +164,7 @@ class AuthClient(object):
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code: str, options: dict = None) -> types.Access:
+    def exchange_code(self, code: str, options: dict = None) -> v2.Access:
         """
         Exchange an authentication code for an access dictionary
 
@@ -184,7 +184,7 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = config.AUTH_URL
+        url = config.AUTH_ORIGIN
         data = {
             "grant_type": "authorization_code",
             "code": code,
@@ -204,11 +204,11 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return types.make_access_object(_set_expiration(data))
+        return v2.make_access_object(_set_expiration(data))
 
     def exchange_refresh_token(
         self, refresh_token: str, options: dict = None
-    ) -> types.Access:
+    ) -> v2.Access:
         """
         Exchange a refresh token for a new access dictionary
 
@@ -228,7 +228,7 @@ class AuthClient(object):
             SmartcarException
         """
         method = "POST"
-        url = config.AUTH_URL
+        url = config.AUTH_ORIGIN
         data = {"grant_type": "refresh_token", "refresh_token": refresh_token}
         params = {}
 
@@ -241,7 +241,7 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return types.make_access_object(_set_expiration(data))
+        return v2.make_access_object(_set_expiration(data))
 
 
 # Static helpers for AuthClient
