@@ -37,6 +37,7 @@
       docker_image_tag: 3.13
       execute_commands:
         - pip install build twine
+        - rm -rf dist build *.egg-info
         - python -m build
         - twine upload --non-interactive dist/* -u __token__ -p $PYPI_TOKEN
       cached_dirs:
