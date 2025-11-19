@@ -545,7 +545,7 @@ class Vehicle(object):
                 "sc-request-id"
             )
             # use lambda default args to avoid issues with closures
-            return lambda p=path, r=path_response: r.select_named_tuple(p, r)
+            return lambda p=path, r=path_response: v2.select_named_tuple(p, r)
 
         # if individual response is erroneous, attach a lambda that returns a SmartcarException
         def _attribute_raise_exception(smartcar_exception):
