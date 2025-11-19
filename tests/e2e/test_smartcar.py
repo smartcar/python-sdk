@@ -9,7 +9,7 @@ from smartcar import (
     get_connections,
     delete_connections,
 )
-import smartcar.response.v2 as v2
+import smartcar.v2_response as v2
 import tests.auth_helpers as ah
 
 

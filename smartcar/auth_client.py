@@ -6,7 +6,7 @@ from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.response.v2 as v2
+import smartcar.v2_response as v2
 
 
 class AuthClient(object):

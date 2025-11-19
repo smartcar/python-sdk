@@ -1,5 +1,5 @@
-import smartcar.response.v2 as v2
-import smartcar.response.v3 as v3
+import smartcar.v2_response as v2
+import smartcar.v3_response as v3
 from smartcar.exception import SmartcarException
 import tests.auth_helpers as ah
 
