@@ -1,4 +1,4 @@
-import smartcar.response.v2 as v2
+import smartcar.v2_response as v2
 import requests.structures as rs
 
 
