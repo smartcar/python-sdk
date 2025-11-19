@@ -1,10 +1,10 @@
-import smartcar.response.v2 as v2
+import smartcar.response as response
 import requests.structures as rs
 
 
 def test_generate_named_tuple():
     test_dict = {"a": True, "b": 100, "c": "apple", "hyphen-to-underscore": True}
-    meta = v2.generate_named_tuple(test_dict, "Meta", True)
+    meta = response.generate_named_tuple(test_dict, "Meta", True)
 
     assert meta.a
     assert meta.b == 100
@@ -20,15 +20,15 @@ def test_select_named_tuple_on_dict():
 
     # Test 1 - No paths matching -> Return "body" as a dictionary (i.e. the else statement)
     test_path_1 = "TESTING"
-    res1 = v2.select_named_tuple(test_path_1, mock_user_res_dict)
+    res1 = response.select_named_tuple(test_path_1, mock_user_res_dict)
     assert res1.id == mock_user_res_dict["body"]["id"]
     assert res1.testing
 
     # Test 2 - Test against one of the predetermined paths in 'select_named_tuple'
     test_path_2 = "user"
-    res2 = v2.select_named_tuple(test_path_2, mock_user_res_dict)
+    res2 = response.select_named_tuple(test_path_2, mock_user_res_dict)
 
-    assert type(res2) == v2.User
+    assert type(res2) == response.User
     assert res2.id == "qwerty123"
 
 
@@ -43,7 +43,7 @@ def test_build_meta():
         }
     )
 
-    meta = v2.build_meta(headers)
+    meta = response.build_meta(headers)
 
     assert meta.request_id == "36ab27d0-fd9d-4455-823a-ce30af709ffc"
     assert meta.data_age == "2023-05-04T07:20:50.844Z"

@@ -8,7 +8,7 @@ from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.response.v2 as v2
+import smartcar.response as response
 import smartcar.response.v3 as v3
 
 API_VERSION = "2.0"
@@ -43,7 +43,7 @@ def get_api_version() -> str:
     return API_VERSION
 
 
-def get_user(access_token: str) -> v2.User:
+def get_user(access_token: str) -> response.User:
     """
     Retrieve the userId associated with the access_token
 
@@ -60,12 +60,12 @@ def get_user(access_token: str) -> v2.User:
     headers = {"Authorization": f"Bearer {access_token}"}
     response = helpers.requester("GET", url, headers=headers)
 
-    return v2.select_named_tuple("user", response)
+    return response.select_named_tuple("user", response)
 
 
 def get_compatibility_matrix(
     region: str, make: str, options: dict = None
-) -> v2.CompatibilityMatrix:
+) -> response.CompatibilityMatrix:
     """
     Retrieve compatibility matrix for a given region and make.
     This API is for reference purposes only and does not guarantee compatibility for a specific vehicle.
@@ -115,7 +115,7 @@ def get_compatibility_matrix(
     matrix = {}
     for make_key, models in data.items():
         matrix[make_key] = [
-            v2.CompatibilityMatrixModel(
+            response.CompatibilityMatrixModel(
                 model=m["model"],
                 startYear=m["startYear"],
                 endYear=m["endYear"],
@@ -150,7 +150,7 @@ def get_vehicle(access_token: str, vehicle_id: str) -> v3.Response:
     }
 
 
-def get_vehicles(access_token: str, paging: dict = None) -> v2.Vehicles:
+def get_vehicles(access_token: str, paging: dict = None) -> response.Vehicles:
     """
     Get a list of the user's vehicle ids
 
@@ -174,12 +174,12 @@ def get_vehicles(access_token: str, paging: dict = None) -> v2.Vehicles:
     params = paging if paging is not None else None
     response = helpers.requester("GET", url, headers=headers, params=params)
 
-    return v2.select_named_tuple("vehicles", response)
+    return response.select_named_tuple("vehicles", response)
 
 
 def get_compatibility(
     vin: str, scope: List[str], country: str = "US", options: dict = None
-) -> Union[v2.CompatibilityV1, v2.CompatibilityV2]:
+) -> Union[response.CompatibilityV1, response.CompatibilityV2]:
     """
     Verify if a vehicle (vin) is eligible to use Smartcar. Use to confirm whether
     specific vehicle is compatible with the permissions provided.
@@ -295,9 +295,9 @@ def get_compatibility(
     response = helpers.requester("GET", url, headers=headers, params=params)
 
     if api_version == "1.0":
-        return v2.select_named_tuple("compatibility_v1", response)
+        return response.select_named_tuple("compatibility_v1", response)
     elif api_version == "2.0":
-        return v2.select_named_tuple("compatibility_v2", response)
+        return response.select_named_tuple("compatibility_v2", response)
     else:
         raise Exception("Please use a valid API version (e.g. '1.0' or '2.0')")
 
@@ -356,7 +356,7 @@ def get_connections(
     amt: str,
     filter: Optional[Dict[str, str]] = None,
     paging: Optional[Dict[str, Optional[int]]] = None,
-) -> v2.GetConnections:
+) -> response.GetConnections:
     """
     Returns a paged list of all the vehicles that are connected to the application
     associated with the management API token used, sorted in descending order by connection date.
@@ -393,21 +393,21 @@ def get_connections(
     response = helpers.requester("GET", url, headers=headers, params=params)
     data = response.json()
     connections = [
-        v2.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        response.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
         for c in data["connections"]
     ]
 
     response_paging = data.get("paging", {})
-    response_paging = v2.PagingCursor(response_paging.get("cursor"))
+    response_paging = response.PagingCursor(response_paging.get("cursor"))
 
-    return v2.GetConnections(
+    return response.GetConnections(
         connections,
         response_paging,
-        v2.build_meta(response.headers),
+        response.build_meta(response.headers),
     )
 
 
-def delete_connections(amt: str, filter: dict = {}) -> v2.DeleteConnections:
+def delete_connections(amt: str, filter: dict = {}) -> response.DeleteConnections:
     """
     Deletes all the connections by vehicle or user ID and returns a list
     of all connections that were deleted.
@@ -443,11 +443,11 @@ def delete_connections(amt: str, filter: dict = {}) -> v2.DeleteConnections:
     response = helpers.requester("DELETE", url, headers=headers, params=params)
     data = response.json()
     connections = [
-        v2.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
+        response.Connection(c.get("vehicleId"), c.get("userId"), c.get("connectedAt"))
         for c in data["connections"]
     ]
 
-    return v2.DeleteConnections(
+    return response.DeleteConnections(
         connections,
-        v2.build_meta(response.headers),
+        response.build_meta(response.headers),
     )

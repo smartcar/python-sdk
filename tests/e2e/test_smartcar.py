@@ -9,7 +9,7 @@ from smartcar import (
     get_connections,
     delete_connections,
 )
-import smartcar.response.v2 as v2
+import smartcar.response as response
 import tests.auth_helpers as ah
 
 
@@ -45,7 +45,7 @@ def test_get_vehicles(access):
     res = get_vehicles(access.access_token)
     assert res.vehicles is not None
     assert res.paging is not None
-    assert type(res.paging) == v2.Paging
+    assert type(res.paging) == response.Paging
 
 
 def test_get_vehicles_with_paging(access):
