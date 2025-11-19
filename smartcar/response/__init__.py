@@ -5,7 +5,7 @@ import re
 import requests.structures as rs
 import enum
 
-# Return types for Smartcar API.
+# Return types for Smartcar API for v2.
 #
 # 'generate_named_tuple' is used to generate an un-typed namedtuple from
 # a dictionary. It will return a namedtuple that has attributes matching
