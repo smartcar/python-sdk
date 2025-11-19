@@ -6,7 +6,7 @@ from warnings import warn
 
 import smartcar.config as config
 import smartcar.helpers as helpers
-import smartcar.response as response
+import smartcar.response as v2
 
 
 class AuthClient(object):
@@ -164,7 +164,7 @@ class AuthClient(object):
 
         return base_url + "/oauth/authorize?" + urlencode(query)
 
-    def exchange_code(self, code: str, options: dict = None) -> response.Access:
+    def exchange_code(self, code: str, options: dict = None) -> v2.Access:
         """
         Exchange an authentication code for an access dictionary
 
@@ -204,11 +204,11 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return response.make_access_object(_set_expiration(data))
+        return v2.make_access_object(_set_expiration(data))
 
     def exchange_refresh_token(
         self, refresh_token: str, options: dict = None
-    ) -> response.Access:
+    ) -> v2.Access:
         """
         Exchange a refresh token for a new access dictionary
 
@@ -241,7 +241,7 @@ class AuthClient(object):
             method, url, data=data, auth=self.auth, params=params
         )
         data = response.json()
-        return response.make_access_object(_set_expiration(data))
+        return v2.make_access_object(_set_expiration(data))
 
 
 # Static helpers for AuthClient
