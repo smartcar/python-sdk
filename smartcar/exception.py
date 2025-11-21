@@ -24,6 +24,8 @@ class SmartcarException(Exception):
                     self.__dict__[key] = formatted_resolution
                 else:
                     self.__dict__[key] = {"type": None, "url": None}
+            elif key == "retry_after":
+                self.retry_after = kwargs[key]
             else:
                 self.__dict__[key] = kwargs[key] or None
 
